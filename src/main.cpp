@@ -12,14 +12,14 @@ vector<int> createListOfInteger(size_t n)
 
     for (size_t i = 1; i <= n; ++i)
     {
-       res[i-1] = i;
+        res[i - 1] = i;
     }
 
     return res;
 }
 
-template<typename Container>
-void printContainer(const Container & v)
+template <typename Container>
+void printContainer(const Container &v)
 {
     for (const auto it : v)
     {
@@ -28,13 +28,13 @@ void printContainer(const Container & v)
     cout << endl;
 }
 
-template<typename Container>
-void printListOfContainers(const Container & list)
+template <typename Container>
+void printListOfContainers(const Container &list)
 {
     size_t i = 0;
     for (const auto container : list)
     {
-        cout << ++i << "\t[";
+        cout << ++i << "\t[ ";
         for (const auto it : container)
         {
             cout << it << " ";
@@ -43,122 +43,70 @@ void printListOfContainers(const Container & list)
     }
 }
 
-vector<vector<int>> implementation1(const vector<int> & integers)
+auto generateJumps(size_t n)
 {
-    vector<vector<int>> allPermutations;
-
-    auto copy  = integers;
-    auto copy2 = integers;
-
-    for (unsigned int op = 0; op < integers.size(); ++op)
+    if (n < 3)
     {
-         size_t i = copy.size() - 2;
-         size_t j = i + 1;
+        return vector<size_t>{1};
+    }
 
-         size_t debug = 0;
-         bool computeNextPermutation = true;
+    vector<size_t> result;
 
-         while (debug++ < 100 && computeNextPermutation)
-         {
-            swap(copy[i], copy[j]);
-            allPermutations.push_back(copy);
+    result.push_back(1);
 
-            --i;
-            --j;
+    // Start at n - 1
+    --n;
+    while(n > 1)
+    {
+        result.push_back(result.back() * n);
+        --n;
+    }
 
-            if (i == 0)
+    return result;
+}
+
+auto implementation2(const vector<int> &integers)
+{
+    set<vector<int>> allPermutations;
+
+    allPermutations.insert(integers);
+
+    size_t pivot = 0;
+
+    auto jumps = generateJumps(integers.size());
+
+    while (pivot < integers.size() - 1)
+    {
+        auto currentLevelPermutations = allPermutations;
+        
+        cout << "pivot " << pivot << " with " << currentLevelPermutations.size() << " permutations to process\n";
+
+        for (auto currentPermutation = currentLevelPermutations.begin(); currentPermutation != currentLevelPermutations.end(); currentPermutation++)
+        {
+            size_t i = pivot;
+            auto copy = *currentPermutation;
+            while (i < integers.size())
             {
-               i = copy.size() - 1;
+                swap(copy[pivot], copy[i]);
+                allPermutations.insert(copy);
+                swap(copy[pivot], copy[i]);
+                ++i;
             }
+        }
 
-            if (j == 0)
-            {
-               j = copy.size() - 1;
-            }
-
-
-            if (allPermutations.back() == copy2)
-            {
-                computeNextPermutation = false;
-            }
-         }
-
-         auto front = copy.front();
-
-         for (unsigned int k = 0; k < copy.size() - 1; ++k)
-         {
-            copy[k] = copy[k+1];
-         }
-         copy.back() = front;
-
-         copy2 = copy;
+        printListOfContainers(allPermutations);
+        ++pivot;
     }
 
     return allPermutations;
 }
 
-auto implementation2(const vector<int> & integers)
-{
-    vector<vector<int>> allPermutations;
-    //allPermutations.push_back(integers);
-
-    auto copy = integers;
-    auto copy2 = copy;
-
-    int k = 1;
-    bool process = true;
-    // for (unsigned int k = 1; k < integers.size(); ++k)
-    while (process)
-    {
-        int j = static_cast<int>(copy.size() - 1);
-        int i = j - 1;
-
-        do
-        {
-            swap(copy[i], copy[j]);
-            allPermutations.push_back(copy);
-
-            --i;
-            --j;
-
-            if (i < 0)
-            {
-               i = copy.size() - 1;
-            }
-
-            if (j < 0)
-            {
-               j = copy.size() - 1;
-            }
-
-        }
-        while(copy != copy2);
-
-        if(k != integers.size())
-        {
-            copy2 = integers;
-            swap(copy2[0], copy2[k]);
-            copy = copy2;
-            ++k;
-        }
-        else
-        {
-            process = false;
-        }
-
-    }
-
-    return allPermutations;
-}
-
-
-
-int main (int argc, char* argv[])
+int main(int argc, char *argv[])
 {
     if (argc < 2)
     {
-       cout << "Usage:\n ./permutation 5";
-       return 0;
+        cout << "Usage:\n ./permutation 5";
+        return 0;
     }
 
     const auto integers = createListOfInteger(atoi(argv[1]));
@@ -176,24 +124,3 @@ int main (int argc, char* argv[])
 
     return EXIT_SUCCESS;
 }
-
-
-
-//     auto comp = [](const vector<int> & v2, const vector<int> & v1)
-//     {
-//         if (v1.size() < v2.size())
-//         {
-//             return true;
-//         }
-
-//         for (unsigned int i = 0; i < v1.size(); ++i)
-//         {
-//            if (v1[i] < v2[i])
-//            {
-//                return true;
-//            }
-//         }
-
-//         return false;
-//     };
-
