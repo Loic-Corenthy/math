@@ -65,7 +65,7 @@ auto generateJumps(size_t n)
     return result;
 }
 
-auto implementation2(const vector<int> &integers)
+auto generatePermutations(const vector<int> &integers)
 {
     set<vector<int>> allPermutations;
 
@@ -114,8 +114,7 @@ int main(int argc, char *argv[])
     cout << "list of integers\n";
     printContainer(integers);
 
-    // const auto allPermutations = implementation1(integers);
-    const auto allPermutations = implementation2(integers);
+    const auto allPermutations = generatePermutations(integers);
 
     cout << "all permutations\n";
     printListOfContainers(allPermutations);
