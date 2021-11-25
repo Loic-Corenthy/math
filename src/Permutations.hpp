@@ -5,50 +5,37 @@
 #include <set>
 
 namespace LCNS::Combinatorics
-{
+{    
     template <typename Set>
-    class Permutations
+    std::set<Set> permutations(const Set & input)
     {
-    public:
-        explicit Permutations(const Set & set);
+        std::set<Set> allPermutations;
 
-        std::set<Set> generate(void);
+        allPermutations.insert(input);
 
-    private:
-        constexpr std::vector<size_t> generateJumps(size_t n) const;
+        size_t pivot = 0;
 
-    private:
-        Set _set;
-    };
-    
-    template <typename Set>
-    std::set<Set> Permutations<Set>::generate(void)
-    {
-        return std::set<Set>();
-    }
-
-    template <typename Set>
-    constexpr std::vector<size_t> Permutations<Set>::generateJumps(size_t n) const
-    {
-        if (n < 3)
+        while (pivot < input.size() - 1)
         {
-            return vector<size_t>{1};
+            auto currentLevelPermutations = allPermutations;
+
+            for (auto currentPermutation = currentLevelPermutations.begin(); currentPermutation != currentLevelPermutations.end(); currentPermutation++)
+            {
+                size_t i = pivot;
+                auto copy = *currentPermutation;
+                while (i < input.size())
+                {
+                    std::swap(copy[pivot], copy[i]);
+                    allPermutations.insert(copy);
+                    std::swap(copy[pivot], copy[i]);
+                    ++i;
+                }
+            }
+
+            ++pivot;
         }
 
-        std::vector<size_t> result;
-        result.reserve(n-1);
-
-        result.push_back(1);
-
-        // Start at n - 1
-        --n;
-        while (n > 1)
-        {
-            result.push_back(result.back() * n);
-            --n;
-        }
-
-        return result;
+        return allPermutations;
     }
 
 } // namespace LCNS::Combinatorics
