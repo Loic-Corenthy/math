@@ -7,6 +7,6 @@ project ("permutations" VERSION 0.1.0
 add_executable(${PROJECT_NAME} "")
 
 target_sources(${PROJECT_NAME} PUBLIC  ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
-                               PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/Permutation.hpp)
+                               PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/Permutations.hpp)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CMAKE_CXX_STANDARD C++20)

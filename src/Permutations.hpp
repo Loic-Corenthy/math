@@ -1,12 +1,14 @@
 #pragma once
 
+#include "LCNSConcepts.hpp"
+
 #include <cstddef>
 #include <vector>
 #include <set>
 
 namespace LCNS::Combinatorics
 {    
-    template <typename Set>
+    template <Container Set>
     std::set<Set> permutations(const Set & input)
     {
         std::set<Set> allPermutations;
