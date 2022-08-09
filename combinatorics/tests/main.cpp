@@ -1,24 +1,13 @@
-#include "Permutations.hpp"
+#include <combinatorics/Permutations.hpp>
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
-vector<int> createListOfInteger(size_t n)
-{
-    vector<int> res(n, 0);
-
-    for (size_t i = 1; i <= n; ++i)
-    {
-        res[i - 1] = i;
-    }
-
-    return res;
-}
-
 template <typename Container>
-void printContainer(const Container &v)
+void printContainer(const Container& v)
 {
     for (const auto it : v)
     {
@@ -28,7 +17,7 @@ void printContainer(const Container &v)
 }
 
 template <typename Container>
-void printListOfContainers(const Container &list)
+void printListOfContainers(const Container& list)
 {
     size_t i = 0;
     for (const auto container : list)
@@ -42,15 +31,16 @@ void printListOfContainers(const Container &list)
     }
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     if (argc < 2)
     {
         cout << "Usage:\n ./permutation 5";
-        return 0;
+        return EXIT_FAILURE;
     }
 
-    const auto integers = createListOfInteger(atoi(argv[1]));
+    vector<int> integers(atoi(argv[1]));
+    std::generate(integers.begin(), integers.end(), [n = 0]() mutable { return n++; });
 
     cout << "list of integers\n";
     printContainer(integers);
