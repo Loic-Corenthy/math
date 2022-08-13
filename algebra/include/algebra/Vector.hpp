@@ -2,138 +2,292 @@
 
 #include "algebra/Internal.hpp"
 
+#include <cmath>
 #include <array>
 
-namespace LCNS
+namespace LCNS::Algebra
 {
-    template <Coordinate number, unsigned int size>
+    /*!
+     *  \brief This class is the template class for vectors of different sizes
+     */
+    template <Coordinate coordinate, unsigned int size>
     class Vector
     {
     public:
+        /*!
+         * \brief Default constructor
+         */
         constexpr Vector() = default;
 
-        constexpr explicit Vector(auto x) requires(size == 1);
-        constexpr explicit Vector(auto x, auto y) requires(size == 2);
-        constexpr explicit Vector(auto x, auto y, auto z) requires(size == 3);
-        constexpr explicit Vector(auto x, auto y, auto z, auto w) requires(size == 4);
+        /*!
+         * \brief Specific constructor for 1D vectors
+         * @param x is the x coordinate
+         */
+        constexpr Vector(auto x) requires(size == 1);
 
-        constexpr number  operator[](unsigned int index) const;
-        constexpr number& operator[](unsigned int index);
+        /*!
+         * \brief Specific constructor for 2D vectors
+         * @param x is the x coordinate
+         * @param y is the y coordinate
+         */
+        constexpr Vector(auto x, auto y) requires(size == 2);
 
-        constexpr bool operator<=>(const Vector<number, size>& rhs) const;
+        /*!
+         * \brief Specific constructor for 3D vectors
+         * @param x is the x coordinate
+         * @param y is the y coordinate
+         * @param z is the z coordinate
+         */
+        constexpr Vector(auto x, auto y, auto z) requires(size == 3);
 
-        constexpr number  x() const noexcept;
-        constexpr number& x() noexcept;
+        /*!
+         * \brief Specific constructor for 4D vectors
+         * @param x is the x coordinate
+         * @param y is the y coordinate
+         * @param z is the z coordinate
+         * @param w is the w coordinate
+         */
+        constexpr Vector(auto x, auto y, auto z, auto w) requires(size == 4);
 
-        constexpr number  y() const noexcept requires(size > 1);
-        constexpr number& y() noexcept requires(size > 1);
+        /*!
+         * \brief Constructor with a list of values for the coordinates
+         * @param coordinates is a list of coefficients that will be used to set the coordinates of the vector.
+         *        There must be as many coefficients as SIZE
+         */
+        constexpr Vector(const std::initializer_list<coordinate>& coordinates);
 
-        constexpr number  z() const noexcept requires(size > 2);
-        constexpr number& z() noexcept requires(size > 2);
+        /*!
+         * \brief Accessor (read/write)
+         * @param index is the index of the coordinate to access
+         * @return a reference to the corresponding coordinate
+         */
+        constexpr coordinate operator[](unsigned int index) const;
 
-        constexpr number  w() const noexcept requires(size > 3);
-        constexpr number& w() noexcept requires(size > 3);
+        /*!
+         * \brief Accessor (read/write)
+         * @param index is the index of the coordinate to access
+         * @return a reference to the corresponding coordinate
+         */
+        constexpr coordinate& operator[](unsigned int index);
 
-        constexpr double length() const noexcept;
+        /*!
+         * \brief Comparision operator
+         * @param rhs is the vector to compare coefficients from
+         * @return true if all coordinates of this vector and rhs are equal, false otherwise
+         */
+        constexpr bool operator==(const Vector<coordinate, size>& rhs) const;
 
-        constexpr number dot(const Vector<number, size>& rhs) const noexcept;
+        /*!
+         * \brief Spaceship operator
+         * @param rhs is the vector to compare from
+         * @return true if the length of this vector is <, <=, >, >= than the length of rhs, false otherwise
+         */
+        constexpr bool operator<=>(const Vector<coordinate, size>& rhs) const;
 
-        constexpr Vector<number, size> cross(const Vector<number, size>& rhs) const requires(size == 2 || size == 3);
+        /*!
+         * \brief Get the first coefficient (read only)
+         * @return the value of the first coefficient
+         */
+        constexpr coordinate  x() const noexcept;
+        constexpr coordinate& x() noexcept;
 
-        constexpr void                 normalize() noexcept;
-        constexpr Vector<number, size> normalized() const noexcept;
+        constexpr coordinate  y() const noexcept requires(size > 1);
+        constexpr coordinate& y() noexcept requires(size > 1);
+
+        constexpr coordinate  z() const noexcept requires(size > 2);
+        constexpr coordinate& z() noexcept requires(size > 2);
+
+        constexpr coordinate  w() const noexcept requires(size > 3);
+        constexpr coordinate& w() noexcept requires(size > 3);
+
+        constexpr double sqrLength() const noexcept;
+        double           length() const;
+
+        constexpr coordinate dot(const Vector<coordinate, size>& rhs) const noexcept;
+
+        constexpr Vector<coordinate, size> cross(const Vector<coordinate, size>& rhs) const noexcept requires(size == 3);
+
+        void                     normalize();
+        Vector<coordinate, size> normalized() const;
 
     private:
-        std::array<number, size> _coords = {};
-    };
+        std::array<coordinate, size> _coords = {};
+    };  // class Vector
 
-    template <Coordinate number, unsigned int size>
-    constexpr Vector<number, size>::Vector(auto x) requires(size == 1)
+    template <Coordinate coordinate, unsigned int size>
+    constexpr Vector<coordinate, size>::Vector(auto x) requires(size == 1)
+    : _coords({ x })
     {
-        static_assert(std::is_same_v<decltype(x), number>);
-        _coords[0] = x;
+        static_assert(std::is_same_v<decltype(x), coordinate>);
     }
 
-    template <Coordinate number, unsigned int size>
-    constexpr Vector<number, size>::Vector(auto x, auto y) requires(size == 2)
+    template <Coordinate coordinate, unsigned int size>
+    constexpr Vector<coordinate, size>::Vector(auto x, auto y) requires(size == 2)
+    : _coords({ x, y })
     {
-        static_assert(std::is_same_v<decltype(x), number>);
-        static_assert(std::is_same_v<decltype(y), number>);
-
-        _coords[0] = x;
-        _coords[1] = y;
+        static_assert(std::is_same_v<decltype(x), coordinate>);
+        static_assert(std::is_same_v<decltype(y), coordinate>);
     }
 
-    template <Coordinate number, unsigned int size>
-    constexpr Vector<number, size>::Vector(auto x, auto y, auto z) requires(size == 3)
+    template <Coordinate coordinate, unsigned int size>
+    constexpr Vector<coordinate, size>::Vector(auto x, auto y, auto z) requires(size == 3)
+    : _coords({ x, y, z })
     {
-        _coords[0] = x;
-        _coords[1] = y;
-        _coords[2] = z;
+        static_assert(std::is_same_v<decltype(x), coordinate>);
+        static_assert(std::is_same_v<decltype(y), coordinate>);
+        static_assert(std::is_same_v<decltype(z), coordinate>);
     }
 
-    template <Coordinate number, unsigned int size>
-    constexpr Vector<number, size>::Vector(auto x, auto y, auto z, auto w) requires(size == 4)
+    template <Coordinate coordinate, unsigned int size>
+    constexpr Vector<coordinate, size>::Vector(auto x, auto y, auto z, auto w) requires(size == 4)
+    : _coords({ x, y, z, w })
     {
-        _coords[0] = x;
-        _coords[1] = y;
-        _coords[2] = z;
-        _coords[3] = w;
+        static_assert(std::is_same_v<decltype(x), coordinate>);
+        static_assert(std::is_same_v<decltype(y), coordinate>);
+        static_assert(std::is_same_v<decltype(z), coordinate>);
+        static_assert(std::is_same_v<decltype(w), coordinate>);
     }
 
-    template <Coordinate number, unsigned int size>
-    constexpr number Vector<number, size>::operator[](unsigned int index) const
+    template <Coordinate coordinate, unsigned int size>
+    constexpr Vector<coordinate, size>::Vector(const std::initializer_list<coordinate>& coordinates)
+    : _coords(coordinates)
+    {
+        static_assert(coordinates.size() == size);
+    }
+
+    template <Coordinate coordinate, unsigned int size>
+    constexpr coordinate Vector<coordinate, size>::operator[](unsigned int index) const
     {
         return _coords[index];
     }
 
-    template <Coordinate number, unsigned int size>
-    constexpr number& Vector<number, size>::operator[](unsigned int index)
+    template <Coordinate coordinate, unsigned int size>
+    constexpr coordinate& Vector<coordinate, size>::operator[](unsigned int index)
     {
         return _coords[index];
     }
 
-    template <Coordinate number, unsigned int size>
-    constexpr number Vector<number, size>::x() const noexcept
+    template <Coordinate coordinate, unsigned int size>
+    constexpr bool Vector<coordinate, size>::operator==(const Vector<coordinate, size>& rhs) const
+    {
+        return _coords == rhs._coords;
+    }
+
+    template <Coordinate coordinate, unsigned int size>
+    constexpr bool Vector<coordinate, size>::operator<=>(const Vector<coordinate, size>& rhs) const
+    {
+        return sqrLength() <=> rhs.sqrLength();
+    }
+
+    template <Coordinate coordinate, unsigned int size>
+    constexpr coordinate Vector<coordinate, size>::x() const noexcept
     {
         return _coords[0];
     }
 
-    template <Coordinate number, unsigned int size>
-    constexpr number& Vector<number, size>::x() noexcept
+    template <Coordinate coordinate, unsigned int size>
+    constexpr coordinate& Vector<coordinate, size>::x() noexcept
     {
         return _coords[0];
     }
-    // constexpr Vector() = default;
 
-    // constexpr Vector(number x) requires (size == 1);
-    // constexpr Vector(number x, number y) requires (size == 2);
-    // constexpr Vector(number x, number y, number z) requires (size == 3);
-    // constexpr Vector(number x, number y, number w) requires (size == 4);
+    template <Coordinate coordinate, unsigned int size>
+    constexpr coordinate Vector<coordinate, size>::y() const noexcept requires(size > 1)
+    {
+        return _coords[1];
+    }
 
-    // constexpr number operator[](unsigned int index) const;
-    // constexpr number& operator[](unsigned int index);
+    template <Coordinate coordinate, unsigned int size>
+    constexpr coordinate& Vector<coordinate, size>::y() noexcept requires(size > 1)
+    {
+        return _coords[1];
+    }
 
-    // constexpr bool operator<=>(const Vector<number, size>& rhs) const;
+    template <Coordinate coordinate, unsigned int size>
+    constexpr coordinate Vector<coordinate, size>::z() const noexcept requires(size > 2)
+    {
+        return _coords[2];
+    }
 
-    // constexpr number x() const noexcept;
-    // constexpr number& x() noexcept;
+    template <Coordinate coordinate, unsigned int size>
+    constexpr coordinate& Vector<coordinate, size>::z() noexcept requires(size > 2)
+    {
+        return _coords[2];
+    }
 
-    // constexpr number y() const noexcept requires (size > 1);
-    // constexpr number& y() noexcept requires (size > 1);
+    template <Coordinate coordinate, unsigned int size>
+    constexpr coordinate Vector<coordinate, size>::w() const noexcept requires(size > 3)
+    {
+        return _coords[3];
+    }
 
-    // constexpr number z() const noexcept requires (size > 2);
-    // constexpr number& z() noexcept requires (size > 2);
+    template <Coordinate coordinate, unsigned int size>
+    constexpr coordinate& Vector<coordinate, size>::w() noexcept requires(size > 3)
+    {
+        return _coords[3];
+    }
 
-    // constexpr number w() const noexcept requires (size > 3);
-    // constexpr number& w() noexcept requires (size > 3);
+    template <Coordinate coordinate, unsigned int size>
+    constexpr double Vector<coordinate, size>::sqrLength() const noexcept
+    {
+        double length_square = 0.0;
 
-    // constexpr double length() const noexcept;
+        for (const auto coord : _coords)
+        {
+            length_square += coord * coord;
+        }
 
-    // constexpr number dot(const Vector<number, size>& rhs) const noexcept;
+        return length_square;
+    }
 
-    // constexpr Vector<number, size> cross(const Vector<number, size>& rhs) const requires (size == 2 || size == 3);
+    template <Coordinate coordinate, unsigned int size>
+    double Vector<coordinate, size>::length() const
+    {
+        return std::sqrt(sqrLength());
+    }
 
-    // constexpr void normalize() noexcept;
-    // constexpr Vector<number, size> normalized() const noexcept;
-}
+    template <Coordinate coordinate, unsigned int size>
+    constexpr coordinate Vector<coordinate, size>::dot(const Vector<coordinate, size>& rhs) const noexcept
+    {
+        coordinate product = 0;
+
+        for (unsigned int i = 0; i < _coords.size(); ++i)
+        {
+            product += _coords[i] * rhs._coords[i];
+        }
+
+        return product;
+    }
+
+    template <Coordinate coordinate, unsigned int size>
+    constexpr Vector<coordinate, size> Vector<coordinate, size>::cross(const Vector<coordinate, size>& rhs) const noexcept requires(size == 3)
+    {
+        return { _coords[1] * rhs._coords[2] - _coords[2] * rhs._coords[1],
+                 _coords[2] * rhs._coords[0] - _coords[0] * rhs._coords[2],
+                 _coords[0] * rhs._coords[1] - _coords[1] * rhs._coords[0] };
+    }
+
+    template <Coordinate coordinate, unsigned int size>
+    void Vector<coordinate, size>::normalize()
+    {
+        const auto len = length();
+
+        if (len != 0.0)
+        {
+            for (auto& coord : _coords)
+            {
+                coord /= len;
+            }
+        }
+    }
+
+    template <Coordinate coordinate, unsigned int size>
+    Vector<coordinate, size> Vector<coordinate, size>::normalized() const
+    {
+        Vector<coordinate, size> result(*this);
+
+        result.normalize();
+
+        return result;
+    }
+}  // namespace LCNS::Algebra
