@@ -51,8 +51,8 @@ namespace LCNS::Algebra
 
         /*!
          * \brief Constructor with a list of values for the coordinates
-         * @param coordinates is a list of coefficients that will be used to set the coordinates of the vector.
-         *        There must be as many coefficients as SIZE
+         * @param coordinates is a list of coordinates that will be used to set the coordinates of the vector.
+         *        There must be as many coordinates as SIZE
          */
         constexpr Vector(const std::initializer_list<coordinate>& coordinates);
 
@@ -72,7 +72,7 @@ namespace LCNS::Algebra
 
         /*!
          * \brief Comparision operator
-         * @param rhs is the vector to compare coefficients from
+         * @param rhs is the vector to compare coordinates from
          * @return true if all coordinates of this vector and rhs are equal, false otherwise
          */
         constexpr bool operator==(const Vector<coordinate, size>& rhs) const;
@@ -85,29 +85,145 @@ namespace LCNS::Algebra
         constexpr bool operator<=>(const Vector<coordinate, size>& rhs) const;
 
         /*!
-         * \brief Get the first coefficient (read only)
-         * @return the value of the first coefficient
+         * \brief Addition operator. Do not modify this object.
+         * @param rhs is the vector to add to this one
+         * @return a vector corresponding to this vector plus rhs
          */
-        constexpr coordinate  x() const noexcept;
+        constexpr Vector<coordinate, size> operator+(const Vector<coordinate, size>& rhs) const noexcept;
+
+        /*!
+         * \brief Substraction operator. Do not modify this object.
+         * @param rhs is the vector to substract from this one
+         * @return a vector corresponding to this vector minus rhs
+         */
+        constexpr Vector<coordinate, size> operator-(const Vector<coordinate, size>& rhs) const noexcept;
+
+        /*!
+         * \brief Dot product. Does not modify this object.
+         * @param rhs is the right hand side of the operation
+         * @return a scalar value, equal to 0 if the 2 vectors are perpendicual to each other.
+         */
+        constexpr coordinate operator*(const Vector<coordinate, size>& rhs) const noexcept;
+
+        /*!
+         * \brief Crooss product. Does not modify this object.
+         * @param rhs must be a vector of 3 dimensions
+         * @return a vector perpendicular to both this and rhs.
+         */
+        constexpr Vector<coordinate, size> operator^(const Vector<coordinate, size>& rhs) const noexcept requires(size == 3);
+
+        /*!
+         * \brief Multiplication operator. Do not modify this object.
+         * @param scalar is the value that will multiply each coordinate of this object
+         * @return a vector with the same direction and a length multiplied by scalar
+         */
+        constexpr Vector<coordinate, size> operator*(auto scalar) const noexcept;
+
+        /*!
+         * \brief Division operator. Do not modify this object.
+         * @param scalar is the value that will divide each coordinate of this object
+         * @return a vector with the same direction and a length divided by scalar
+         */
+        constexpr Vector<coordinate, size> operator/(auto scalar) const;
+
+        /*!
+         * \brief Addition with a vector. Modify this object
+         * @param rhs is the vector to add to this one
+         * @return a reference on this object after the operation
+         */
+        constexpr Vector<coordinate, size>& operator+=(const Vector<coordinate, size>& rhs) noexcept;
+
+        /*!
+         * \brief Substraction operator. Do not modify this object.
+         * @param rhs is the vector to substract from this one
+         * @return a reference on this object after the operation
+         */
+        Vector<coordinate, size>& operator-=(const Vector<coordinate, size>& rhs) noexcept;
+
+        /*!
+         * \brief Multiplication by a scalar operator
+         * @param scalar is the value that will multiply all the coordinates
+         * @return a reference on this object after the operation
+         */
+        constexpr Vector<coordinate, size>& operator*=(auto scalar) noexcept;
+
+        /*!
+         * \brief Division by a scalar operator
+         * @param scalar is the value from which all the coordinates will be divided
+         * @return a reference on this object after the operation
+         */
+        constexpr Vector<coordinate, size>& operator/=(auto scalar);
+
+        /*!
+         * \brief Get the first coordinate (read only)
+         * @return the value of the first coordinate
+         */
+        constexpr coordinate x() const noexcept;
+
+        /*!
+         * \brief Get the first coordinate (read/write)
+         * @return the value of the first coordinate
+         */
         constexpr coordinate& x() noexcept;
 
-        constexpr coordinate  y() const noexcept requires(size > 1);
+        /*!
+         * \brief Get the second coordinate (read only)
+         * @return the value of the second coordinate
+         */
+        constexpr coordinate y() const noexcept requires(size > 1);
+
+        /*!
+         * \brief Get the second coordinate (read/write)
+         * @return the value of the second coordinate
+         */
         constexpr coordinate& y() noexcept requires(size > 1);
 
-        constexpr coordinate  z() const noexcept requires(size > 2);
+        /*!
+         * \brief Get the third coordinate (read only)
+         * @return the value of the third coordinate
+         */
+        constexpr coordinate z() const noexcept requires(size > 2);
+
+        /*!
+         * \brief Get the third coordinate (read/write)
+         * @return the value of the third coordinate
+         */
         constexpr coordinate& z() noexcept requires(size > 2);
 
-        constexpr coordinate  w() const noexcept requires(size > 3);
+        /*!
+         * \brief Get the fourth coordinate (read only)
+         * @return the value of the fourth coordinate
+         */
+        constexpr coordinate w() const noexcept requires(size > 3);
+
+        /*!
+         * \brief Get the fourth coordinate (read/write)
+         * @return the value of the fourth coordinate
+         */
         constexpr coordinate& w() noexcept requires(size > 3);
 
+        /*!
+         * \brief Compute the square length of the vector
+         * @return the length of the vector squared
+         */
         constexpr double sqrLength() const noexcept;
-        double           length() const;
 
-        constexpr coordinate dot(const Vector<coordinate, size>& rhs) const noexcept;
+        /*!
+         * \brief Compute the length of the vector
+         * @return the length of the vector
+         */
+        double length() const;
 
-        constexpr Vector<coordinate, size> cross(const Vector<coordinate, size>& rhs) const noexcept requires(size == 3);
+        /*!
+         * \brief Normalize this vector
+         */
+        void normalize();
 
-        void                     normalize();
+        /*!
+         * \brief Create a new vector which corresponds to the normalized version of this vector.
+         *        Does not modify this object.
+         * @return a vector of length 1 with the same direction
+         */
         Vector<coordinate, size> normalized() const;
 
     private:
@@ -180,6 +296,67 @@ namespace LCNS::Algebra
     }
 
     template <Coordinate coordinate, unsigned int size>
+    constexpr Vector<coordinate, size> Vector<coordinate, size>::operator+(const Vector<coordinate, size>& rhs) const noexcept
+    {
+    }
+
+    template <Coordinate coordinate, unsigned int size>
+    constexpr Vector<coordinate, size> Vector<coordinate, size>::operator-(const Vector<coordinate, size>& rhs) const noexcept
+    {
+    }
+
+    template <Coordinate coordinate, unsigned int size>
+    constexpr coordinate Vector<coordinate, size>::operator*(const Vector<coordinate, size>& rhs) const noexcept
+    {
+        coordinate product = 0;
+
+        for (unsigned int i = 0; i < _coords.size(); ++i)
+        {
+            product += _coords[i] * rhs._coords[i];
+        }
+
+        return product;
+    }
+
+    template <Coordinate coordinate, unsigned int size>
+    constexpr Vector<coordinate, size> Vector<coordinate, size>::operator^(const Vector<coordinate, size>& rhs) const noexcept requires(size == 3)
+    {
+        return { _coords[1] * rhs._coords[2] - _coords[2] * rhs._coords[1],
+                 _coords[2] * rhs._coords[0] - _coords[0] * rhs._coords[2],
+                 _coords[0] * rhs._coords[1] - _coords[1] * rhs._coords[0] };
+    }
+
+    template <Coordinate coordinate, unsigned int size>
+    constexpr Vector<coordinate, size> Vector<coordinate, size>::operator*(auto scalar) const noexcept
+    {
+    }
+
+    template <Coordinate coordinate, unsigned int size>
+    constexpr Vector<coordinate, size> Vector<coordinate, size>::operator/(auto scalar) const
+    {
+    }
+
+    template <Coordinate coordinate, unsigned int size>
+    constexpr Vector<coordinate, size>& Vector<coordinate, size>::operator+=(const Vector<coordinate, size>& rhs) noexcept
+    {
+    }
+
+    template <Coordinate coordinate, unsigned int size>
+    Vector<coordinate, size>& Vector<coordinate, size>::operator-=(const Vector<coordinate, size>& rhs) noexcept
+    {
+    }
+
+    template <Coordinate coordinate, unsigned int size>
+    constexpr Vector<coordinate, size>& Vector<coordinate, size>::operator*=(auto scalar) noexcept
+    {
+    }
+
+    template <Coordinate coordinate, unsigned int size>
+    constexpr Vector<coordinate, size>& Vector<coordinate, size>::operator/=(auto scalar)
+    {
+    }
+
+    template <Coordinate coordinate, unsigned int size>
     constexpr coordinate Vector<coordinate, size>::x() const noexcept
     {
         return _coords[0];
@@ -244,27 +421,6 @@ namespace LCNS::Algebra
     double Vector<coordinate, size>::length() const
     {
         return std::sqrt(sqrLength());
-    }
-
-    template <Coordinate coordinate, unsigned int size>
-    constexpr coordinate Vector<coordinate, size>::dot(const Vector<coordinate, size>& rhs) const noexcept
-    {
-        coordinate product = 0;
-
-        for (unsigned int i = 0; i < _coords.size(); ++i)
-        {
-            product += _coords[i] * rhs._coords[i];
-        }
-
-        return product;
-    }
-
-    template <Coordinate coordinate, unsigned int size>
-    constexpr Vector<coordinate, size> Vector<coordinate, size>::cross(const Vector<coordinate, size>& rhs) const noexcept requires(size == 3)
-    {
-        return { _coords[1] * rhs._coords[2] - _coords[2] * rhs._coords[1],
-                 _coords[2] * rhs._coords[0] - _coords[0] * rhs._coords[2],
-                 _coords[0] * rhs._coords[1] - _coords[1] * rhs._coords[0] };
     }
 
     template <Coordinate coordinate, unsigned int size>
