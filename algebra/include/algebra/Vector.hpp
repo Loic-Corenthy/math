@@ -4,6 +4,7 @@
 
 #include <cmath>
 #include <array>
+#include <exception>
 
 namespace LCNS::Algebra
 {
@@ -72,14 +73,14 @@ namespace LCNS::Algebra
 
         /*!
          * \brief Comparision operator
-         * @param rhs is the vector to compare coordinates from
+         * @param rhs is the vector to compare coordinates with
          * @return true if all coordinates of this vector and rhs are equal, false otherwise
          */
         constexpr bool operator==(const Vector<coordinate, size>& rhs) const;
 
         /*!
          * \brief Spaceship operator
-         * @param rhs is the vector to compare from
+         * @param rhs is the vector to compare with
          * @return true if the length of this vector is <, <=, >, >= than the length of rhs, false otherwise
          */
         constexpr bool operator<=>(const Vector<coordinate, size>& rhs) const;
@@ -298,11 +299,27 @@ namespace LCNS::Algebra
     template <Coordinate coordinate, unsigned int size>
     constexpr Vector<coordinate, size> Vector<coordinate, size>::operator+(const Vector<coordinate, size>& rhs) const noexcept
     {
+        Vector<coordinate, size> result(*this);
+
+        for (unsigned int i = 0; i < size; ++i)
+        {
+            result[i] += rhs[i];
+        }
+
+        return result;
     }
 
     template <Coordinate coordinate, unsigned int size>
     constexpr Vector<coordinate, size> Vector<coordinate, size>::operator-(const Vector<coordinate, size>& rhs) const noexcept
     {
+        Vector<coordinate, size> result(*this);
+
+        for (unsigned int i = 0; i < size; ++i)
+        {
+            result[i] -= rhs[i];
+        }
+
+        return result;
     }
 
     template <Coordinate coordinate, unsigned int size>
@@ -329,31 +346,81 @@ namespace LCNS::Algebra
     template <Coordinate coordinate, unsigned int size>
     constexpr Vector<coordinate, size> Vector<coordinate, size>::operator*(auto scalar) const noexcept
     {
+        Vector<coordinate, size> result(*this);
+
+        for (auto& coord : result._coords)
+        {
+            coord *= scalar;
+        }
+
+        return result;
     }
 
     template <Coordinate coordinate, unsigned int size>
     constexpr Vector<coordinate, size> Vector<coordinate, size>::operator/(auto scalar) const
     {
+        if (scalar == 0.0)
+        {
+            throw std::runtime_error("Can't divide by 0");
+        }
+
+        Vector<coordinate, size> result(*this);
+
+        for (auto& coord : result._coords)
+        {
+            coord /= scalar;
+        }
+
+        return result;
     }
 
     template <Coordinate coordinate, unsigned int size>
     constexpr Vector<coordinate, size>& Vector<coordinate, size>::operator+=(const Vector<coordinate, size>& rhs) noexcept
     {
+        for (unsigned int i = 0; i < size; ++i)
+        {
+            _coords[i] += rhs[i];
+        }
+
+        return *this;
     }
 
     template <Coordinate coordinate, unsigned int size>
     Vector<coordinate, size>& Vector<coordinate, size>::operator-=(const Vector<coordinate, size>& rhs) noexcept
     {
+        for (unsigned int i = 0; i < size; ++i)
+        {
+            _coords[i] -= rhs[i];
+        }
+
+        return *this;
     }
 
     template <Coordinate coordinate, unsigned int size>
     constexpr Vector<coordinate, size>& Vector<coordinate, size>::operator*=(auto scalar) noexcept
     {
+        for (auto& coord : _coords)
+        {
+            coord /= scalar;
+        }
+
+        return *this;
     }
 
     template <Coordinate coordinate, unsigned int size>
     constexpr Vector<coordinate, size>& Vector<coordinate, size>::operator/=(auto scalar)
     {
+        if (scalar == 0.0)
+        {
+            throw std::runtime_error("Can't divide by 0");
+        }
+
+        for (auto& coord : _coords)
+        {
+            coord /= scalar;
+        }
+
+        return *this;
     }
 
     template <Coordinate coordinate, unsigned int size>
