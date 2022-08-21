@@ -1,3 +1,6 @@
-add_executable(testVector "main.cpp")
+add_executable(testVector "TestVector2.cpp")
 
-target_link_libraries(testVector PRIVATE lcns::algebra)
+
+include(CTest)
+include(Catch)
+target_link_libraries(testVector PRIVATE lcns::algebra Catch2::Catch2WithMain)
