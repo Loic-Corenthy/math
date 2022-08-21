@@ -76,7 +76,7 @@ namespace LCNS::Algebra
          * @param rhs is the vector to compare with
          * @return true if the length of this vector is <, <=, >, >= than the length of rhs, false otherwise
          */
-        constexpr bool operator<=>(const Vector<coordinate, size>& rhs) const;
+        constexpr auto operator<=>(const Vector<coordinate, size>& rhs) const;
 
         /*!
          * \brief Addition operator. Do not modify this object.
@@ -277,7 +277,7 @@ namespace LCNS::Algebra
     }
 
     template <Coordinate coordinate, unsigned int size>
-    constexpr bool Vector<coordinate, size>::operator<=>(const Vector<coordinate, size>& rhs) const
+    constexpr auto Vector<coordinate, size>::operator<=>(const Vector<coordinate, size>& rhs) const
     {
         return sqrLength() <=> rhs.sqrLength();
     }
