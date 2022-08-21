@@ -4,7 +4,7 @@
 
 #include <cmath>
 #include <array>
-#include <exception>
+#include <stdexcept>
 
 namespace LCNS::Algebra
 {
@@ -361,7 +361,7 @@ namespace LCNS::Algebra
     {
         if (scalar == 0.0)
         {
-            throw std::runtime_error("Can't divide by 0");
+            throw std::invalid_argument("Can't divide by 0");
         }
 
         Vector<coordinate, size> result(*this);
@@ -412,7 +412,7 @@ namespace LCNS::Algebra
     {
         if (scalar == 0.0)
         {
-            throw std::runtime_error("Can't divide by 0");
+            throw std::invalid_argument("Can't divide by 0");
         }
 
         for (auto& coord : _coords)
