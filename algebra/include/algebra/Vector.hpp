@@ -226,36 +226,46 @@ namespace LCNS::Algebra
 
     template <Coordinate coordinate, unsigned int size>
     constexpr Vector<coordinate, size>::Vector(auto x) requires(size == 1)
-    : _coords({ x })
     {
         static_assert(std::is_same_v<decltype(x), coordinate>);
+
+        _coords[0] = x;
     }
 
     template <Coordinate coordinate, unsigned int size>
     constexpr Vector<coordinate, size>::Vector(auto x, auto y) requires(size == 2)
-    : _coords({ x, y })
     {
         static_assert(std::is_same_v<decltype(x), coordinate>);
         static_assert(std::is_same_v<decltype(y), coordinate>);
+
+        _coords[0] = x;
+        _coords[1] = y;
     }
 
     template <Coordinate coordinate, unsigned int size>
     constexpr Vector<coordinate, size>::Vector(auto x, auto y, auto z) requires(size == 3)
-    : _coords({ x, y, z })
     {
         static_assert(std::is_same_v<decltype(x), coordinate>);
         static_assert(std::is_same_v<decltype(y), coordinate>);
         static_assert(std::is_same_v<decltype(z), coordinate>);
+
+        _coords[0] = x;
+        _coords[1] = y;
+        _coords[2] = z;
     }
 
     template <Coordinate coordinate, unsigned int size>
     constexpr Vector<coordinate, size>::Vector(auto x, auto y, auto z, auto w) requires(size == 4)
-    : _coords({ x, y, z, w })
     {
         static_assert(std::is_same_v<decltype(x), coordinate>);
         static_assert(std::is_same_v<decltype(y), coordinate>);
         static_assert(std::is_same_v<decltype(z), coordinate>);
         static_assert(std::is_same_v<decltype(w), coordinate>);
+
+        _coords[0] = x;
+        _coords[1] = y;
+        _coords[2] = z;
+        _coords[3] = w;
     }
 
     template <Coordinate coordinate, unsigned int size>
@@ -332,6 +342,8 @@ namespace LCNS::Algebra
     template <Coordinate coordinate, unsigned int size>
     constexpr Vector<coordinate, size> Vector<coordinate, size>::operator*(auto scalar) const noexcept
     {
+        static_assert(std::is_same_v<decltype(scalar), coordinate>);
+
         Vector<coordinate, size> result(*this);
 
         for (auto& coord : result._coords)
@@ -345,6 +357,8 @@ namespace LCNS::Algebra
     template <Coordinate coordinate, unsigned int size>
     constexpr Vector<coordinate, size> Vector<coordinate, size>::operator/(auto scalar) const
     {
+        static_assert(std::is_same_v<decltype(scalar), coordinate>);
+
         if (scalar == 0.0)
         {
             throw std::invalid_argument("Can't divide by 0");
@@ -385,6 +399,8 @@ namespace LCNS::Algebra
     template <Coordinate coordinate, unsigned int size>
     constexpr Vector<coordinate, size>& Vector<coordinate, size>::operator*=(auto scalar) noexcept
     {
+        static_assert(std::is_same_v<decltype(scalar), coordinate>);
+
         for (auto& coord : _coords)
         {
             coord /= scalar;
@@ -396,6 +412,8 @@ namespace LCNS::Algebra
     template <Coordinate coordinate, unsigned int size>
     constexpr Vector<coordinate, size>& Vector<coordinate, size>::operator/=(auto scalar)
     {
+        static_assert(std::is_same_v<decltype(scalar), coordinate>);
+
         if (scalar == 0.0)
         {
             throw std::invalid_argument("Can't divide by 0");
