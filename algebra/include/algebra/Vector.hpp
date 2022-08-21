@@ -51,13 +51,6 @@ namespace LCNS::Algebra
         constexpr Vector(auto x, auto y, auto z, auto w) requires(size == 4);
 
         /*!
-         * \brief Constructor with a list of values for the coordinates
-         * @param coordinates is a list of coordinates that will be used to set the coordinates of the vector.
-         *        There must be as many coordinates as SIZE
-         */
-        constexpr Vector(const std::initializer_list<coordinate>& coordinates);
-
-        /*!
          * \brief Accessor (read/write)
          * @param index is the index of the coordinate to access
          * @return a reference to the corresponding coordinate
@@ -263,13 +256,6 @@ namespace LCNS::Algebra
         static_assert(std::is_same_v<decltype(y), coordinate>);
         static_assert(std::is_same_v<decltype(z), coordinate>);
         static_assert(std::is_same_v<decltype(w), coordinate>);
-    }
-
-    template <Coordinate coordinate, unsigned int size>
-    constexpr Vector<coordinate, size>::Vector(const std::initializer_list<coordinate>& coordinates)
-    : _coords(coordinates)
-    {
-        static_assert(coordinates.size() == size);
     }
 
     template <Coordinate coordinate, unsigned int size>
