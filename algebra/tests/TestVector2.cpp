@@ -255,9 +255,9 @@ TEMPLATE_LIST_TEST_CASE("Subtraction operator", "[algebra][vector][dim2][operato
 
 TEMPLATE_LIST_TEST_CASE("Subtraction  operator", "[algebra][vector][dim2][operator]", FloatingTypes)
 {
-    constexpr TestType x1 = 23.7;
+    constexpr TestType x1 = 24567.957;
     constexpr TestType y1 = -2.0;
-    constexpr TestType x2 = 23.6;
+    constexpr TestType x2 = 24266.957;
     constexpr TestType y2 = -55.11;
 
     constexpr Vector<TestType, 2> vec1(x1, y1);
@@ -266,12 +266,87 @@ TEMPLATE_LIST_TEST_CASE("Subtraction  operator", "[algebra][vector][dim2][operat
 
     constexpr auto epsilon = std::numeric_limits<TestType>::epsilon() * 100;
 
-    // static_assert(std::abs(sub[0] - 0.1) < epsilon);
+    static_assert(std::abs(sub[0] - 301.0) < epsilon);
     static_assert(std::abs(sub[1] - 53.11) < epsilon);
 
-    const auto sumX = Catch::Approx(0.1).epsilon(epsilon);
+    const auto sumX = Catch::Approx(301.0).epsilon(epsilon);
     const auto sumY = Catch::Approx(53.11).epsilon(epsilon);
 
     REQUIRE(sub[0] == sumX);
     REQUIRE(sub[1] == sumY);
+}
+
+TEMPLATE_LIST_TEST_CASE("Dot product", "[algebra][vector][dim2][operator]", IntegerTypes)
+{
+    constexpr TestType x1 = 15;
+    constexpr TestType y1 = 97;
+    constexpr TestType x2 = -97;
+    constexpr TestType y2 = 15;
+
+    constexpr Vector<TestType, 2> vec1(x1, y1);
+    constexpr Vector<TestType, 2> vec2(x2, y2);
+
+    constexpr TestType dotProduct = vec1 * vec2;
+
+    static_assert(dotProduct == 0);
+
+    REQUIRE(dotProduct == 0);
+}
+
+TEMPLATE_LIST_TEST_CASE("Dot product", "[algebra][vector][dim2][operator]", FloatingTypes)
+{
+    constexpr TestType x1 = 3.0;
+    constexpr TestType y1 = 5.0;
+    constexpr TestType x2 = 4.0;
+    constexpr TestType y2 = 1.0;
+
+    constexpr Vector<TestType, 2> vec1(x1, y1);
+    constexpr Vector<TestType, 2> vec2(x2, y2);
+
+    constexpr TestType dotProduct = vec1 * vec2;
+
+    constexpr auto epsilon = std::numeric_limits<TestType>::epsilon() * 100;
+
+    static_assert(std::abs(dotProduct - 17.0) < epsilon);
+
+    const auto dotProductApprox = Catch::Approx(17.0).epsilon(epsilon);
+
+    REQUIRE(dotProduct == dotProductApprox);
+}
+
+TEMPLATE_LIST_TEST_CASE("Scalar multiplication operator", "[algebra][vector][dim2][operator]", IntegerTypes)
+{
+    constexpr TestType x      = 15;
+    constexpr TestType y      = 97;
+    constexpr TestType scalar = 66;
+
+    constexpr Vector<TestType, 2> vec1(x, y);
+    constexpr Vector<TestType, 2> scaled = vec1 * scalar;
+
+    static_assert(scaled[0] == 990);
+    static_assert(scaled[1] == 6402);
+
+    REQUIRE(scaled[0] == 990);
+    REQUIRE(scaled[1] == 6402);
+}
+
+TEMPLATE_LIST_TEST_CASE("Scalar multiplication operator", "[algebra][vector][dim2][operator]", FloatingTypes)
+{
+    constexpr TestType x      = 1.5;
+    constexpr TestType y      = 9.5;
+    constexpr TestType scalar = 10.0;
+
+    constexpr Vector<TestType, 2> vec1(x, y);
+    constexpr Vector<TestType, 2> scaled = vec1 * scalar;
+
+    constexpr auto epsilon = std::numeric_limits<TestType>::epsilon() * 100;
+
+    static_assert(scaled[0] == 15.0);
+    static_assert(scaled[1] == 95.0);
+
+    const auto scaledX = Catch::Approx(15.0).epsilon(epsilon);
+    const auto scaledY = Catch::Approx(95.0).epsilon(epsilon);
+
+    REQUIRE(scaled[0] == scaledX);
+    REQUIRE(scaled[1] == scaledY);
 }
