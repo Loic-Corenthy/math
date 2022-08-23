@@ -33,8 +33,8 @@ TEMPLATE_LIST_TEST_CASE("Accessor operator", "[algebra][vector][dim2][operator]"
     static_assert(vec[0] == x);
     static_assert(vec[1] == y);
 
-    Catch::Approx targetX = Catch::Approx(x).epsilon(std::numeric_limits<TestType>::epsilon() * 100);
-    Catch::Approx targetY = Catch::Approx(y).epsilon(std::numeric_limits<TestType>::epsilon() * 100);
+    const auto targetX = Catch::Approx(x).epsilon(std::numeric_limits<TestType>::epsilon() * 100);
+    const auto targetY = Catch::Approx(y).epsilon(std::numeric_limits<TestType>::epsilon() * 100);
     CHECK(vec[0] == targetX);
     CHECK(vec[1] == targetY);
 }
@@ -61,7 +61,7 @@ TEMPLATE_LIST_TEST_CASE("Default constructor", "[algebra][vector][dim2][construc
     static_assert(vec[0] == zero);
     static_assert(vec[1] == zero);
 
-    Catch::Approx target = Catch::Approx(0).epsilon(std::numeric_limits<TestType>::epsilon() * 100);
+    const auto target = Catch::Approx(0).epsilon(std::numeric_limits<TestType>::epsilon() * 100);
     CHECK(vec[0] == target);
     CHECK(vec[1] == target);
 }
@@ -90,8 +90,8 @@ TEMPLATE_LIST_TEST_CASE("Constructor with parameters", "[algebra][vector][dim2][
     static_assert(vec[0] == x);
     static_assert(vec[1] == y);
 
-    Catch::Approx targetX = Catch::Approx(x).epsilon(std::numeric_limits<TestType>::epsilon() * 100);
-    Catch::Approx targetY = Catch::Approx(y).epsilon(std::numeric_limits<TestType>::epsilon() * 100);
+    const auto targetX = Catch::Approx(x).epsilon(std::numeric_limits<TestType>::epsilon() * 100);
+    const auto targetY = Catch::Approx(y).epsilon(std::numeric_limits<TestType>::epsilon() * 100);
     CHECK(vec[0] == targetX);
     CHECK(vec[1] == targetY);
 }
@@ -120,8 +120,8 @@ TEMPLATE_LIST_TEST_CASE("Constructor with initializer list", "[algebra][vector][
     static_assert(vec[0] == x);
     static_assert(vec[1] == y);
 
-    Catch::Approx targetX = Catch::Approx(x).epsilon(std::numeric_limits<TestType>::epsilon() * 100);
-    Catch::Approx targetY = Catch::Approx(y).epsilon(std::numeric_limits<TestType>::epsilon() * 100);
+    const auto targetX = Catch::Approx(x).epsilon(std::numeric_limits<TestType>::epsilon() * 100);
+    const auto targetY = Catch::Approx(y).epsilon(std::numeric_limits<TestType>::epsilon() * 100);
     CHECK(vec[0] == targetX);
     CHECK(vec[1] == targetY);
 }
@@ -398,10 +398,10 @@ TEMPLATE_LIST_TEST_CASE("Scalar division operator", "[algebra][vector][dim2][ope
 
 TEMPLATE_LIST_TEST_CASE("Plus equal operator", "[algebra][vector][dim2][operator]", IntegerTypes)
 {
-    TestType x1 = 776;
-    TestType y1 = 145;
-    TestType x2 = 4;
-    TestType y2 = -146;
+    const TestType x1 = 776;
+    const TestType y1 = 145;
+    const TestType x2 = 4;
+    const TestType y2 = -146;
 
     Vector<TestType, 2> vec1(x1, y1);
     Vector<TestType, 2> vec2(x2, y2);
@@ -413,10 +413,10 @@ TEMPLATE_LIST_TEST_CASE("Plus equal operator", "[algebra][vector][dim2][operator
 
 TEMPLATE_LIST_TEST_CASE("Plus equal operator", "[algebra][vector][dim2][operator]", FloatingTypes)
 {
-    TestType x1 = 18.643;
-    TestType y1 = -288.349;
-    TestType x2 = 23.767;
-    TestType y2 = 5500.1763;
+    const TestType x1 = 18.643;
+    const TestType y1 = -288.349;
+    const TestType x2 = 23.767;
+    const TestType y2 = 5500.1763;
 
     Vector<TestType, 2> vec1(x1, y1);
     Vector<TestType, 2> vec2(x2, y2);
@@ -433,10 +433,10 @@ TEMPLATE_LIST_TEST_CASE("Plus equal operator", "[algebra][vector][dim2][operator
 
 TEMPLATE_LIST_TEST_CASE("Minus equal operator", "[algebra][vector][dim2][operator]", IntegerTypes)
 {
-    TestType x1 = 776;
-    TestType y1 = 145;
-    TestType x2 = 4;
-    TestType y2 = -146;
+    const TestType x1 = 776;
+    const TestType y1 = 145;
+    const TestType x2 = 4;
+    const TestType y2 = -146;
 
     Vector<TestType, 2> vec1(x1, y1);
     Vector<TestType, 2> vec2(x2, y2);
@@ -448,10 +448,10 @@ TEMPLATE_LIST_TEST_CASE("Minus equal operator", "[algebra][vector][dim2][operato
 
 TEMPLATE_LIST_TEST_CASE("Minus equal operator", "[algebra][vector][dim2][operator]", FloatingTypes)
 {
-    TestType x1 = 23.325;
-    TestType y1 = -288.349;
-    TestType x2 = 20.665;
-    TestType y2 = 5500.1763;
+    const TestType x1 = 23.325;
+    const TestType y1 = -288.349;
+    const TestType x2 = 20.665;
+    const TestType y2 = 5500.1763;
 
     Vector<TestType, 2> vec1(x1, y1);
     Vector<TestType, 2> vec2(x2, y2);
@@ -468,9 +468,9 @@ TEMPLATE_LIST_TEST_CASE("Minus equal operator", "[algebra][vector][dim2][operato
 
 TEMPLATE_LIST_TEST_CASE("Times equal operator", "[algebra][vector][dim2][operator]", IntegerTypes)
 {
-    TestType x      = 15;
-    TestType y      = 97;
-    TestType scalar = 3;
+    const TestType x      = 15;
+    const TestType y      = 97;
+    const TestType scalar = 3;
 
     Vector<TestType, 2> vec(x, y);
     vec *= scalar;
@@ -481,14 +481,14 @@ TEMPLATE_LIST_TEST_CASE("Times equal operator", "[algebra][vector][dim2][operato
 
 TEMPLATE_LIST_TEST_CASE("Times equal operator", "[algebra][vector][dim2][operator]", FloatingTypes)
 {
-    TestType x      = 1.5;
-    TestType y      = 9.5;
-    TestType scalar = 31.22;
+    const TestType x      = 1.5;
+    const TestType y      = 9.5;
+    const TestType scalar = 31.22;
 
     Vector<TestType, 2> vec(x, y);
     vec *= scalar;
 
-    auto epsilon = std::numeric_limits<TestType>::epsilon() * 100;
+    const auto epsilon = std::numeric_limits<TestType>::epsilon() * 100;
 
     const auto scaledX = Catch::Approx(46.83).epsilon(epsilon);
     const auto scaledY = Catch::Approx(296.59).epsilon(epsilon);
@@ -499,15 +499,15 @@ TEMPLATE_LIST_TEST_CASE("Times equal operator", "[algebra][vector][dim2][operato
 
 TEMPLATE_LIST_TEST_CASE("Divide equal operator", "[algebra][vector][dim2][operator]", IntegerTypes)
 {
-    TestType x = 15;
-    TestType y = 99;
+    const TestType x = 15;
+    const TestType y = 99;
 
     Vector<TestType, 2> vec(x, y);
 
-    TestType zero = 0;
+    const TestType zero = 0;
     CHECK_THROWS(vec / zero);
 
-    TestType scalar = 3;
+    const TestType scalar = 3;
     vec /= scalar;
 
     CHECK(vec[0] == 5);
@@ -516,22 +516,151 @@ TEMPLATE_LIST_TEST_CASE("Divide equal operator", "[algebra][vector][dim2][operat
 
 TEMPLATE_LIST_TEST_CASE("Divide equal operator", "[algebra][vector][dim2][operator]", FloatingTypes)
 {
-    TestType x = 1.5;
-    TestType y = 9.5;
+    const TestType x = 1.5;
+    const TestType y = 9.5;
 
     Vector<TestType, 2> vec(x, y);
 
-    TestType zero = 0.0;
+    const TestType zero = 0.0;
     CHECK_THROWS(vec / zero);
 
-    TestType scalar = 0.1;
+    const TestType scalar = 0.1;
     vec /= scalar;
 
-    auto epsilon = std::numeric_limits<TestType>::epsilon() * 100;
+    const auto epsilon = std::numeric_limits<TestType>::epsilon() * 100;
 
     const auto scaledX = Catch::Approx(15.0).epsilon(epsilon);
     const auto scaledY = Catch::Approx(95).epsilon(epsilon);
 
     CHECK(vec[0] == scaledX);
     CHECK(vec[1] == scaledY);
+}
+
+TEMPLATE_LIST_TEST_CASE("Accessors", "[algebra][vector][dim2][accessor]", IntegerTypes)
+{
+    constexpr TestType x1 = 684;
+    constexpr TestType y1 = -1;
+
+    constexpr Vector<TestType, 2> vec1(x1, y1);
+
+    static_assert(vec1.x() == x1);
+    static_assert(vec1.y() == y1);
+
+    CHECK(vec1.x() == x1);
+    CHECK(vec1.y() == y1);
+
+    const TestType x2 = -321;
+    const TestType y2 = -199;
+
+    Vector<TestType, 2> vec2;
+    vec2.x() = x2;
+    vec2.y() = y2;
+
+    CHECK(vec2.x() == x2);
+    CHECK(vec2.y() == y2);
+}
+
+TEMPLATE_LIST_TEST_CASE("Accessors", "[algebra][vector][dim2][accessor]", FloatingTypes)
+{
+    constexpr TestType x1 = 248.7;
+    constexpr TestType y1 = -1000.0;
+
+    constexpr Vector<TestType, 2> vec1(x1, y1);
+
+    constexpr auto epsilon = std::numeric_limits<TestType>::epsilon() * 100;
+
+    static_assert(std::abs(vec1.x() - x1) < epsilon);
+    static_assert(std::abs(vec1.y() - y1) < epsilon);
+
+    const auto approxX = Catch::Approx(x1).epsilon(epsilon);
+    const auto approxY = Catch::Approx(y1).epsilon(epsilon);
+
+    CHECK(vec1.x() == approxX);
+    CHECK(vec1.y() == approxY);
+
+    const TestType x2 = -77.986;
+    const TestType y2 = -765.239;
+
+    Vector<TestType, 2> vec2;
+    vec2.x() = x2;
+    vec2.y() = y2;
+
+    CHECK(vec2.x() == x2);
+    CHECK(vec2.y() == y2);
+}
+
+TEMPLATE_LIST_TEST_CASE("Square length", "[algebra][vector][dim2][accessor]", IntegerTypes)
+{
+    constexpr TestType x = 3;
+    constexpr TestType y = 4;
+
+    constexpr Vector<TestType, 2> vec(x, y);
+
+    static_assert(vec.sqrLength() == 25);
+
+    CHECK(vec.sqrLength() == 25);
+}
+
+TEMPLATE_LIST_TEST_CASE("Square length", "[algebra][vector][dim2][accessor]", FloatingTypes)
+{
+    constexpr TestType x = 69.0;
+    constexpr TestType y = 260.0;
+
+    constexpr Vector<TestType, 2> vec(x, y);
+
+    constexpr auto epsilon = std::numeric_limits<TestType>::epsilon() * 100;
+
+    static_assert(std::abs(vec.sqrLength() - 72361.0) < epsilon);
+
+    const auto approxSqrLength = Catch::Approx(72361.0).epsilon(epsilon);
+
+    CHECK(vec.sqrLength() == approxSqrLength);
+}
+
+TEMPLATE_LIST_TEST_CASE("Length", "[algebra][vector][dim2][accessor]", IntegerTypes)
+{
+    const TestType x = 3;
+    const TestType y = 4;
+
+    const Vector<TestType, 2> vec(x, y);
+
+    CHECK(vec.length() == 5);
+}
+
+TEMPLATE_LIST_TEST_CASE("Length", "[algebra][vector][dim2][accessor]", FloatingTypes)
+{
+    const TestType x = 69.0;
+    const TestType y = 260.0;
+
+    const Vector<TestType, 2> vec(x, y);
+
+    const auto approxLength = Catch::Approx(269.0).epsilon(std::numeric_limits<TestType>::epsilon() * 100);
+
+    CHECK(vec.length() == approxLength);
+}
+
+TEMPLATE_LIST_TEST_CASE("Normalize", "[algebra][vector][dim2][accessor]", FloatingTypes)
+{
+    const TestType x = 69.0;
+    const TestType y = 260.0;
+
+    Vector<TestType, 2> vec(x, y);
+    vec.normalize();
+
+    const auto one = Catch::Approx(1.0).epsilon(std::numeric_limits<TestType>::epsilon() * 100);
+
+    CHECK(vec.length() == one);
+}
+
+TEMPLATE_LIST_TEST_CASE("Normalized", "[algebra][vector][dim2][accessor]", FloatingTypes)
+{
+    const TestType x = -69.0;
+    const TestType y = -260.0;
+
+    const Vector<TestType, 2> vec(x, y);
+    const Vector<TestType, 2> normalized = vec.normalized();
+
+    const auto one = Catch::Approx(1.0).epsilon(std::numeric_limits<TestType>::epsilon() * 100);
+
+    CHECK(normalized.length() == one);
 }
