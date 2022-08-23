@@ -62,7 +62,7 @@ namespace LCNS::Algebra
          * @param index is the index of the coordinate to access
          * @return a reference to the corresponding coordinate
          */
-        constexpr coordinate& operator[](unsigned int index);
+        coordinate& operator[](unsigned int index);
 
         /*!
          * \brief Comparision operator
@@ -158,7 +158,7 @@ namespace LCNS::Algebra
          * \brief Get the first coordinate (read/write)
          * @return the value of the first coordinate
          */
-        constexpr coordinate& x() noexcept;
+        coordinate& x() noexcept;
 
         /*!
          * \brief Get the second coordinate (read only)
@@ -170,7 +170,7 @@ namespace LCNS::Algebra
          * \brief Get the second coordinate (read/write)
          * @return the value of the second coordinate
          */
-        constexpr coordinate& y() noexcept requires(size > 1);
+        coordinate& y() noexcept requires(size > 1);
 
         /*!
          * \brief Get the third coordinate (read only)
@@ -182,7 +182,7 @@ namespace LCNS::Algebra
          * \brief Get the third coordinate (read/write)
          * @return the value of the third coordinate
          */
-        constexpr coordinate& z() noexcept requires(size > 2);
+        coordinate& z() noexcept requires(size > 2);
 
         /*!
          * \brief Get the fourth coordinate (read only)
@@ -194,7 +194,7 @@ namespace LCNS::Algebra
          * \brief Get the fourth coordinate (read/write)
          * @return the value of the fourth coordinate
          */
-        constexpr coordinate& w() noexcept requires(size > 3);
+        coordinate& w() noexcept requires(size > 3);
 
         /*!
          * \brief Compute the square length of the vector
@@ -211,14 +211,14 @@ namespace LCNS::Algebra
         /*!
          * \brief Normalize this vector
          */
-        void normalize();
+        void normalize() requires(std::is_floating_point_v<coordinate>);
 
         /*!
          * \brief Create a new vector which corresponds to the normalized version of this vector.
          *        Does not modify this object.
          * @return a vector of length 1 with the same direction
          */
-        Vector<coordinate, size> normalized() const;
+        Vector<coordinate, size> normalized() const requires(std::is_floating_point_v<coordinate>);
 
     private:
         std::array<coordinate, size> _coords = {};
@@ -275,7 +275,7 @@ namespace LCNS::Algebra
     }
 
     template <Coordinate coordinate, unsigned int size>
-    constexpr coordinate& Vector<coordinate, size>::operator[](unsigned int index)
+    coordinate& Vector<coordinate, size>::operator[](unsigned int index)
     {
         return _coords[index];
     }
@@ -299,7 +299,7 @@ namespace LCNS::Algebra
 
         for (unsigned int i = 0; i < size; ++i)
         {
-            result[i] += rhs[i];
+            result._coords[i] += rhs._coords[i];
         }
 
         return result;
@@ -312,7 +312,7 @@ namespace LCNS::Algebra
 
         for (unsigned int i = 0; i < size; ++i)
         {
-            result[i] -= rhs[i];
+            result._coords[i] -= rhs._coords[i];
         }
 
         return result;
@@ -379,7 +379,7 @@ namespace LCNS::Algebra
     {
         for (unsigned int i = 0; i < size; ++i)
         {
-            _coords[i] += rhs[i];
+            _coords[i] += rhs._coords[i];
         }
 
         return *this;
@@ -390,7 +390,7 @@ namespace LCNS::Algebra
     {
         for (unsigned int i = 0; i < size; ++i)
         {
-            _coords[i] -= rhs[i];
+            _coords[i] -= rhs._coords[i];
         }
 
         return *this;
@@ -434,7 +434,7 @@ namespace LCNS::Algebra
     }
 
     template <Coordinate coordinate, unsigned int size>
-    constexpr coordinate& Vector<coordinate, size>::x() noexcept
+    coordinate& Vector<coordinate, size>::x() noexcept
     {
         return _coords[0];
     }
@@ -446,7 +446,7 @@ namespace LCNS::Algebra
     }
 
     template <Coordinate coordinate, unsigned int size>
-    constexpr coordinate& Vector<coordinate, size>::y() noexcept requires(size > 1)
+    coordinate& Vector<coordinate, size>::y() noexcept requires(size > 1)
     {
         return _coords[1];
     }
@@ -458,7 +458,7 @@ namespace LCNS::Algebra
     }
 
     template <Coordinate coordinate, unsigned int size>
-    constexpr coordinate& Vector<coordinate, size>::z() noexcept requires(size > 2)
+    coordinate& Vector<coordinate, size>::z() noexcept requires(size > 2)
     {
         return _coords[2];
     }
@@ -470,7 +470,7 @@ namespace LCNS::Algebra
     }
 
     template <Coordinate coordinate, unsigned int size>
-    constexpr coordinate& Vector<coordinate, size>::w() noexcept requires(size > 3)
+    coordinate& Vector<coordinate, size>::w() noexcept requires(size > 3)
     {
         return _coords[3];
     }
@@ -495,7 +495,7 @@ namespace LCNS::Algebra
     }
 
     template <Coordinate coordinate, unsigned int size>
-    void Vector<coordinate, size>::normalize()
+    void Vector<coordinate, size>::normalize() requires(std::is_floating_point_v<coordinate>)
     {
         const auto len = length();
 
@@ -509,7 +509,7 @@ namespace LCNS::Algebra
     }
 
     template <Coordinate coordinate, unsigned int size>
-    Vector<coordinate, size> Vector<coordinate, size>::normalized() const
+    Vector<coordinate, size> Vector<coordinate, size>::normalized() const requires(std::is_floating_point_v<coordinate>)
     {
         Vector<coordinate, size> result(*this);
 
