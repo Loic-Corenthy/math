@@ -403,7 +403,7 @@ namespace LCNS::Algebra
 
         for (auto& coord : _coords)
         {
-            coord /= scalar;
+            coord *= scalar;
         }
 
         return *this;
