@@ -125,7 +125,7 @@ namespace LCNS::Algebra
          * @param rhs is the vector to add to this one
          * @return a reference on this object after the operation
          */
-        constexpr Vector<coordinate, size>& operator+=(const Vector<coordinate, size>& rhs) noexcept;
+        Vector<coordinate, size>& operator+=(const Vector<coordinate, size>& rhs) noexcept;
 
         /*!
          * \brief Substraction operator. Do not modify this object.
@@ -139,14 +139,14 @@ namespace LCNS::Algebra
          * @param scalar is the value that will multiply all the coordinates
          * @return a reference on this object after the operation
          */
-        constexpr Vector<coordinate, size>& operator*=(auto scalar) noexcept;
+        Vector<coordinate, size>& operator*=(auto scalar) noexcept;
 
         /*!
          * \brief Division by a scalar operator
          * @param scalar is the value from which all the coordinates will be divided
          * @return a reference on this object after the operation
          */
-        constexpr Vector<coordinate, size>& operator/=(auto scalar);
+        Vector<coordinate, size>& operator/=(auto scalar);
 
         /*!
          * \brief Get the first coordinate (read only)
@@ -375,7 +375,7 @@ namespace LCNS::Algebra
     }
 
     template <Coordinate coordinate, unsigned int size>
-    constexpr Vector<coordinate, size>& Vector<coordinate, size>::operator+=(const Vector<coordinate, size>& rhs) noexcept
+    Vector<coordinate, size>& Vector<coordinate, size>::operator+=(const Vector<coordinate, size>& rhs) noexcept
     {
         for (unsigned int i = 0; i < size; ++i)
         {
@@ -397,7 +397,7 @@ namespace LCNS::Algebra
     }
 
     template <Coordinate coordinate, unsigned int size>
-    constexpr Vector<coordinate, size>& Vector<coordinate, size>::operator*=(auto scalar) noexcept
+    Vector<coordinate, size>& Vector<coordinate, size>::operator*=(auto scalar) noexcept
     {
         static_assert(std::is_same_v<decltype(scalar), coordinate>);
 
@@ -410,7 +410,7 @@ namespace LCNS::Algebra
     }
 
     template <Coordinate coordinate, unsigned int size>
-    constexpr Vector<coordinate, size>& Vector<coordinate, size>::operator/=(auto scalar)
+    Vector<coordinate, size>& Vector<coordinate, size>::operator/=(auto scalar)
     {
         static_assert(std::is_same_v<decltype(scalar), coordinate>);
 
