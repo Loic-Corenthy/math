@@ -61,7 +61,7 @@ TEMPLATE_LIST_TEST_CASE("Default constructor", "[algebra][vector][dim2][construc
     static_assert(vec[0] == zero);
     static_assert(vec[1] == zero);
 
-    const auto target = Catch::Approx(0).epsilon(std::numeric_limits<TestType>::epsilon() * 100);
+    const auto target = Catch::Approx(zero).epsilon(std::numeric_limits<TestType>::epsilon() * 100);
     CHECK(vec[0] == target);
     CHECK(vec[1] == target);
 }
@@ -389,7 +389,7 @@ TEMPLATE_LIST_TEST_CASE("Scalar division operator", "[algebra][vector][dim2][ope
 
     constexpr auto epsilon = std::numeric_limits<TestType>::epsilon() * 100;
 
-    const auto scaledX = Catch::Approx(-17).epsilon(epsilon);
+    const auto scaledX = Catch::Approx(-17.0).epsilon(epsilon);
     const auto scaledY = Catch::Approx(31.0).epsilon(epsilon);
 
     CHECK(scaled[0] == scaledX);
@@ -567,16 +567,11 @@ TEMPLATE_LIST_TEST_CASE("Accessors", "[algebra][vector][dim2][accessor]", Floati
 
     constexpr Vector<TestType, 2> vec1(x1, y1);
 
-    constexpr auto epsilon = std::numeric_limits<TestType>::epsilon() * 100;
+    static_assert(vec1.x() == x1);
+    static_assert(vec1.y() == y1);
 
-    static_assert(std::abs(vec1.x() - x1) < epsilon);
-    static_assert(std::abs(vec1.y() - y1) < epsilon);
-
-    const auto approxX = Catch::Approx(x1).epsilon(epsilon);
-    const auto approxY = Catch::Approx(y1).epsilon(epsilon);
-
-    CHECK(vec1.x() == approxX);
-    CHECK(vec1.y() == approxY);
+    CHECK(vec1.x() == x1);
+    CHECK(vec1.y() == y1);
 
     const TestType x2 = -77.986;
     const TestType y2 = -765.239;
