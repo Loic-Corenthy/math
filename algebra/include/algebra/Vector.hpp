@@ -100,7 +100,7 @@ namespace LCNS::Algebra
         constexpr coordinate operator*(const Vector<coordinate, size>& rhs) const noexcept;
 
         /*!
-         * \brief Crooss product. Does not modify this object.
+         * \brief Cross product. Does not modify this object.
          * @param rhs must be a vector of 3 dimensions
          * @return a vector perpendicular to both this and rhs.
          */
@@ -334,9 +334,9 @@ namespace LCNS::Algebra
     template <Coordinate coordinate, unsigned int size>
     constexpr Vector<coordinate, size> Vector<coordinate, size>::operator^(const Vector<coordinate, size>& rhs) const noexcept requires(size == 3)
     {
-        return { _coords[1] * rhs._coords[2] - _coords[2] * rhs._coords[1],
-                 _coords[2] * rhs._coords[0] - _coords[0] * rhs._coords[2],
-                 _coords[0] * rhs._coords[1] - _coords[1] * rhs._coords[0] };
+        return { static_cast<coordinate>(_coords[1] * rhs._coords[2] - _coords[2] * rhs._coords[1]),
+                 static_cast<coordinate>(_coords[2] * rhs._coords[0] - _coords[0] * rhs._coords[2]),
+                 static_cast<coordinate>(_coords[0] * rhs._coords[1] - _coords[1] * rhs._coords[0]) };
     }
 
     template <Coordinate coordinate, unsigned int size>
