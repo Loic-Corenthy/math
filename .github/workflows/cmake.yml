@@ -33,8 +33,28 @@ jobs:
         # Build your program with the given configuration
         run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
-      - name: Test
-        working-directory: ${{github.workspace}}/build
+      - name: Upload build directory to artefact
+        uses: actions/upload-artifact@v3
+        with:
+          name: build_directory
+          path: ${{github.workspace}}/build/
+
+  tests:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Download build directory
+        uses: actions/download-artifact@v3
+        with:
+          name: build_directory
+          path: build
+
+      - name: Update mode for test executable
+        run: chmod +x ./build/algebra/tests/testVector
+
+      - name: Test algebra module
+        working-directory: build
         # Execute tests defined by the CMake configuration.
         # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
         run: ctest -C ${{env.BUILD_TYPE}} --output-on-failure --test-dir algebra/tests
