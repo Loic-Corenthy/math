@@ -39,7 +39,9 @@ namespace LCNS::Algebra
          * @param y is the y coordinate
          * @param z is the z coordinate
          */
-        constexpr Vector(auto x, auto y, auto z) requires(size == 3);
+        constexpr Vector(auto x,
+                auto y,
+                         auto z) requires(size == 3);
 
         /*!
          * \brief Specific constructor for 4D vectors
