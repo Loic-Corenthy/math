@@ -33,10 +33,8 @@ TEMPLATE_LIST_TEST_CASE("Accessor operator", "[algebra][vector][dim2][operator]"
     static_assert(vec[0] == x);
     static_assert(vec[1] == y);
 
-    const auto targetX = Catch::Approx(x).epsilon(std::numeric_limits<TestType>::epsilon() * 100);
-    const auto targetY = Catch::Approx(y).epsilon(std::numeric_limits<TestType>::epsilon() * 100);
-    CHECK(vec[0] == targetX);
-    CHECK(vec[1] == targetY);
+    CHECK(vec[0] == x);
+    CHECK(vec[1] == y);
 }
 
 TEMPLATE_LIST_TEST_CASE("Default constructor", "[algebra][vector][dim2][constructor]", IntegerTypes)
@@ -61,9 +59,8 @@ TEMPLATE_LIST_TEST_CASE("Default constructor", "[algebra][vector][dim2][construc
     static_assert(vec[0] == zero);
     static_assert(vec[1] == zero);
 
-    const auto target = Catch::Approx(zero).epsilon(std::numeric_limits<TestType>::epsilon() * 100);
-    CHECK(vec[0] == target);
-    CHECK(vec[1] == target);
+    CHECK(vec[0] == zero);
+    CHECK(vec[1] == zero);
 }
 
 TEMPLATE_LIST_TEST_CASE("Constructor with parameters", "[algebra][vector][dim2][constructor]", IntegerTypes)
@@ -90,10 +87,8 @@ TEMPLATE_LIST_TEST_CASE("Constructor with parameters", "[algebra][vector][dim2][
     static_assert(vec[0] == x);
     static_assert(vec[1] == y);
 
-    const auto targetX = Catch::Approx(x).epsilon(std::numeric_limits<TestType>::epsilon() * 100);
-    const auto targetY = Catch::Approx(y).epsilon(std::numeric_limits<TestType>::epsilon() * 100);
-    CHECK(vec[0] == targetX);
-    CHECK(vec[1] == targetY);
+    CHECK(vec[0] == x);
+    CHECK(vec[1] == y);
 }
 
 TEMPLATE_LIST_TEST_CASE("Constructor with initializer list", "[algebra][vector][dim2][constructor]", IntegerTypes)
@@ -120,10 +115,8 @@ TEMPLATE_LIST_TEST_CASE("Constructor with initializer list", "[algebra][vector][
     static_assert(vec[0] == x);
     static_assert(vec[1] == y);
 
-    const auto targetX = Catch::Approx(x).epsilon(std::numeric_limits<TestType>::epsilon() * 100);
-    const auto targetY = Catch::Approx(y).epsilon(std::numeric_limits<TestType>::epsilon() * 100);
-    CHECK(vec[0] == targetX);
-    CHECK(vec[1] == targetY);
+    CHECK(vec[0] == x);
+    CHECK(vec[1] == y);
 }
 
 TEMPLATE_LIST_TEST_CASE("Comparison operator", "[algebra][vector][dim2][operator]", IntegerTypes)
