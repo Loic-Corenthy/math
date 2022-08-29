@@ -33,7 +33,6 @@ jobs:
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VALIDATE_CLANG_FORMAT: true
 
   build:
     # The CMake configure and build commands are platform agnostic and should work equally
