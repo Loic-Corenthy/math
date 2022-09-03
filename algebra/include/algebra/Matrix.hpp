@@ -52,6 +52,27 @@ namespace LCNS::Algebra
          */
         constexpr bool operator==(const Matrix<coordinate, rows, cols>& rhs) const;
 
+        /*!
+         * \brief Addition operator. Do not modify this object.
+         * @param rhs is the matrix to add to this one
+         * @return a matrix corresponding to the addition: this + rhs
+         */
+        constexpr Matrix<coordinate, rows, cols> operator+(const Matrix<coordinate, rows, cols>& rhs) const;
+
+        /*!
+         * \brief Substraction operator. Do not modify this object.
+         * @param rhs is the matrix to substract from this one
+         * @return a matrix corresponding to the substraction: this - rhs
+         */
+        constexpr Matrix<coordinate, rows, cols> operator-(const Matrix<coordinate, rows, cols>& rhs) const;
+
+        /*!
+         * \brief Multiplication by a matrix operator. Do not modify this object.
+         * @param rhs is the right hand side of the multiplication
+         * @return a matrix corresponding to the multiplication: this * rhs
+         */
+        constexpr Matrix<coordinate, rows, cols> operator*(const Matrix<coordinate, rows, cols>& rhs) const;
+
     private:
         /*!
          * \brief Unnamed helper function to get the 1D equalent of i and j
@@ -63,6 +84,9 @@ namespace LCNS::Algebra
 
     private:
         std::array<coordinate, rows* cols> _coeff = {};
+
+        unsigned int _rows = rows;
+        unsigned int _cols = cols;
 
     };  // class Matrix
 
@@ -79,6 +103,11 @@ namespace LCNS::Algebra
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>
     constexpr Matrix<coordinate, rows, cols>::Matrix(const std::initializer_list<coordinate>& coeffs)
     {
+        if (coeffs.size() > _coeff.size())
+        {
+            throw std::out_of_range("Too many coefficients in the initializer list for this size of matrix");
+        }
+
         unsigned int i = 0;
         for (auto it = coeffs.begin(); it < coeffs.end(); it++)
         {
@@ -89,12 +118,22 @@ namespace LCNS::Algebra
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>
     coordinate& Matrix<coordinate, rows, cols>::operator()(unsigned int i, unsigned int j)
     {
+        if (rows <= i || cols <= j)
+        {
+            throw std::out_of_range("Index out of range to access matrix coefficient");
+        }
+
         return _coeff[_(i, j)];
     }
 
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>
     constexpr coordinate Matrix<coordinate, rows, cols>::operator()(unsigned int i, unsigned int j) const
     {
+        if (rows <= i || cols <= j)
+        {
+            throw std::out_of_range("Index out of range to access matrix coefficient");
+        }
+
         return _coeff[_(i, j)];
     }
 
@@ -102,6 +141,60 @@ namespace LCNS::Algebra
     constexpr bool Matrix<coordinate, rows, cols>::operator==(const Matrix<coordinate, rows, cols>& rhs) const
     {
         return _coeff == rhs._coeff;
+    }
+
+    template <Coordinate coordinate, unsigned int rows, unsigned int cols>
+    constexpr Matrix<coordinate, rows, cols> Matrix<coordinate, rows, cols>::operator+(const Matrix<coordinate, rows, cols>& rhs) const
+    {
+        if (_rows != rhs._rows || _cols != rhs._cols)
+        {
+            throw std::runtime_error("Addition requires matrices of equal dimentions");
+        }
+
+        auto result = *this;
+
+        for (unsigned int i = 0; i < rows * cols; ++i)
+        {
+            result._coeff[i] += rhs._coeff[i];
+        }
+
+        return result;
+    }
+
+    template <Coordinate coordinate, unsigned int rows, unsigned int cols>
+    constexpr Matrix<coordinate, rows, cols> Matrix<coordinate, rows, cols>::operator-(const Matrix<coordinate, rows, cols>& rhs) const
+    {
+        if (_rows != rhs._rows || _cols != rhs._cols)
+        {
+            throw std::runtime_error("substraction requires matrices of equal dimentions");
+        }
+
+        auto result = *this;
+
+        for (unsigned int i = 0; i < rows * cols; ++i)
+        {
+            result._coeff[i] -= rhs._coeff[i];
+        }
+
+        return result;
+    }
+
+    template <Coordinate coordinate, unsigned int rows, unsigned int cols>
+    constexpr Matrix<coordinate, rows, cols> Matrix<coordinate, rows, cols>::operator*(const Matrix<coordinate, rows, cols>& rhs) const
+    {
+        if (_cols != rhs._rows)
+        {
+            throw std::runtime_error("Multiplication requires the number of column of this matrix to match the number of rows of rhs");
+        }
+
+        Matrix<coordinate, rows, cols> result;
+
+        for (size_t i = 0; i < rows; ++i)
+            for (size_t j = 0; j < cols; ++j)
+                for (size_t k = 0; k < cols; ++k)
+                    result._coeff[_(i, j)] += _coeff[_(i, k)] * rhs._coeff[_(k, j)];
+
+        return result;
     }
 
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>

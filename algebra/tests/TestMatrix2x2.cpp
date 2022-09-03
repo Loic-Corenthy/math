@@ -1,9 +1,13 @@
 #include "algebra/Matrix.hpp"
 
+#include "Helper.hpp"
+
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_template_test_macros.hpp>
 #include <catch2/catch_approx.hpp>
 
+using LCNS::compileTimeEpsilon;
+using LCNS::runTimeEpsilon;
 using LCNS::Algebra::Matrix;
 
 using IntegerTypes  = std::tuple<short, int, long>;
@@ -307,4 +311,136 @@ TEMPLATE_LIST_TEST_CASE("Comparision operator", "[algebra][matrix][dim2][operato
 
     CHECK(mat == identical);
     CHECK(mat != different);
+}
+
+TEMPLATE_LIST_TEST_CASE("Addition operator", "[algebra][matrix][dim2][operator]", IntegerTypes)
+{
+    constexpr TestType mat1_00 = 666, mat1_01 = 10, mat1_10 = 113, mat1_11 = -347;
+    constexpr TestType mat2_00 = -16, mat2_01 = 31, mat2_10 = -98, mat2_11 = -300;
+
+    constexpr Matrix<TestType, 2, 2> mat1 = { mat1_00, mat1_01, mat1_10, mat1_11 };
+    constexpr Matrix<TestType, 2, 2> mat2 = { mat2_00, mat2_01, mat2_10, mat2_11 };
+    constexpr Matrix<TestType, 2, 2> sum  = mat1 + mat2;
+
+    static_assert(sum(0, 0) == 650);
+    static_assert(sum(0, 1) == 41);
+    static_assert(sum(1, 0) == 15);
+    static_assert(sum(1, 1) == -647);
+
+    CHECK(sum(0, 0) == 650);
+    CHECK(sum(0, 1) == 41);
+    CHECK(sum(1, 0) == 15);
+    CHECK(sum(1, 1) == -647);
+}
+
+TEMPLATE_LIST_TEST_CASE("Addition operator", "[algebra][matrix][dim2][operator]", FloatingTypes)
+{
+    constexpr TestType mat1_00 = -8.2, mat1_01 = 5864.1, mat1_10 = -77.12, mat1_11 = -3.5;
+    constexpr TestType mat2_00 = 10.0, mat2_01 = 249.56, mat2_10 = -91.91, mat2_11 = 3.52;
+
+    constexpr Matrix<TestType, 2, 2> mat1 = { mat1_00, mat1_01, mat1_10, mat1_11 };
+    constexpr Matrix<TestType, 2, 2> mat2 = { mat2_00, mat2_01, mat2_10, mat2_11 };
+    constexpr Matrix<TestType, 2, 2> sum  = mat1 + mat2;
+
+    constexpr auto cte = compileTimeEpsilon<TestType>();
+
+    static_assert(std::abs(sum(0, 0) - 1.8) < cte);
+    static_assert(std::abs(sum(0, 1) - 6113.66) < cte);
+    static_assert(std::abs(sum(1, 0) - -169.03) < cte);
+    static_assert(std::abs(sum(1, 1) - 0.02) < cte);
+
+    const auto rte = runTimeEpsilon<TestType>();
+
+    CHECK(sum(0, 0) == Catch::Approx(1.8).epsilon(rte));
+    CHECK(sum(0, 1) == Catch::Approx(6113.66).epsilon(rte));
+    CHECK(sum(1, 0) == Catch::Approx(-169.03).epsilon(rte));
+    CHECK(sum(1, 1) == Catch::Approx(0.02).epsilon(rte));
+}
+
+TEMPLATE_LIST_TEST_CASE("Substraction operator", "[algebra][matrix][dim2][operator]", IntegerTypes)
+{
+    constexpr TestType mat1_00 = 321, mat1_01 = 654, mat1_10 = 987, mat1_11 = -741;
+    constexpr TestType mat2_00 = -54, mat2_01 = 111, mat2_10 = -98, mat2_11 = -900;
+
+    constexpr Matrix<TestType, 2, 2> mat1 = { mat1_00, mat1_01, mat1_10, mat1_11 };
+    constexpr Matrix<TestType, 2, 2> mat2 = { mat2_00, mat2_01, mat2_10, mat2_11 };
+    constexpr Matrix<TestType, 2, 2> diff = mat1 - mat2;
+
+    static_assert(diff(0, 0) == 375);
+    static_assert(diff(0, 1) == 543);
+    static_assert(diff(1, 0) == 1085);
+    static_assert(diff(1, 1) == 159);
+
+    CHECK(diff(0, 0) == 375);
+    CHECK(diff(0, 1) == 543);
+    CHECK(diff(1, 0) == 1085);
+    CHECK(diff(1, 1) == 159);
+}
+
+TEMPLATE_LIST_TEST_CASE("Substraction operator", "[algebra][matrix][dim2][operator]", FloatingTypes)
+{
+    constexpr TestType mat1_00 = -11.990, mat1_01 = 584.137, mat1_10 = -77.12, mat1_11 = 853.08;
+    constexpr TestType mat2_00 = -100.01, mat2_01 = -249.56, mat2_10 = -99.99, mat2_11 = 642.80;
+
+    constexpr Matrix<TestType, 2, 2> mat1 = { mat1_00, mat1_01, mat1_10, mat1_11 };
+    constexpr Matrix<TestType, 2, 2> mat2 = { mat2_00, mat2_01, mat2_10, mat2_11 };
+    constexpr Matrix<TestType, 2, 2> diff = mat1 - mat2;
+
+    constexpr auto cte = compileTimeEpsilon<TestType>();
+
+    static_assert(std::abs(diff(0, 0) - 88.02) < cte);
+    static_assert(std::abs(diff(0, 1) - 833.697) < cte);
+    static_assert(std::abs(diff(1, 0) - 22.87) < cte);
+    static_assert(std::abs(diff(1, 1) - 210.28) < cte);
+
+    const auto rte = runTimeEpsilon<TestType>();
+
+    CHECK(diff(0, 0) == Catch::Approx(88.02).epsilon(rte));
+    CHECK(diff(0, 1) == Catch::Approx(833.697).epsilon(rte));
+    CHECK(diff(1, 0) == Catch::Approx(22.87).epsilon(rte));
+    CHECK(diff(1, 1) == Catch::Approx(210.28).epsilon(rte));
+}
+
+TEMPLATE_LIST_TEST_CASE("Multiplication operator", "[algebra][matrix][dim2][operator]", IntegerTypes)
+{
+    constexpr TestType mat1_00 = 3, mat1_01 = 5, mat1_10 = -9, mat1_11 = 0;
+    constexpr TestType mat2_00 = 5, mat2_01 = 7, mat2_10 = 12, mat2_11 = 1;
+
+    constexpr Matrix<TestType, 2, 2> mat1 = { mat1_00, mat1_01, mat1_10, mat1_11 };
+    constexpr Matrix<TestType, 2, 2> mat2 = { mat2_00, mat2_01, mat2_10, mat2_11 };
+    constexpr Matrix<TestType, 2, 2> mul  = mat1 * mat2;
+
+    static_assert(mul(0, 0) == 75);
+    static_assert(mul(0, 1) == 26);
+    static_assert(mul(1, 0) == -45);
+    static_assert(mul(1, 1) == -63);
+
+    CHECK(mul(0, 0) == 75);
+    CHECK(mul(0, 1) == 26);
+    CHECK(mul(1, 0) == -45);
+    CHECK(mul(1, 1) == -63);
+}
+
+TEMPLATE_LIST_TEST_CASE("Multiplication operator", "[algebra][matrix][dim2][operator]", FloatingTypes)
+{
+    constexpr TestType mat1_00 = 0.16, mat1_01 = 12.2, mat1_10 = 3.33, mat1_11 = 0.5;
+    constexpr TestType mat2_00 = -0.8, mat2_01 = -2.5, mat2_10 = -0.1, mat2_11 = 0.2;
+
+    constexpr Matrix<TestType, 2, 2> mat1 = { mat1_00, mat1_01, mat1_10, mat1_11 };
+    constexpr Matrix<TestType, 2, 2> mat2 = { mat2_00, mat2_01, mat2_10, mat2_11 };
+    constexpr Matrix<TestType, 2, 2> mul  = mat1 * mat2;
+
+    constexpr auto cte = compileTimeEpsilon<TestType>();
+
+    static_assert(std::abs(mul(0, 0) - -1.348) < cte);
+    static_assert(std::abs(mul(0, 1) - 2.04) < cte);
+    static_assert(std::abs(mul(1, 0) - -2.714) < cte);
+    static_assert(std::abs(mul(1, 1) - -8.225) < cte);
+
+    const auto rte = runTimeEpsilon<TestType>();
+
+    CHECK(mul(0, 0) == Catch::Approx(-1.348).epsilon(rte));
+    CHECK(mul(0, 1) == Catch::Approx(2.04).epsilon(rte));
+    CHECK(mul(1, 0) == Catch::Approx(-2.714).epsilon(rte));
+    CHECK(mul(1, 1) == Catch::Approx(-8.225).epsilon(rte));
 }

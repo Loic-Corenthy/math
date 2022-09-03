@@ -13,6 +13,7 @@ add_executable(testMatrix)
 
 target_sources(testMatrix
                PRIVATE
+               "Helper.hpp"
                "TestMatrix2x2.cpp"
             #    "TestVector3.cpp"
             #    "TestVector4.cpp"
