@@ -21,7 +21,7 @@ namespace LCNS::Algebra
          * \brief Constructor with scalar parameter.
          * @param scalar is the scalar value that will be set to the diagonal coefficients
          */
-        constexpr Matrix(const auto scalar);
+        constexpr Matrix(auto scalar);
 
         /*!
          * \brief Constructor with initializer list parameter.
@@ -45,6 +45,13 @@ namespace LCNS::Algebra
          */
         constexpr coordinate operator()(unsigned int i, unsigned int j) const;
 
+        /*!
+         * \brief Comparision operator
+         * @param rhs is the matrix to compare coefficients from
+         * @return true if all coordinates of this matrix and rhs are equal
+         */
+        constexpr bool operator==(const Matrix<coordinate, rows, cols>& rhs) const;
+
     private:
         /*!
          * \brief Unnamed helper function to get the 1D equalent of i and j
@@ -60,7 +67,7 @@ namespace LCNS::Algebra
     };  // class Matrix
 
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>
-    constexpr Matrix<coordinate, rows, cols>::Matrix(const auto scalar)
+    constexpr Matrix<coordinate, rows, cols>::Matrix(auto scalar)
     {
         static_assert(std::is_same_v<decltype(scalar), coordinate>);
 
@@ -89,6 +96,12 @@ namespace LCNS::Algebra
     constexpr coordinate Matrix<coordinate, rows, cols>::operator()(unsigned int i, unsigned int j) const
     {
         return _coeff[_(i, j)];
+    }
+
+    template <Coordinate coordinate, unsigned int rows, unsigned int cols>
+    constexpr bool Matrix<coordinate, rows, cols>::operator==(const Matrix<coordinate, rows, cols>& rhs) const
+    {
+        return _coeff == rhs._coeff;
     }
 
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>
