@@ -21,7 +21,7 @@ namespace LCNS::Algebra
          * \brief Constructor with scalar parameter.
          * @param scalar is the scalar value that will be set to the diagonal coefficients
          */
-        constexpr Matrix(auto scalar);
+        constexpr explicit Matrix(auto scalar);
 
         /*!
          * \brief Constructor with initializer list parameter.
@@ -66,13 +66,6 @@ namespace LCNS::Algebra
          */
         constexpr Matrix<coordinate, rows, cols> operator-(const Matrix<coordinate, rows, cols>& rhs) const;
 
-        /*!
-         * \brief Multiplication by a matrix operator. Do not modify this object.
-         * @param rhs is the right hand side of the multiplication
-         * @return a matrix corresponding to the multiplication: this * rhs
-         */
-        constexpr Matrix<coordinate, rows, cols> operator*(const Matrix<coordinate, rows, cols>& rhs) const;
-
     private:
         /*!
          * \brief Unnamed helper function to get the 1D equalent of i and j
@@ -95,8 +88,10 @@ namespace LCNS::Algebra
     {
         static_assert(std::is_same_v<decltype(scalar), coordinate>);
 
-        for (unsigned int i = 0; i < rows; ++i)
-            for (unsigned int j = 0; j < cols; ++j)
+        const auto diag = std::min(_rows, _cols);
+
+        for (unsigned int i = 0; i < diag; ++i)
+            for (unsigned int j = 0; j < diag; ++j)
                 _coeff[_(i, j)] = (i == j) ? scalar : static_cast<coordinate>(0);
     }
 
@@ -180,26 +175,27 @@ namespace LCNS::Algebra
     }
 
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>
-    constexpr Matrix<coordinate, rows, cols> Matrix<coordinate, rows, cols>::operator*(const Matrix<coordinate, rows, cols>& rhs) const
+    inline constexpr unsigned int Matrix<coordinate, rows, cols>::_(unsigned int i, unsigned int j) const
     {
-        if (_cols != rhs._rows)
+        return i * cols + j;
+    }
+
+    template <Coordinate coordinate, unsigned int rows_lhs, unsigned int cols_lhs, unsigned int rows_rhs, unsigned int cols_rhs>
+    constexpr Matrix<coordinate, rows_rhs, cols_lhs> operator*(const Matrix<coordinate, rows_lhs, cols_lhs>& lhs,
+                                                               const Matrix<coordinate, rows_rhs, cols_rhs>& rhs)
+    {
+        if (cols_lhs != rows_rhs)
         {
             throw std::runtime_error("Multiplication requires the number of column of this matrix to match the number of rows of rhs");
         }
 
-        Matrix<coordinate, rows, cols> result;
+        Matrix<coordinate, rows_rhs, cols_lhs> result;
 
-        for (size_t i = 0; i < rows; ++i)
-            for (size_t j = 0; j < cols; ++j)
-                for (size_t k = 0; k < cols; ++k)
-                    result._coeff[_(i, j)] += _coeff[_(i, k)] * rhs._coeff[_(k, j)];
+        for (size_t i = 0; i < rows_rhs; ++i)
+            for (size_t j = 0; j < cols_lhs; ++j)
+                for (size_t k = 0; k < cols_lhs; ++k)
+                    result(i, j) += lhs(i, k) * rhs(k, j);
 
         return result;
-    }
-
-    template <Coordinate coordinate, unsigned int rows, unsigned int cols>
-    inline constexpr unsigned int Matrix<coordinate, rows, cols>::_(unsigned int i, unsigned int j) const
-    {
-        return i * cols + j;
     }
 }  // namespace LCNS::Algebra

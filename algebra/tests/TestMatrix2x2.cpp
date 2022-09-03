@@ -42,6 +42,9 @@ TEMPLATE_LIST_TEST_CASE("Accessor operator", "[algebra][matrix][dim2][operator]"
     CHECK(mat2(0, 1) == m00);
     CHECK(mat2(1, 0) == m01);
     CHECK(mat2(1, 1) == m10);
+
+    CHECK_THROWS(mat2(2, 0));
+    CHECK_THROWS(mat2(0, 2));
 }
 
 TEMPLATE_LIST_TEST_CASE("Accessor operator", "[algebra][matrix][dim2][operator]", FloatingTypes)
@@ -73,6 +76,9 @@ TEMPLATE_LIST_TEST_CASE("Accessor operator", "[algebra][matrix][dim2][operator]"
     CHECK(mat2(0, 1) == m00);
     CHECK(mat2(1, 0) == m01);
     CHECK(mat2(1, 1) == m10);
+
+    CHECK_THROWS(mat2(2, 0));
+    CHECK_THROWS(mat2(0, 2));
 }
 
 TEMPLATE_LIST_TEST_CASE("Default constructor", "[algebra][matrix][dim2][constructor]", IntegerTypes)
@@ -143,6 +149,54 @@ TEMPLATE_LIST_TEST_CASE("Constructor with diagonal coefficient", "[algebra][matr
     CHECK(mat(0, 1) == zero);
     CHECK(mat(1, 0) == zero);
     CHECK(mat(1, 1) == one);
+}
+
+TEMPLATE_LIST_TEST_CASE("Constructor with initializer list", "[algebra][matrix][dim2][constructor]", IntegerTypes)
+{
+    constexpr TestType m00 = 1;
+    constexpr TestType m01 = 4;
+    constexpr TestType m10 = 27;
+    constexpr TestType m11 = 256;
+
+    constexpr Matrix<TestType, 2, 2> mat = { m00, m01, m10, m11 };
+
+    static_assert(mat(0, 0) == m00);
+    static_assert(mat(0, 1) == m01);
+    static_assert(mat(1, 0) == m10);
+    static_assert(mat(1, 1) == m11);
+
+    CHECK(mat(0, 0) == m00);
+    CHECK(mat(0, 1) == m01);
+    CHECK(mat(1, 0) == m10);
+    CHECK(mat(1, 1) == m11);
+
+    CHECK_NOTHROW(Matrix<TestType, 2, 2>({}));
+    CHECK_NOTHROW(Matrix<TestType, 2, 2>({ m00, m01, m10 }));
+    CHECK_THROWS(Matrix<TestType, 2, 2>({ m00, m01, m10, m11, 0 }));
+}
+
+TEMPLATE_LIST_TEST_CASE("Constructor with initializer list", "[algebra][matrix][dim2][constructor]", FloatingTypes)
+{
+    constexpr TestType m00 = -18.1;
+    constexpr TestType m01 = 19.2;
+    constexpr TestType m10 = 20.3;
+    constexpr TestType m11 = -21.4;
+
+    constexpr Matrix<TestType, 2, 2> mat = { m00, m01, m10, m11 };
+
+    static_assert(mat(0, 0) == m00);
+    static_assert(mat(0, 1) == m01);
+    static_assert(mat(1, 0) == m10);
+    static_assert(mat(1, 1) == m11);
+
+    CHECK(mat(0, 0) == m00);
+    CHECK(mat(0, 1) == m01);
+    CHECK(mat(1, 0) == m10);
+    CHECK(mat(1, 1) == m11);
+
+    CHECK_NOTHROW(Matrix<TestType, 2, 2>({}));
+    CHECK_NOTHROW(Matrix<TestType, 2, 2>({ m00, m01, m10 }));
+    CHECK_THROWS(Matrix<TestType, 2, 2>({ m00, m01, m10, m11, 0 }));
 }
 
 TEMPLATE_LIST_TEST_CASE("Copy operator", "[algebra][matrix][dim2][operator]", IntegerTypes)
@@ -403,17 +457,12 @@ TEMPLATE_LIST_TEST_CASE("Substraction operator", "[algebra][matrix][dim2][operat
 
 TEMPLATE_LIST_TEST_CASE("Multiplication operator", "[algebra][matrix][dim2][operator]", IntegerTypes)
 {
-    constexpr TestType mat1_00 = 3, mat1_01 = 5, mat1_10 = -9, mat1_11 = 0;
-    constexpr TestType mat2_00 = 5, mat2_01 = 7, mat2_10 = 12, mat2_11 = 1;
+    TestType mat1_00 = 3, mat1_01 = 5, mat1_10 = -9, mat1_11 = 0;
+    TestType mat2_00 = 5, mat2_01 = 7, mat2_10 = 12, mat2_11 = 1;
 
-    constexpr Matrix<TestType, 2, 2> mat1 = { mat1_00, mat1_01, mat1_10, mat1_11 };
-    constexpr Matrix<TestType, 2, 2> mat2 = { mat2_00, mat2_01, mat2_10, mat2_11 };
-    constexpr Matrix<TestType, 2, 2> mul  = mat1 * mat2;
-
-    static_assert(mul(0, 0) == 75);
-    static_assert(mul(0, 1) == 26);
-    static_assert(mul(1, 0) == -45);
-    static_assert(mul(1, 1) == -63);
+    Matrix<TestType, 2, 2> mat1 = { mat1_00, mat1_01, mat1_10, mat1_11 };
+    Matrix<TestType, 2, 2> mat2 = { mat2_00, mat2_01, mat2_10, mat2_11 };
+    Matrix<TestType, 2, 2> mul  = mat1 * mat2;
 
     CHECK(mul(0, 0) == 75);
     CHECK(mul(0, 1) == 26);
@@ -423,19 +472,12 @@ TEMPLATE_LIST_TEST_CASE("Multiplication operator", "[algebra][matrix][dim2][oper
 
 TEMPLATE_LIST_TEST_CASE("Multiplication operator", "[algebra][matrix][dim2][operator]", FloatingTypes)
 {
-    constexpr TestType mat1_00 = 0.16, mat1_01 = 12.2, mat1_10 = 3.33, mat1_11 = 0.5;
-    constexpr TestType mat2_00 = -0.8, mat2_01 = -2.5, mat2_10 = -0.1, mat2_11 = 0.2;
+    TestType mat1_00 = 0.16, mat1_01 = 12.2, mat1_10 = 3.33, mat1_11 = 0.5;
+    TestType mat2_00 = -0.8, mat2_01 = -2.5, mat2_10 = -0.1, mat2_11 = 0.2;
 
-    constexpr Matrix<TestType, 2, 2> mat1 = { mat1_00, mat1_01, mat1_10, mat1_11 };
-    constexpr Matrix<TestType, 2, 2> mat2 = { mat2_00, mat2_01, mat2_10, mat2_11 };
-    constexpr Matrix<TestType, 2, 2> mul  = mat1 * mat2;
-
-    constexpr auto cte = compileTimeEpsilon<TestType>();
-
-    static_assert(std::abs(mul(0, 0) - -1.348) < cte);
-    static_assert(std::abs(mul(0, 1) - 2.04) < cte);
-    static_assert(std::abs(mul(1, 0) - -2.714) < cte);
-    static_assert(std::abs(mul(1, 1) - -8.225) < cte);
+    Matrix<TestType, 2, 2> mat1 = { mat1_00, mat1_01, mat1_10, mat1_11 };
+    Matrix<TestType, 2, 2> mat2 = { mat2_00, mat2_01, mat2_10, mat2_11 };
+    Matrix<TestType, 2, 2> mul  = mat1 * mat2;
 
     const auto rte = runTimeEpsilon<TestType>();
 
@@ -443,4 +485,9 @@ TEMPLATE_LIST_TEST_CASE("Multiplication operator", "[algebra][matrix][dim2][oper
     CHECK(mul(0, 1) == Catch::Approx(2.04).epsilon(rte));
     CHECK(mul(1, 0) == Catch::Approx(-2.714).epsilon(rte));
     CHECK(mul(1, 1) == Catch::Approx(-8.225).epsilon(rte));
+
+    TestType               one = 1.0;
+    Matrix<TestType, 2, 4> test(one);
+
+    auto bob = mat1 * test;
 }
