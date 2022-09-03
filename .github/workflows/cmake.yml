@@ -76,7 +76,7 @@ jobs:
           path: build
 
       - name: Update mode for test executable
-        run: chmod +x ./build/algebra/tests/testVector
+        run: chmod +x ./build/algebra/tests/testVector ./build/algebra/tests/testMatrix
 
       - name: Test algebra module
         working-directory: build
