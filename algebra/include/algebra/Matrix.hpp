@@ -35,7 +35,7 @@ namespace LCNS::Algebra
          * @param j is the index of the column where to find the coefficient to access
          * @return a reference on the corresponding coefficient
          */
-        coordinate& operator()(unsigned int i, unsigned int j);
+        constexpr coordinate& operator()(unsigned int i, unsigned int j);
 
         /*!
          * @brief Accessor (read only)
@@ -127,7 +127,7 @@ namespace LCNS::Algebra
     }
 
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>
-    coordinate& Matrix<coordinate, rows, cols>::operator()(unsigned int i, unsigned int j)
+    constexpr coordinate& Matrix<coordinate, rows, cols>::operator()(unsigned int i, unsigned int j)
     {
         if (rows <= i || cols <= j)
         {
