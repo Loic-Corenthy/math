@@ -455,14 +455,19 @@ TEMPLATE_LIST_TEST_CASE("Substraction operator", "[algebra][matrix][dim2][operat
     CHECK(diff(1, 1) == Catch::Approx(210.28).epsilon(rte));
 }
 
-TEMPLATE_LIST_TEST_CASE("Multiplication operator", "[algebra][matrix][dim2][operator]", IntegerTypes)
+TEMPLATE_LIST_TEST_CASE("Matrix multiplication operator", "[algebra][matrix][dim2][operator]", IntegerTypes)
 {
-    TestType mat1_00 = 3, mat1_01 = 5, mat1_10 = -9, mat1_11 = 0;
-    TestType mat2_00 = 5, mat2_01 = 7, mat2_10 = 12, mat2_11 = 1;
+    constexpr TestType mat1_00 = 3, mat1_01 = 5, mat1_10 = -9, mat1_11 = 0;
+    constexpr TestType mat2_00 = 5, mat2_01 = 7, mat2_10 = 12, mat2_11 = 1;
 
-    Matrix<TestType, 2, 2> mat1 = { mat1_00, mat1_01, mat1_10, mat1_11 };
-    Matrix<TestType, 2, 2> mat2 = { mat2_00, mat2_01, mat2_10, mat2_11 };
-    Matrix<TestType, 2, 2> mul  = mat1 * mat2;
+    constexpr Matrix<TestType, 2, 2> mat1 = { mat1_00, mat1_01, mat1_10, mat1_11 };
+    constexpr Matrix<TestType, 2, 2> mat2 = { mat2_00, mat2_01, mat2_10, mat2_11 };
+    constexpr Matrix<TestType, 2, 2> mul  = mat1 * mat2;
+
+    static_assert(mul(0, 0) == 75);
+    static_assert(mul(0, 1) == 26);
+    static_assert(mul(1, 0) == -45);
+    static_assert(mul(1, 1) == -63);
 
     CHECK(mul(0, 0) == 75);
     CHECK(mul(0, 1) == 26);
@@ -470,14 +475,21 @@ TEMPLATE_LIST_TEST_CASE("Multiplication operator", "[algebra][matrix][dim2][oper
     CHECK(mul(1, 1) == -63);
 }
 
-TEMPLATE_LIST_TEST_CASE("Multiplication operator", "[algebra][matrix][dim2][operator]", FloatingTypes)
+TEMPLATE_LIST_TEST_CASE("Matrix Multiplication operator", "[algebra][matrix][dim2][operator]", FloatingTypes)
 {
-    TestType mat1_00 = 0.16, mat1_01 = 12.2, mat1_10 = 3.33, mat1_11 = 0.5;
-    TestType mat2_00 = -0.8, mat2_01 = -2.5, mat2_10 = -0.1, mat2_11 = 0.2;
+    constexpr TestType mat1_00 = 0.16, mat1_01 = 12.2, mat1_10 = 3.33, mat1_11 = 0.5;
+    constexpr TestType mat2_00 = -0.8, mat2_01 = -2.5, mat2_10 = -0.1, mat2_11 = 0.2;
 
-    Matrix<TestType, 2, 2> mat1 = { mat1_00, mat1_01, mat1_10, mat1_11 };
-    Matrix<TestType, 2, 2> mat2 = { mat2_00, mat2_01, mat2_10, mat2_11 };
-    Matrix<TestType, 2, 2> mul  = mat1 * mat2;
+    constexpr Matrix<TestType, 2, 2> mat1 = { mat1_00, mat1_01, mat1_10, mat1_11 };
+    constexpr Matrix<TestType, 2, 2> mat2 = { mat2_00, mat2_01, mat2_10, mat2_11 };
+    constexpr Matrix<TestType, 2, 2> mul  = mat1 * mat2;
+
+    constexpr auto cte = compileTimeEpsilon<TestType>();
+
+    static_assert(std::abs(mul(0, 0) - -1.348) < cte);
+    static_assert(std::abs(mul(0, 1) - 2.04) < cte);
+    static_assert(std::abs(mul(1, 0) - -2.714) < cte);
+    static_assert(std::abs(mul(1, 1) - -8.225) < cte);
 
     const auto rte = runTimeEpsilon<TestType>();
 
@@ -485,9 +497,70 @@ TEMPLATE_LIST_TEST_CASE("Multiplication operator", "[algebra][matrix][dim2][oper
     CHECK(mul(0, 1) == Catch::Approx(2.04).epsilon(rte));
     CHECK(mul(1, 0) == Catch::Approx(-2.714).epsilon(rte));
     CHECK(mul(1, 1) == Catch::Approx(-8.225).epsilon(rte));
+}
 
-    TestType               one = 1.0;
-    Matrix<TestType, 2, 4> test(one);
+TEMPLATE_LIST_TEST_CASE("Scalar multiplication operator", "[algebra][matrix][dim2][operator]", IntegerTypes)
+{
+    constexpr TestType mat_00 = 8, mat_01 = 9, mat_10 = 2022, mat_11 = 10;
+    constexpr TestType scalar = 2;
 
-    auto bob = mat1 * test;
+    constexpr Matrix<TestType, 2, 2> mat = { mat_00, mat_01, mat_10, mat_11 };
+
+    constexpr Matrix<TestType, 2, 2> scaled1 = scalar * mat;
+    constexpr Matrix<TestType, 2, 2> scaled2 = mat * scalar;
+
+    static_assert(scaled1(0, 0) == 16);
+    static_assert(scaled1(0, 1) == 18);
+    static_assert(scaled1(1, 0) == 4044);
+    static_assert(scaled1(1, 1) == 20);
+
+    static_assert(scaled2(0, 0) == 16);
+    static_assert(scaled2(0, 1) == 18);
+    static_assert(scaled2(1, 0) == 4044);
+    static_assert(scaled2(1, 1) == 20);
+
+    CHECK(scaled1(0, 0) == 16);
+    CHECK(scaled1(0, 1) == 18);
+    CHECK(scaled1(1, 0) == 4044);
+    CHECK(scaled1(1, 1) == 20);
+
+    CHECK(scaled2(0, 0) == 16);
+    CHECK(scaled2(0, 1) == 18);
+    CHECK(scaled2(1, 0) == 4044);
+    CHECK(scaled2(1, 1) == 20);
+}
+
+TEMPLATE_LIST_TEST_CASE("Scalar Multiplication operator", "[algebra][matrix][dim2][operator]", FloatingTypes)
+{
+    constexpr TestType mat_00 = -77.3, mat_01 = 123.4, mat_10 = 10.01, mat_11 = -99.65;
+    constexpr TestType scalar = 17.2;
+
+    constexpr Matrix<TestType, 2, 2> mat = { mat_00, mat_01, mat_10, mat_11 };
+
+    constexpr Matrix<TestType, 2, 2> scaled1 = scalar * mat;
+    constexpr Matrix<TestType, 2, 2> scaled2 = mat * scalar;
+
+    constexpr auto cte = compileTimeEpsilon<TestType>();
+
+    static_assert(std::abs(scaled1(0, 0) - -1329.56) < cte);
+    static_assert(std::abs(scaled1(0, 1) - 2122.48) < cte);
+    static_assert(std::abs(scaled1(1, 0) - 172.172) < cte);
+    static_assert(std::abs(scaled1(1, 1) - -1713.98) < cte);
+
+    static_assert(std::abs(scaled2(0, 0) - -1329.56) < cte);
+    static_assert(std::abs(scaled2(0, 1) - 2122.48) < cte);
+    static_assert(std::abs(scaled2(1, 0) - 172.172) < cte);
+    static_assert(std::abs(scaled2(1, 1) - -1713.98) < cte);
+
+    const auto rte = runTimeEpsilon<TestType>();
+
+    CHECK(scaled1(0, 0) == Catch::Approx(-1329.56).epsilon(rte));
+    CHECK(scaled1(0, 1) == Catch::Approx(2122.48).epsilon(rte));
+    CHECK(scaled1(1, 0) == Catch::Approx(172.172).epsilon(rte));
+    CHECK(scaled1(1, 1) == Catch::Approx(-1713.98).epsilon(rte));
+
+    CHECK(scaled2(0, 0) == Catch::Approx(-1329.56).epsilon(rte));
+    CHECK(scaled2(0, 1) == Catch::Approx(2122.48).epsilon(rte));
+    CHECK(scaled2(1, 0) == Catch::Approx(172.172).epsilon(rte));
+    CHECK(scaled2(1, 1) == Catch::Approx(-1713.98).epsilon(rte));
 }

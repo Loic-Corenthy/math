@@ -94,8 +94,8 @@ namespace LCNS::Algebra
     private:
         std::array<coordinate, rows* cols> _coeff = {};
 
-        unsigned int _rows = rows;
-        unsigned int _cols = cols;
+        static constexpr unsigned int _rows = rows;
+        static constexpr unsigned int _cols = cols;
 
     };  // class Matrix
 
@@ -227,6 +227,30 @@ namespace LCNS::Algebra
         return i * cols + j;
     }
 
+    template <Coordinate coordinate, unsigned int rows, unsigned int cols>
+    constexpr Matrix<coordinate, rows, cols> operator*(const Matrix<coordinate, rows, cols>& lhs, const coordinate rhs)
+    {
+        Matrix<coordinate, rows, cols> result;
+
+        for (size_t i = 0; i < rows; ++i)
+            for (size_t j = 0; j < cols; ++j)
+                result(i, j) = lhs(i, j) * rhs;
+
+        return result;
+    }
+
+    template <Coordinate coordinate, unsigned int rows, unsigned int cols>
+    constexpr Matrix<coordinate, rows, cols> operator*(const coordinate lhs, const Matrix<coordinate, rows, cols>& rhs)
+    {
+        Matrix<coordinate, rows, cols> result;
+
+        for (size_t i = 0; i < rows; ++i)
+            for (size_t j = 0; j < cols; ++j)
+                result(i, j) = lhs * rhs(i, j);
+
+        return result;
+    }
+
     template <Coordinate coordinate, unsigned int rows_lhs, unsigned int cols_lhs, unsigned int rows_rhs, unsigned int cols_rhs>
     constexpr Matrix<coordinate, rows_rhs, cols_lhs> operator*(const Matrix<coordinate, rows_lhs, cols_lhs>& lhs,
                                                                const Matrix<coordinate, rows_rhs, cols_rhs>& rhs)
@@ -247,35 +271,11 @@ namespace LCNS::Algebra
     }
 
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>
-    constexpr Matrix<coordinate, rows, cols> operator*(Matrix<coordinate, rows, cols>& lhs, auto rhs)
-    {
-        static_assert(std::is_same_v<decltype(rhs), coordinate>);
-
-        for (size_t i = 0; i < rows; ++i)
-            for (size_t j = 0; j < cols; ++j)
-                lhs(i, j) *= rhs;
-
-        return lhs;
-    }
-
-    template <Coordinate coordinate, unsigned int rows, unsigned int cols>
-    constexpr Matrix<coordinate, rows, cols> operator*(auto lhs, Matrix<coordinate, rows, cols>& rhs)
-    {
-        static_assert(std::is_same_v<decltype(lhs), coordinate>);
-
-        for (size_t i = 0; i < rows; ++i)
-            for (size_t j = 0; j < cols; ++j)
-                rhs(i, j) *= lhs;
-
-        return rhs;
-    }
-
-    template <Coordinate coordinate, unsigned int rows, unsigned int cols>
     constexpr Matrix<coordinate, rows, cols> operator/(Matrix<coordinate, rows, cols>& lhs, auto rhs)
     {
         static_assert(std::is_same_v<decltype(rhs), coordinate>);
 
-        if (scalar == static_cast<coordinate>(0))
+        if (rhs == static_cast<coordinate>(0))
         {
             throw std::runtime_error("Divide by zero");
         }
