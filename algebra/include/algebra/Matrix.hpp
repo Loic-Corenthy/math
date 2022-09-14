@@ -82,6 +82,12 @@ namespace LCNS::Algebra
 
         /*! Other operations are achieved using an external operator, see below */
 
+        /*!
+         * @brief Compute the determinant of this matrix. Only works for square matrices of size 1,2,3 or 4
+         * @return the determinant of this matrix.
+         */
+        constexpr coordinate det() const requires(rows == cols && (0 < rows && rows < 5));
+
     private:
         /*!
          * @brief Unnamed helper function to get the 1D equalent of i and j
@@ -219,6 +225,35 @@ namespace LCNS::Algebra
         }
 
         return *this;
+    }
+
+    template <Coordinate coordinate, unsigned int rows, unsigned int cols>
+    constexpr coordinate Matrix<coordinate, rows, cols>::det() const requires(rows == cols && (0 < rows && rows < 5))
+    {
+        // clang-format off
+        if constexpr (rows == 1)
+        {
+            return _coeff[0];
+        }
+        else if constexpr (rows == 2)
+        {
+            return _coeff[0] * _coeff[3] - _coeff[1] * _coeff[2];
+        }
+        else if constexpr (rows == 3)
+        {
+            return   _coeff[0] * _coeff[4] * _coeff[8] + _coeff[1] * _coeff[5] * _coeff[6] + _coeff[2] * _coeff[3] * _coeff[7]
+                   - _coeff[2] * _coeff[4] * _coeff[6] - _coeff[1] * _coeff[3] * _coeff[8] - _coeff[0] * _coeff[5] * _coeff[7];
+        }
+        else if constexpr (rows == 4)
+        {
+            return  ( _coeff[ 3] * _coeff[ 6] * _coeff[ 9] * _coeff[12] - _coeff[ 2] * _coeff[ 7] * _coeff[ 9] * _coeff[12] - _coeff[ 3] * _coeff[ 5] * _coeff[10] * _coeff[12] + _coeff[ 1] * _coeff[ 7] * _coeff[10] * _coeff[12]
+                    + _coeff[ 2] * _coeff[ 5] * _coeff[11] * _coeff[12] - _coeff[ 1] * _coeff[ 6] * _coeff[11] * _coeff[12] - _coeff[ 3] * _coeff[ 6] * _coeff[ 8] * _coeff[13] + _coeff[ 2] * _coeff[ 7] * _coeff[ 8] * _coeff[13]
+                    + _coeff[ 3] * _coeff[ 4] * _coeff[10] * _coeff[13] - _coeff[ 0] * _coeff[ 7] * _coeff[10] * _coeff[13] - _coeff[ 2] * _coeff[ 4] * _coeff[11] * _coeff[13] + _coeff[ 0] * _coeff[ 6] * _coeff[11] * _coeff[13]
+                    + _coeff[ 3] * _coeff[ 5] * _coeff[ 8] * _coeff[14] - _coeff[ 1] * _coeff[ 7] * _coeff[ 8] * _coeff[14] - _coeff[ 3] * _coeff[ 4] * _coeff[ 9] * _coeff[14] + _coeff[ 0] * _coeff[ 7] * _coeff[ 9] * _coeff[14]
+                    + _coeff[ 1] * _coeff[ 4] * _coeff[11] * _coeff[14] - _coeff[ 0] * _coeff[ 5] * _coeff[11] * _coeff[14] - _coeff[ 2] * _coeff[ 5] * _coeff[ 8] * _coeff[15] + _coeff[ 1] * _coeff[ 6] * _coeff[ 8] * _coeff[15]
+                    + _coeff[ 2] * _coeff[ 4] * _coeff[ 9] * _coeff[15] - _coeff[ 0] * _coeff[ 6] * _coeff[ 9] * _coeff[15] - _coeff[ 1] * _coeff[ 4] * _coeff[10] * _coeff[15] + _coeff[ 0] * _coeff[ 5] * _coeff[10] * _coeff[15]);
+        }
+        // clang-format on
     }
 
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>
