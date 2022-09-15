@@ -5,6 +5,8 @@
 #include <cmath>
 #include <array>
 #include <stdexcept>
+#include <ostream>
+#include <iomanip>
 
 namespace LCNS::Algebra
 {
@@ -83,6 +85,18 @@ namespace LCNS::Algebra
         /*! Other operations are achieved using an external operator, see below */
 
         /*!
+         * @brief Transpose this matrix
+         * @return a reference on this object after the operation
+         */
+        constexpr Matrix<coordinate, rows, cols>& transpose();
+
+        /*!
+         * @brief Create a matrix that is the transpose of this
+         * @return a new matrix
+         */
+        constexpr Matrix<coordinate, cols, rows> transposed() const;
+
+        /*!
          * @brief Compute the determinant of this matrix. Only works for square matrices of size 1,2,3 or 4
          * @return the determinant of this matrix.
          */
@@ -100,8 +114,8 @@ namespace LCNS::Algebra
     private:
         std::array<coordinate, rows* cols> _coeff = {};
 
-        static constexpr unsigned int _rows = rows;
-        static constexpr unsigned int _cols = cols;
+        unsigned int _rows = rows;
+        unsigned int _cols = cols;
 
     };  // class Matrix
 
@@ -228,6 +242,23 @@ namespace LCNS::Algebra
     }
 
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>
+    constexpr Matrix<coordinate, rows, cols>& Matrix<coordinate, rows, cols>::transpose()
+    {
+        std::swap(_rows, _cols);
+
+        for (unsigned int i = 0; i < rows; ++i)
+            for (unsigned int j = i + 1; j < cols; ++j)
+                std::swap(_coeff[_(i, j)], _coeff[_(j, i)]);
+
+        return *this;
+    }
+
+    template <Coordinate coordinate, unsigned int rows, unsigned int cols>
+    constexpr Matrix<coordinate, cols, rows> Matrix<coordinate, rows, cols>::transposed() const
+    {
+    }
+
+    template <Coordinate coordinate, unsigned int rows, unsigned int cols>
     constexpr coordinate Matrix<coordinate, rows, cols>::det() const requires(rows == cols && (0 < rows && rows < 5))
     {
         // clang-format off
@@ -322,4 +353,19 @@ namespace LCNS::Algebra
         return lhs;
     }
 
+    template <Coordinate coordinate, unsigned int rows, unsigned int cols>
+    std::ostream& operator<<(std::ostream& os, const Matrix<coordinate, rows, cols>& m)
+    {
+        for (size_t i = 0; i < rows; ++i)
+        {
+            for (size_t j = 0; j < cols; ++j)
+            {
+                os << std::setw(sizeof(coordinate)) << m(i, j) << " ";
+            }
+
+            os << '\n';
+        }
+
+        return os;
+    }
 }  // namespace LCNS::Algebra

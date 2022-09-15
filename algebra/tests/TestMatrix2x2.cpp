@@ -564,3 +564,50 @@ TEMPLATE_LIST_TEST_CASE("Scalar Multiplication operator", "[algebra][matrix][dim
     CHECK(scaled2(1, 0) == Catch::Approx(172.172).epsilon(rte));
     CHECK(scaled2(1, 1) == Catch::Approx(-1713.98).epsilon(rte));
 }
+
+TEMPLATE_LIST_TEST_CASE("Determinant", "[algebra][matrix][dim2][method]", IntegerTypes)
+{
+    constexpr TestType mat1_00 = 3, mat1_01 = 7, mat1_10 = -2, mat1_11 = 13;
+    constexpr TestType mat2_00 = 1, mat2_01 = 2, mat2_10 = -5, mat2_11 = -10;
+    constexpr TestType one = 1;
+
+    constexpr Matrix<TestType, 2, 2> mat1 = { mat1_00, mat1_01, mat1_10, mat1_11 };
+    constexpr Matrix<TestType, 2, 2> mat2 = { mat2_00, mat2_01, mat2_10, mat2_11 };
+    constexpr Matrix<TestType, 2, 2> mat3(one);
+
+    constexpr TestType det1 = mat1.det();
+    constexpr TestType det2 = mat2.det();
+    constexpr TestType det3 = mat3.det();
+
+    static_assert(det1 == 53);
+    static_assert(det2 == 0);
+    static_assert(det3 == 1);
+
+    CHECK(det1 == 53);
+    CHECK(det2 == 0);
+    CHECK(det3 == 1);
+}
+
+TEMPLATE_LIST_TEST_CASE("Determinant", "[algebra][matrix][dim2][method]", FloatingTypes)
+{
+    constexpr TestType mat1_00 = 0.16, mat1_01 = 12.2, mat1_10 = 3.33, mat1_11 = 0.5;
+    constexpr TestType mat2_00 = -0.8, mat2_01 = -2.5, mat2_10 = -0.1, mat2_11 = 0.2;
+
+    constexpr Matrix<TestType, 2, 2> mat1 = { mat1_00, mat1_01, mat1_10, mat1_11 };
+    constexpr Matrix<TestType, 2, 2> mat2 = { mat2_00, mat2_01, mat2_10, mat2_11 };
+    constexpr Matrix<TestType, 2, 2> mul  = mat1 * mat2;
+
+    constexpr auto cte = compileTimeEpsilon<TestType>();
+
+    static_assert(std::abs(mul(0, 0) - -1.348) < cte);
+    static_assert(std::abs(mul(0, 1) - 2.04) < cte);
+    static_assert(std::abs(mul(1, 0) - -2.714) < cte);
+    static_assert(std::abs(mul(1, 1) - -8.225) < cte);
+
+    const auto rte = runTimeEpsilon<TestType>();
+
+    CHECK(mul(0, 0) == Catch::Approx(-1.348).epsilon(rte));
+    CHECK(mul(0, 1) == Catch::Approx(2.04).epsilon(rte));
+    CHECK(mul(1, 0) == Catch::Approx(-2.714).epsilon(rte));
+    CHECK(mul(1, 1) == Catch::Approx(-8.225).epsilon(rte));
+}
