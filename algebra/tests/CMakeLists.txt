@@ -16,7 +16,7 @@ target_sources(testMatrix
                "Helper.hpp"
                "TestMatrix2x2.cpp"
             #    "TestVector3.cpp"
-            #    "TestVector4.cpp"
+               "TestMatrix4x4.cpp"
 )
 
 target_link_libraries(testMatrix PRIVATE lcns::algebra Catch2::Catch2WithMain)
