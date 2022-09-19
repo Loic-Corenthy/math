@@ -575,9 +575,9 @@ TEMPLATE_LIST_TEST_CASE("Determinant", "[algebra][matrix][dim2][method]", Intege
     constexpr Matrix<TestType, 2, 2> mat2 = { mat2_00, mat2_01, mat2_10, mat2_11 };
     constexpr Matrix<TestType, 2, 2> mat3(one);
 
-    constexpr TestType det1 = mat1.det();
-    constexpr TestType det2 = mat2.det();
-    constexpr TestType det3 = mat3.det();
+    constexpr TestType det1 = mat1.determinant();
+    constexpr TestType det2 = mat2.determinant();
+    constexpr TestType det3 = mat3.determinant();
 
     static_assert(det1 == 53);
     static_assert(det2 == 0);
@@ -590,24 +590,27 @@ TEMPLATE_LIST_TEST_CASE("Determinant", "[algebra][matrix][dim2][method]", Intege
 
 TEMPLATE_LIST_TEST_CASE("Determinant", "[algebra][matrix][dim2][method]", FloatingTypes)
 {
-    constexpr TestType mat1_00 = 0.16, mat1_01 = 12.2, mat1_10 = 3.33, mat1_11 = 0.5;
-    constexpr TestType mat2_00 = -0.8, mat2_01 = -2.5, mat2_10 = -0.1, mat2_11 = 0.2;
+    constexpr TestType mat1_00 = 2.18, mat1_01 = -9.3, mat1_10 = -5.55, mat1_11 = -0.5;
+    constexpr TestType mat2_00 = 4.2, mat2_01 = 10.5, mat2_10 = 0.1, mat2_11 = 0.25;
+    constexpr TestType one = 1.0;
 
     constexpr Matrix<TestType, 2, 2> mat1 = { mat1_00, mat1_01, mat1_10, mat1_11 };
     constexpr Matrix<TestType, 2, 2> mat2 = { mat2_00, mat2_01, mat2_10, mat2_11 };
-    constexpr Matrix<TestType, 2, 2> mul  = mat1 * mat2;
+    constexpr Matrix<TestType, 2, 2> mat3(one);
+
+    constexpr TestType det1 = mat1.determinant();
+    constexpr TestType det2 = mat2.determinant();
+    constexpr TestType det3 = mat3.determinant();
 
     constexpr auto cte = compileTimeEpsilon<TestType>();
 
-    static_assert(std::abs(mul(0, 0) - -1.348) < cte);
-    static_assert(std::abs(mul(0, 1) - 2.04) < cte);
-    static_assert(std::abs(mul(1, 0) - -2.714) < cte);
-    static_assert(std::abs(mul(1, 1) - -8.225) < cte);
+    static_assert(std::abs(det1 - -52.705) < cte);
+    static_assert(std::abs(det2 - 0.0) < cte);
+    static_assert(std::abs(det3 - 1.0) < cte);
 
     const auto rte = runTimeEpsilon<TestType>();
 
-    CHECK(mul(0, 0) == Catch::Approx(-1.348).epsilon(rte));
-    CHECK(mul(0, 1) == Catch::Approx(2.04).epsilon(rte));
-    CHECK(mul(1, 0) == Catch::Approx(-2.714).epsilon(rte));
-    CHECK(mul(1, 1) == Catch::Approx(-8.225).epsilon(rte));
+    CHECK(std::abs(det1 - -52.705) < rte);
+    CHECK(std::abs(det2 - 0.0) < rte);
+    CHECK(std::abs(det3 - 1.0) < rte);
 }

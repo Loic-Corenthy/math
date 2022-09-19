@@ -3,10 +3,12 @@
 #include "algebra/Internal.hpp"
 
 #include <cmath>
+#include <cstring>
 #include <array>
 #include <stdexcept>
 #include <ostream>
 #include <iomanip>
+#include <tuple>
 
 namespace LCNS::Algebra
 {
@@ -85,22 +87,45 @@ namespace LCNS::Algebra
         /*! Other operations are achieved using an external operator, see below */
 
         /*!
-         * @brief Transpose this matrix
-         * @return a reference on this object after the operation
+         * @brief Get the matrix dimentions
+         * @return a tuple with the row and column counts. To be used as `const auto [rows, cols] = matrix.dimensions();`
          */
-        constexpr Matrix<coordinate, rows, cols>& transpose();
+        constexpr std::tuple<unsigned int, unsigned int> dimensions() const;
 
         /*!
-         * @brief Create a matrix that is the transpose of this
+         * @brief Get a pointer to the internal coefficients (read/write)
+         * @return a pointer to the first element of _coeff
+         */
+        coordinate* data();
+
+        /*!
+         * @brief Get a pointer to the internal coefficients (read only)
+         * @return a pointer to the first element of _coeff
+         */
+        coordinate* data() const;
+
+        /*!
+         * @brief Transpose this matrix if it's a square matrix
+         * @return a reference on this object after the operation
+         */
+        Matrix<coordinate, rows, cols>& transpose() requires(rows == cols);
+
+        /*!
+         * @brief Create a matrix that is the transpose of this, also works for rectangular matrices
          * @return a new matrix
          */
-        constexpr Matrix<coordinate, cols, rows> transposed() const;
+        Matrix<coordinate, cols, rows> transposed() const;
 
         /*!
          * @brief Compute the determinant of this matrix. Only works for square matrices of size 1,2,3 or 4
          * @return the determinant of this matrix.
          */
-        constexpr coordinate det() const requires(rows == cols && (0 < rows && rows < 5));
+        constexpr coordinate determinant() const requires(rows == cols && (0 < rows && rows < 5));
+
+
+        constexpr Matrix<coordinate, rows, cols>& inverse() requires(rows == cols && (0 < rows && rows < 5));
+
+        constexpr Matrix<coordinate, rows, cols> inversed() requires(rows == cols && (0 < rows && rows < 5));
 
     private:
         /*!
@@ -160,7 +185,7 @@ namespace LCNS::Algebra
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>
     constexpr coordinate Matrix<coordinate, rows, cols>::operator()(unsigned int i, unsigned int j) const
     {
-        if (rows <= i || cols <= j)
+        if (_rows <= i || _cols <= j)
         {
             throw std::out_of_range("Index out of range to access matrix coefficient");
         }
@@ -242,55 +267,104 @@ namespace LCNS::Algebra
     }
 
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>
-    constexpr Matrix<coordinate, rows, cols>& Matrix<coordinate, rows, cols>::transpose()
+    constexpr std::tuple<unsigned int, unsigned int> Matrix<coordinate, rows, cols>::dimensions() const
     {
-        std::swap(_rows, _cols);
+        return std::make_tuple(_rows, _cols);
+    }
 
-        for (unsigned int i = 0; i < rows; ++i)
-            for (unsigned int j = i + 1; j < cols; ++j)
+    template <Coordinate coordinate, unsigned int rows, unsigned int cols>
+    coordinate* Matrix<coordinate, rows, cols>::data()
+    {
+        return _coeff.data();
+    }
+
+    template <Coordinate coordinate, unsigned int rows, unsigned int cols>
+    coordinate* Matrix<coordinate, rows, cols>::data() const
+    {
+        return _coeff.data();
+    }
+
+    template <Coordinate coordinate, unsigned int rows, unsigned int cols>
+    Matrix<coordinate, rows, cols>& Matrix<coordinate, rows, cols>::transpose() requires(rows == cols)
+    {
+        for (unsigned int i = 0; i < _rows; ++i)
+            for (unsigned int j = i + 1; j < _cols; ++j)
                 std::swap(_coeff[_(i, j)], _coeff[_(j, i)]);
 
         return *this;
     }
 
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>
-    constexpr Matrix<coordinate, cols, rows> Matrix<coordinate, rows, cols>::transposed() const
+    Matrix<coordinate, cols, rows> Matrix<coordinate, rows, cols>::transposed() const
     {
+        Matrix<coordinate, cols, rows> result;
+
+        for (unsigned int i = 0; i < _rows; ++i)
+            for (unsigned int j = 0; j < _cols; ++j)
+                result(j, i) = _coeff[_(i, j)];
+
+        return result;
     }
 
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>
-    constexpr coordinate Matrix<coordinate, rows, cols>::det() const requires(rows == cols && (0 < rows && rows < 5))
+    constexpr coordinate Matrix<coordinate, rows, cols>::determinant() const requires(rows == cols && (0 < rows && rows < 5))
     {
-        // clang-format off
         if constexpr (rows == 1)
         {
             return _coeff[0];
         }
-        else if constexpr (rows == 2)
+
+        // clang-format off
+        if constexpr (std::is_same_v<coordinate,float>)
         {
-            return _coeff[0] * _coeff[3] - _coeff[1] * _coeff[2];
+            if constexpr (rows == 2)
+            {
+                    return static_cast<coordinate>(static_cast<double>(_coeff[0]) * static_cast<double>(_coeff[3]) - static_cast<double>(_coeff[1]) * static_cast<double>(_coeff[2]));
+            }
+            else if constexpr (rows == 3)
+            {
+                return static_cast<coordinate>(  static_cast<double>(_coeff[0]) * static_cast<double>(_coeff[4]) * static_cast<double>(_coeff[8]) + static_cast<double>(_coeff[1]) * static_cast<double>(_coeff[5]) * static_cast<double>(_coeff[6]) + static_cast<double>(_coeff[2]) * static_cast<double>(_coeff[3]) * static_cast<double>(_coeff[7])
+                                               - static_cast<double>(_coeff[2]) * static_cast<double>(_coeff[4]) * static_cast<double>(_coeff[6]) - static_cast<double>(_coeff[1]) * static_cast<double>(_coeff[3]) * static_cast<double>(_coeff[8]) - static_cast<double>(_coeff[0]) * static_cast<double>(_coeff[5]) * static_cast<double>(_coeff[7]));
+            }
+            else if constexpr (rows == 4)
+            {
+                return  static_cast<coordinate>(  static_cast<double>(_coeff[ 3]) * static_cast<double>(_coeff[ 6]) * static_cast<double>(_coeff[ 9]) * static_cast<double>(_coeff[12]) - static_cast<double>(_coeff[ 2]) * static_cast<double>(_coeff[ 7]) * static_cast<double>(_coeff[ 9]) * static_cast<double>(_coeff[12]) - static_cast<double>(_coeff[ 3]) * static_cast<double>(_coeff[ 5]) * static_cast<double>(_coeff[10]) * static_cast<double>(_coeff[12]) + static_cast<double>(_coeff[ 1]) * static_cast<double>(_coeff[ 7]) * static_cast<double>(_coeff[10]) * static_cast<double>(_coeff[12])
+                                                + static_cast<double>(_coeff[ 2]) * static_cast<double>(_coeff[ 5]) * static_cast<double>(_coeff[11]) * static_cast<double>(_coeff[12]) - static_cast<double>(_coeff[ 1]) * static_cast<double>(_coeff[ 6]) * static_cast<double>(_coeff[11]) * static_cast<double>(_coeff[12]) - static_cast<double>(_coeff[ 3]) * static_cast<double>(_coeff[ 6]) * static_cast<double>(_coeff[ 8]) * static_cast<double>(_coeff[13]) + static_cast<double>(_coeff[ 2]) * static_cast<double>(_coeff[ 7]) * static_cast<double>(_coeff[ 8]) * static_cast<double>(_coeff[13])
+                                                + static_cast<double>(_coeff[ 3]) * static_cast<double>(_coeff[ 4]) * static_cast<double>(_coeff[10]) * static_cast<double>(_coeff[13]) - static_cast<double>(_coeff[ 0]) * static_cast<double>(_coeff[ 7]) * static_cast<double>(_coeff[10]) * static_cast<double>(_coeff[13]) - static_cast<double>(_coeff[ 2]) * static_cast<double>(_coeff[ 4]) * static_cast<double>(_coeff[11]) * static_cast<double>(_coeff[13]) + static_cast<double>(_coeff[ 0]) * static_cast<double>(_coeff[ 6]) * static_cast<double>(_coeff[11]) * static_cast<double>(_coeff[13])
+                                                + static_cast<double>(_coeff[ 3]) * static_cast<double>(_coeff[ 5]) * static_cast<double>(_coeff[ 8]) * static_cast<double>(_coeff[14]) - static_cast<double>(_coeff[ 1]) * static_cast<double>(_coeff[ 7]) * static_cast<double>(_coeff[ 8]) * static_cast<double>(_coeff[14]) - static_cast<double>(_coeff[ 3]) * static_cast<double>(_coeff[ 4]) * static_cast<double>(_coeff[ 9]) * static_cast<double>(_coeff[14]) + static_cast<double>(_coeff[ 0]) * static_cast<double>(_coeff[ 7]) * static_cast<double>(_coeff[ 9]) * static_cast<double>(_coeff[14])
+                                                + static_cast<double>(_coeff[ 1]) * static_cast<double>(_coeff[ 4]) * static_cast<double>(_coeff[11]) * static_cast<double>(_coeff[14]) - static_cast<double>(_coeff[ 0]) * static_cast<double>(_coeff[ 5]) * static_cast<double>(_coeff[11]) * static_cast<double>(_coeff[14]) - static_cast<double>(_coeff[ 2]) * static_cast<double>(_coeff[ 5]) * static_cast<double>(_coeff[ 8]) * static_cast<double>(_coeff[15]) + static_cast<double>(_coeff[ 1]) * static_cast<double>(_coeff[ 6]) * static_cast<double>(_coeff[ 8]) * static_cast<double>(_coeff[15])
+                                                + static_cast<double>(_coeff[ 2]) * static_cast<double>(_coeff[ 4]) * static_cast<double>(_coeff[ 9]) * static_cast<double>(_coeff[15]) - static_cast<double>(_coeff[ 0]) * static_cast<double>(_coeff[ 6]) * static_cast<double>(_coeff[ 9]) * static_cast<double>(_coeff[15]) - static_cast<double>(_coeff[ 1]) * static_cast<double>(_coeff[ 4]) * static_cast<double>(_coeff[10]) * static_cast<double>(_coeff[15]) + static_cast<double>(_coeff[ 0]) * static_cast<double>(_coeff[ 5]) * static_cast<double>(_coeff[10]) * static_cast<double>(_coeff[15]));
+            }
         }
-        else if constexpr (rows == 3)
+        else
         {
-            return   _coeff[0] * _coeff[4] * _coeff[8] + _coeff[1] * _coeff[5] * _coeff[6] + _coeff[2] * _coeff[3] * _coeff[7]
-                   - _coeff[2] * _coeff[4] * _coeff[6] - _coeff[1] * _coeff[3] * _coeff[8] - _coeff[0] * _coeff[5] * _coeff[7];
+            if constexpr (rows == 2)
+            {
+                return _coeff[0] * _coeff[3] - _coeff[1] * _coeff[2];
+            }
+            else if constexpr (rows == 3)
+            {
+                return ( _coeff[0] * _coeff[4] * _coeff[8] + _coeff[1] * _coeff[5] * _coeff[6] + _coeff[2] * _coeff[3] * _coeff[7]
+                       - _coeff[2] * _coeff[4] * _coeff[6] - _coeff[1] * _coeff[3] * _coeff[8] - _coeff[0] * _coeff[5] * _coeff[7]);
+            }
+            else if constexpr (rows == 4)
+            {
+                return  ( _coeff[ 3] * _coeff[ 6] * _coeff[ 9] * _coeff[12] - _coeff[ 2] * _coeff[ 7] * _coeff[ 9] * _coeff[12] - _coeff[ 3] * _coeff[ 5] * _coeff[10] * _coeff[12] + _coeff[ 1] * _coeff[ 7] * _coeff[10] * _coeff[12]
+                        + _coeff[ 2] * _coeff[ 5] * _coeff[11] * _coeff[12] - _coeff[ 1] * _coeff[ 6] * _coeff[11] * _coeff[12] - _coeff[ 3] * _coeff[ 6] * _coeff[ 8] * _coeff[13] + _coeff[ 2] * _coeff[ 7] * _coeff[ 8] * _coeff[13]
+                        + _coeff[ 3] * _coeff[ 4] * _coeff[10] * _coeff[13] - _coeff[ 0] * _coeff[ 7] * _coeff[10] * _coeff[13] - _coeff[ 2] * _coeff[ 4] * _coeff[11] * _coeff[13] + _coeff[ 0] * _coeff[ 6] * _coeff[11] * _coeff[13]
+                        + _coeff[ 3] * _coeff[ 5] * _coeff[ 8] * _coeff[14] - _coeff[ 1] * _coeff[ 7] * _coeff[ 8] * _coeff[14] - _coeff[ 3] * _coeff[ 4] * _coeff[ 9] * _coeff[14] + _coeff[ 0] * _coeff[ 7] * _coeff[ 9] * _coeff[14]
+                        + _coeff[ 1] * _coeff[ 4] * _coeff[11] * _coeff[14] - _coeff[ 0] * _coeff[ 5] * _coeff[11] * _coeff[14] - _coeff[ 2] * _coeff[ 5] * _coeff[ 8] * _coeff[15] + _coeff[ 1] * _coeff[ 6] * _coeff[ 8] * _coeff[15]
+                        + _coeff[ 2] * _coeff[ 4] * _coeff[ 9] * _coeff[15] - _coeff[ 0] * _coeff[ 6] * _coeff[ 9] * _coeff[15] - _coeff[ 1] * _coeff[ 4] * _coeff[10] * _coeff[15] + _coeff[ 0] * _coeff[ 5] * _coeff[10] * _coeff[15]);
+            }
         }
-        else if constexpr (rows == 4)
-        {
-            return  ( _coeff[ 3] * _coeff[ 6] * _coeff[ 9] * _coeff[12] - _coeff[ 2] * _coeff[ 7] * _coeff[ 9] * _coeff[12] - _coeff[ 3] * _coeff[ 5] * _coeff[10] * _coeff[12] + _coeff[ 1] * _coeff[ 7] * _coeff[10] * _coeff[12]
-                    + _coeff[ 2] * _coeff[ 5] * _coeff[11] * _coeff[12] - _coeff[ 1] * _coeff[ 6] * _coeff[11] * _coeff[12] - _coeff[ 3] * _coeff[ 6] * _coeff[ 8] * _coeff[13] + _coeff[ 2] * _coeff[ 7] * _coeff[ 8] * _coeff[13]
-                    + _coeff[ 3] * _coeff[ 4] * _coeff[10] * _coeff[13] - _coeff[ 0] * _coeff[ 7] * _coeff[10] * _coeff[13] - _coeff[ 2] * _coeff[ 4] * _coeff[11] * _coeff[13] + _coeff[ 0] * _coeff[ 6] * _coeff[11] * _coeff[13]
-                    + _coeff[ 3] * _coeff[ 5] * _coeff[ 8] * _coeff[14] - _coeff[ 1] * _coeff[ 7] * _coeff[ 8] * _coeff[14] - _coeff[ 3] * _coeff[ 4] * _coeff[ 9] * _coeff[14] + _coeff[ 0] * _coeff[ 7] * _coeff[ 9] * _coeff[14]
-                    + _coeff[ 1] * _coeff[ 4] * _coeff[11] * _coeff[14] - _coeff[ 0] * _coeff[ 5] * _coeff[11] * _coeff[14] - _coeff[ 2] * _coeff[ 5] * _coeff[ 8] * _coeff[15] + _coeff[ 1] * _coeff[ 6] * _coeff[ 8] * _coeff[15]
-                    + _coeff[ 2] * _coeff[ 4] * _coeff[ 9] * _coeff[15] - _coeff[ 0] * _coeff[ 6] * _coeff[ 9] * _coeff[15] - _coeff[ 1] * _coeff[ 4] * _coeff[10] * _coeff[15] + _coeff[ 0] * _coeff[ 5] * _coeff[10] * _coeff[15]);
-        }
+
         // clang-format on
     }
 
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>
     inline constexpr unsigned int Matrix<coordinate, rows, cols>::_(unsigned int i, unsigned int j) const
     {
-        return i * cols + j;
+        return i * _cols + j;
     }
 
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>
