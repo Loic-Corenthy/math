@@ -8,12 +8,12 @@
 
 #include <iostream>
 
-using LCNS::compileTimeEpsilon;
-using LCNS::runTimeEpsilon;
+using LCNS::epsilonHighPrecision;
+using LCNS::epsilonLowPrecision;
 using LCNS::Algebra::Matrix;
 
 using IntegerTypes  = std::tuple<short, int, long>;
-using FloatingTypes = std::tuple<float, double, long double>;
+using FloatingTypes = std::tuple<float, double>;
 
 TEMPLATE_LIST_TEST_CASE("Determinant", "[algebra][matrix][dim4][method]", FloatingTypes)
 {
@@ -32,9 +32,9 @@ TEMPLATE_LIST_TEST_CASE("Determinant", "[algebra][matrix][dim4][method]", Floati
 
     static_assert(std::abs(det1 - 6810.0026) < 0.002); // Can't get a better precision than 0.002 with float
 
-    const auto rte = runTimeEpsilon<TestType>();
+    const auto ehp = epsilonHighPrecision<TestType>();
 
-    CHECK(det1 == Catch::Approx(6810.0026).epsilon(rte));
+    CHECK(det1 == Catch::Approx(6810.0026).epsilon(ehp));
     // clang-format on
 }
 

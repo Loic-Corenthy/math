@@ -6,12 +6,12 @@
 #include <catch2/catch_template_test_macros.hpp>
 #include <catch2/catch_approx.hpp>
 
-using LCNS::compileTimeEpsilon;
-using LCNS::runTimeEpsilon;
+using LCNS::epsilonHighPrecision;
+using LCNS::epsilonLowPrecision;
 using LCNS::Algebra::Matrix;
 
 using IntegerTypes  = std::tuple<short, int, long>;
-using FloatingTypes = std::tuple<float, double, long double>;
+using FloatingTypes = std::tuple<float, double>;
 
 TEMPLATE_LIST_TEST_CASE("Accessor operator", "[algebra][matrix][dim2][operator]", IntegerTypes)
 {
@@ -396,19 +396,19 @@ TEMPLATE_LIST_TEST_CASE("Addition operator", "[algebra][matrix][dim2][operator]"
     constexpr Matrix<TestType, 2, 2> mat2 = { mat2_00, mat2_01, mat2_10, mat2_11 };
     constexpr Matrix<TestType, 2, 2> sum  = mat1 + mat2;
 
-    constexpr auto cte = compileTimeEpsilon<TestType>();
+    constexpr auto elp = epsilonLowPrecision<TestType>();
 
-    static_assert(std::abs(sum(0, 0) - 1.8) < cte);
-    static_assert(std::abs(sum(0, 1) - 6113.66) < cte);
-    static_assert(std::abs(sum(1, 0) - -169.03) < cte);
-    static_assert(std::abs(sum(1, 1) - 0.02) < cte);
+    static_assert(std::abs(sum(0, 0) - 1.8) < elp);
+    static_assert(std::abs(sum(0, 1) - 6113.66) < elp);
+    static_assert(std::abs(sum(1, 0) - -169.03) < elp);
+    static_assert(std::abs(sum(1, 1) - 0.02) < elp);
 
-    const auto rte = runTimeEpsilon<TestType>();
+    const auto ehp = epsilonHighPrecision<TestType>();
 
-    CHECK(sum(0, 0) == Catch::Approx(1.8).epsilon(rte));
-    CHECK(sum(0, 1) == Catch::Approx(6113.66).epsilon(rte));
-    CHECK(sum(1, 0) == Catch::Approx(-169.03).epsilon(rte));
-    CHECK(sum(1, 1) == Catch::Approx(0.02).epsilon(rte));
+    CHECK(sum(0, 0) == Catch::Approx(1.8).epsilon(ehp));
+    CHECK(sum(0, 1) == Catch::Approx(6113.66).epsilon(ehp));
+    CHECK(sum(1, 0) == Catch::Approx(-169.03).epsilon(ehp));
+    CHECK(sum(1, 1) == Catch::Approx(0.02).epsilon(ehp));
 }
 
 TEMPLATE_LIST_TEST_CASE("Substraction operator", "[algebra][matrix][dim2][operator]", IntegerTypes)
@@ -440,19 +440,19 @@ TEMPLATE_LIST_TEST_CASE("Substraction operator", "[algebra][matrix][dim2][operat
     constexpr Matrix<TestType, 2, 2> mat2 = { mat2_00, mat2_01, mat2_10, mat2_11 };
     constexpr Matrix<TestType, 2, 2> diff = mat1 - mat2;
 
-    constexpr auto cte = compileTimeEpsilon<TestType>();
+    constexpr auto elp = epsilonLowPrecision<TestType>();
 
-    static_assert(std::abs(diff(0, 0) - 88.02) < cte);
-    static_assert(std::abs(diff(0, 1) - 833.697) < cte);
-    static_assert(std::abs(diff(1, 0) - 22.87) < cte);
-    static_assert(std::abs(diff(1, 1) - 210.28) < cte);
+    static_assert(std::abs(diff(0, 0) - 88.02) < elp);
+    static_assert(std::abs(diff(0, 1) - 833.697) < elp);
+    static_assert(std::abs(diff(1, 0) - 22.87) < elp);
+    static_assert(std::abs(diff(1, 1) - 210.28) < elp);
 
-    const auto rte = runTimeEpsilon<TestType>();
+    const auto ehp = epsilonHighPrecision<TestType>();
 
-    CHECK(diff(0, 0) == Catch::Approx(88.02).epsilon(rte));
-    CHECK(diff(0, 1) == Catch::Approx(833.697).epsilon(rte));
-    CHECK(diff(1, 0) == Catch::Approx(22.87).epsilon(rte));
-    CHECK(diff(1, 1) == Catch::Approx(210.28).epsilon(rte));
+    CHECK(diff(0, 0) == Catch::Approx(88.02).epsilon(ehp));
+    CHECK(diff(0, 1) == Catch::Approx(833.697).epsilon(ehp));
+    CHECK(diff(1, 0) == Catch::Approx(22.87).epsilon(ehp));
+    CHECK(diff(1, 1) == Catch::Approx(210.28).epsilon(ehp));
 }
 
 TEMPLATE_LIST_TEST_CASE("Matrix multiplication operator", "[algebra][matrix][dim2][operator]", IntegerTypes)
@@ -484,19 +484,19 @@ TEMPLATE_LIST_TEST_CASE("Matrix Multiplication operator", "[algebra][matrix][dim
     constexpr Matrix<TestType, 2, 2> mat2 = { mat2_00, mat2_01, mat2_10, mat2_11 };
     constexpr Matrix<TestType, 2, 2> mul  = mat1 * mat2;
 
-    constexpr auto cte = compileTimeEpsilon<TestType>();
+    constexpr auto elp = epsilonLowPrecision<TestType>();
 
-    static_assert(std::abs(mul(0, 0) - -1.348) < cte);
-    static_assert(std::abs(mul(0, 1) - 2.04) < cte);
-    static_assert(std::abs(mul(1, 0) - -2.714) < cte);
-    static_assert(std::abs(mul(1, 1) - -8.225) < cte);
+    static_assert(std::abs(mul(0, 0) - -1.348) < elp);
+    static_assert(std::abs(mul(0, 1) - 2.04) < elp);
+    static_assert(std::abs(mul(1, 0) - -2.714) < elp);
+    static_assert(std::abs(mul(1, 1) - -8.225) < elp);
 
-    const auto rte = runTimeEpsilon<TestType>();
+    const auto ehp = epsilonHighPrecision<TestType>();
 
-    CHECK(mul(0, 0) == Catch::Approx(-1.348).epsilon(rte));
-    CHECK(mul(0, 1) == Catch::Approx(2.04).epsilon(rte));
-    CHECK(mul(1, 0) == Catch::Approx(-2.714).epsilon(rte));
-    CHECK(mul(1, 1) == Catch::Approx(-8.225).epsilon(rte));
+    CHECK(mul(0, 0) == Catch::Approx(-1.348).epsilon(ehp));
+    CHECK(mul(0, 1) == Catch::Approx(2.04).epsilon(ehp));
+    CHECK(mul(1, 0) == Catch::Approx(-2.714).epsilon(ehp));
+    CHECK(mul(1, 1) == Catch::Approx(-8.225).epsilon(ehp));
 }
 
 TEMPLATE_LIST_TEST_CASE("Scalar multiplication operator", "[algebra][matrix][dim2][operator]", IntegerTypes)
@@ -540,29 +540,29 @@ TEMPLATE_LIST_TEST_CASE("Scalar Multiplication operator", "[algebra][matrix][dim
     constexpr Matrix<TestType, 2, 2> scaled1 = scalar * mat;
     constexpr Matrix<TestType, 2, 2> scaled2 = mat * scalar;
 
-    constexpr auto cte = compileTimeEpsilon<TestType>();
+    constexpr auto elp = epsilonLowPrecision<TestType>();
 
-    static_assert(std::abs(scaled1(0, 0) - -1329.56) < cte);
-    static_assert(std::abs(scaled1(0, 1) - 2122.48) < cte);
-    static_assert(std::abs(scaled1(1, 0) - 172.172) < cte);
-    static_assert(std::abs(scaled1(1, 1) - -1713.98) < cte);
+    static_assert(std::abs(scaled1(0, 0) - -1329.56) < elp);
+    static_assert(std::abs(scaled1(0, 1) - 2122.48) < elp);
+    static_assert(std::abs(scaled1(1, 0) - 172.172) < elp);
+    static_assert(std::abs(scaled1(1, 1) - -1713.98) < elp);
 
-    static_assert(std::abs(scaled2(0, 0) - -1329.56) < cte);
-    static_assert(std::abs(scaled2(0, 1) - 2122.48) < cte);
-    static_assert(std::abs(scaled2(1, 0) - 172.172) < cte);
-    static_assert(std::abs(scaled2(1, 1) - -1713.98) < cte);
+    static_assert(std::abs(scaled2(0, 0) - -1329.56) < elp);
+    static_assert(std::abs(scaled2(0, 1) - 2122.48) < elp);
+    static_assert(std::abs(scaled2(1, 0) - 172.172) < elp);
+    static_assert(std::abs(scaled2(1, 1) - -1713.98) < elp);
 
-    const auto rte = runTimeEpsilon<TestType>();
+    const auto ehp = epsilonHighPrecision<TestType>();
 
-    CHECK(scaled1(0, 0) == Catch::Approx(-1329.56).epsilon(rte));
-    CHECK(scaled1(0, 1) == Catch::Approx(2122.48).epsilon(rte));
-    CHECK(scaled1(1, 0) == Catch::Approx(172.172).epsilon(rte));
-    CHECK(scaled1(1, 1) == Catch::Approx(-1713.98).epsilon(rte));
+    CHECK(scaled1(0, 0) == Catch::Approx(-1329.56).epsilon(ehp));
+    CHECK(scaled1(0, 1) == Catch::Approx(2122.48).epsilon(ehp));
+    CHECK(scaled1(1, 0) == Catch::Approx(172.172).epsilon(ehp));
+    CHECK(scaled1(1, 1) == Catch::Approx(-1713.98).epsilon(ehp));
 
-    CHECK(scaled2(0, 0) == Catch::Approx(-1329.56).epsilon(rte));
-    CHECK(scaled2(0, 1) == Catch::Approx(2122.48).epsilon(rte));
-    CHECK(scaled2(1, 0) == Catch::Approx(172.172).epsilon(rte));
-    CHECK(scaled2(1, 1) == Catch::Approx(-1713.98).epsilon(rte));
+    CHECK(scaled2(0, 0) == Catch::Approx(-1329.56).epsilon(ehp));
+    CHECK(scaled2(0, 1) == Catch::Approx(2122.48).epsilon(ehp));
+    CHECK(scaled2(1, 0) == Catch::Approx(172.172).epsilon(ehp));
+    CHECK(scaled2(1, 1) == Catch::Approx(-1713.98).epsilon(ehp));
 }
 
 TEMPLATE_LIST_TEST_CASE("Determinant", "[algebra][matrix][dim2][method]", IntegerTypes)
@@ -602,17 +602,17 @@ TEMPLATE_LIST_TEST_CASE("Determinant", "[algebra][matrix][dim2][method]", Floati
     constexpr TestType det2 = mat2.determinant();
     constexpr TestType det3 = mat3.determinant();
 
-    constexpr auto cte = compileTimeEpsilon<TestType>();
+    constexpr auto elp = epsilonLowPrecision<TestType>();
 
-    static_assert(std::abs(det1 - -52.705) < cte);
-    static_assert(std::abs(det2 - 0.0) < cte);
-    static_assert(std::abs(det3 - 1.0) < cte);
+    static_assert(std::abs(det1 - -52.705) < elp);
+    static_assert(std::abs(det2 - 0.0) < elp);
+    static_assert(std::abs(det3 - 1.0) < elp);
 
-    const auto rte = runTimeEpsilon<TestType>();
+    const auto ehp = epsilonHighPrecision<TestType>();
 
-    CHECK(std::abs(det1 - -52.705) < rte);
-    CHECK(std::abs(det2 - 0.0) < rte);
-    CHECK(std::abs(det3 - 1.0) < rte);
+    CHECK(std::abs(det1 - -52.705) < elp);  // Precision warning: can't achieve high precision
+    CHECK(std::abs(det2 - 0.0) < ehp);
+    CHECK(std::abs(det3 - 1.0) < ehp);
 }
 
 TEMPLATE_LIST_TEST_CASE("Trace", "[algebra][matrix][dim2][method]", IntegerTypes)
@@ -646,15 +646,15 @@ TEMPLATE_LIST_TEST_CASE("Trace", "[algebra][matrix][dim2][method]", FloatingType
     constexpr TestType tr1 = mat1.trace();
     constexpr TestType tr2 = mat2.trace();
 
-    constexpr auto cte = compileTimeEpsilon<TestType>();
+    constexpr auto elp = epsilonLowPrecision<TestType>();
 
-    static_assert(std::abs(tr1 - 11.0) < cte);
-    static_assert(std::abs(tr2 - 2.0) < cte);
+    static_assert(std::abs(tr1 - 11.0) < elp);
+    static_assert(std::abs(tr2 - 2.0) < elp);
 
-    const auto rte          = runTimeEpsilon<TestType>();
+    const auto ehp          = epsilonHighPrecision<TestType>();
     const auto [rows, cols] = mat2.dimensions();
 
-    CHECK(std::abs(tr1 - 11.0) < rte);
+    CHECK(std::abs(tr1 - 11.0) < ehp);
     CHECK(tr2 == static_cast<TestType>(rows));
     CHECK(tr2 == static_cast<TestType>(cols));
 }

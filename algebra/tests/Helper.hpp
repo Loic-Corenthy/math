@@ -3,36 +3,28 @@
 namespace LCNS
 {
     template <typename T>
-    constexpr T compileTimeEpsilon()
+    constexpr T epsilonLowPrecision()
     {
         if constexpr (std::is_same_v<T, float>)
         {
-            return 0.001f;
+            return 1e-3f;
         }
         else if constexpr (std::is_same_v<T, double>)
         {
-            return 0.000'001;
-        }
-        else if constexpr (std::is_same_v<T, long double>)
-        {
-            return 0.000'000'001;
+            return 1e-6;
         }
     }
 
     template <typename T>
-    constexpr T runTimeEpsilon()
+    constexpr T epsilonHighPrecision()
     {
         if constexpr (std::is_same_v<T, float>)
         {
-            return 0.000'01f;
+            return 1e-6f;
         }
         else if constexpr (std::is_same_v<T, double>)
         {
-            return 0.000'000'001;
-        }
-        else if constexpr (std::is_same_v<T, long double>)
-        {
-            return 0.000'000'000'001;
+            return 1e-9;
         }
     }
 }  // namespace LCNS
