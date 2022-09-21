@@ -122,6 +122,11 @@ namespace LCNS::Algebra
          */
         constexpr coordinate determinant() const requires(rows == cols && (0 < rows && rows < 5));
 
+        /*!
+         * @brief Compute the trace of this matrix if it's a square matrix
+         * @return the sum of the diagonal coefficients
+         */
+        constexpr coordinate trace() const requires(rows == cols);
 
         constexpr Matrix<coordinate, rows, cols>& inverse() requires(rows == cols && (0 < rows && rows < 5));
 
@@ -359,6 +364,17 @@ namespace LCNS::Algebra
         }
 
         // clang-format on
+    }
+
+    template <Coordinate coordinate, unsigned int rows, unsigned int cols>
+    constexpr coordinate Matrix<coordinate, rows, cols>::trace() const requires(rows == cols)
+    {
+        coordinate result = 0;
+
+        for (unsigned int i = 0; i < rows; ++i)
+            result += _coeff[_(i, i)];
+
+        return result;
     }
 
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>

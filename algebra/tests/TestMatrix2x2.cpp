@@ -614,3 +614,47 @@ TEMPLATE_LIST_TEST_CASE("Determinant", "[algebra][matrix][dim2][method]", Floati
     CHECK(std::abs(det2 - 0.0) < rte);
     CHECK(std::abs(det3 - 1.0) < rte);
 }
+
+TEMPLATE_LIST_TEST_CASE("Trace", "[algebra][matrix][dim2][method]", IntegerTypes)
+{
+    constexpr TestType mat1_00 = 8, mat1_01 = 9, mat1_10 = -42, mat1_11 = 998;
+    constexpr TestType one = 1;
+
+    constexpr Matrix<TestType, 2, 2> mat1 = { mat1_00, mat1_01, mat1_10, mat1_11 };
+    constexpr Matrix<TestType, 2, 2> mat2(one);
+
+    constexpr TestType tr1 = mat1.trace();
+    constexpr TestType tr2 = mat2.trace();
+
+    static_assert(tr1 == 1006);
+    static_assert(tr2 == 2);
+
+    const auto [rows, cols] = mat2.dimensions();
+    CHECK(tr1 == 1006);
+    CHECK(tr2 == rows);
+    CHECK(tr2 == cols);
+}
+
+TEMPLATE_LIST_TEST_CASE("Trace", "[algebra][matrix][dim2][method]", FloatingTypes)
+{
+    constexpr TestType mat1_00 = 8.20, mat1_01 = -9.33, mat1_10 = -42.55, mat1_11 = 2.8;
+    constexpr TestType one = 1.0;
+
+    constexpr Matrix<TestType, 2, 2> mat1 = { mat1_00, mat1_01, mat1_10, mat1_11 };
+    constexpr Matrix<TestType, 2, 2> mat2(one);
+
+    constexpr TestType tr1 = mat1.trace();
+    constexpr TestType tr2 = mat2.trace();
+
+    constexpr auto cte = compileTimeEpsilon<TestType>();
+
+    static_assert(std::abs(tr1 - 11.0) < cte);
+    static_assert(std::abs(tr2 - 2.0) < cte);
+
+    const auto rte          = runTimeEpsilon<TestType>();
+    const auto [rows, cols] = mat2.dimensions();
+
+    CHECK(std::abs(tr1 - 11.0) < rte);
+    CHECK(tr2 == static_cast<TestType>(rows));
+    CHECK(tr2 == static_cast<TestType>(cols));
+}
