@@ -651,10 +651,41 @@ TEMPLATE_LIST_TEST_CASE("Trace", "[algebra][matrix][dim2][method]", FloatingType
     static_assert(std::abs(tr1 - 11.0) < elp);
     static_assert(std::abs(tr2 - 2.0) < elp);
 
-    const auto ehp          = epsilonHighPrecision<TestType>();
+    const auto ehp = epsilonHighPrecision<TestType>();
+
     const auto [rows, cols] = mat2.dimensions();
 
     CHECK(std::abs(tr1 - 11.0) < ehp);
     CHECK(tr2 == static_cast<TestType>(rows));
     CHECK(tr2 == static_cast<TestType>(cols));
+}
+
+TEMPLATE_LIST_TEST_CASE("Inverse", "[algebra][matrix][dim2][method]", FloatingTypes)
+{
+    constexpr TestType mat_00 = 3.20, mat_01 = -1.33, mat_10 = -4.55, mat_11 = 2.8;
+
+    Matrix<TestType, 2, 2> mat = { mat_00, mat_01, mat_10, mat_11 };
+
+    mat.inverse();
+
+    constexpr auto elp = epsilonLowPrecision<TestType>();
+
+    CHECK(std::abs(mat(0, 0) - 0.962696) < elp);
+    CHECK(std::abs(mat(0, 1) - 0.45728) < elp);
+    CHECK(std::abs(mat(1, 0) - 1.56438) < elp);
+    CHECK(std::abs(mat(1, 1) - 1.100224) < elp);
+
+    constexpr Matrix<TestType, 2, 2> mat2 = { mat_00, mat_01, mat_10, mat_11 };
+
+    constexpr auto inv = mat2.inversed();
+
+    static_assert(std::abs(inv(0, 0) - 0.962696) < elp);
+    static_assert(std::abs(inv(0, 1) - 0.45728) < elp);
+    static_assert(std::abs(inv(1, 0) - 1.56438) < elp);
+    static_assert(std::abs(inv(1, 1) - 1.100224) < elp);
+
+    CHECK(std::abs(inv(0, 0) - 0.962696) < elp);
+    CHECK(std::abs(inv(0, 1) - 0.45728) < elp);
+    CHECK(std::abs(inv(1, 0) - 1.56438) < elp);
+    CHECK(std::abs(inv(1, 1) - 1.100224) < elp);
 }

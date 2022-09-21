@@ -128,9 +128,18 @@ namespace LCNS::Algebra
          */
         constexpr coordinate trace() const requires(rows == cols);
 
-        constexpr Matrix<coordinate, rows, cols>& inverse() requires(rows == cols && (0 < rows && rows < 5));
+        /*!
+         * @brief Inverse this matrix if it's a square matrix of floating point coordinates and if its determinant is not null
+         * @return a reference to this
+         */
+        Matrix<coordinate, rows, cols>& inverse() requires(rows == cols && (0 < rows && rows < 5) && std::is_floating_point_v<coordinate>);
 
-        constexpr Matrix<coordinate, rows, cols> inversed() requires(rows == cols && (0 < rows && rows < 5));
+        /*!
+         * @brief Compute the inverse of this matrix if it's a square matrix of floating point coordinates and if its determinant is not null
+         * @return a new matrix that is the inverse of this matrix if the operation is successful, a null matrix otherwise
+         */
+        constexpr Matrix<coordinate, rows, cols> inversed() const
+        requires(rows == cols && (0 < rows && rows < 5) && std::is_floating_point_v<coordinate>);
 
     private:
         /*!
@@ -140,6 +149,14 @@ namespace LCNS::Algebra
          * @return the equivalent index to access the coefficient in _coeff
          */
         constexpr unsigned int _(unsigned int i, unsigned int j) const;
+
+        /*!
+         * @brief Helper method to compute the matrix inverse
+         * @param copy takes the coefficients of this matrix as a copy
+         * @param det is the determinant of this matrix
+         */
+        constexpr void _inverseImpl(std::array<coordinate, rows * cols> copy,
+                                    coordinate det) requires(rows == cols && (0 < rows && rows < 5) && std::is_floating_point_v<coordinate>);
 
     private:
         std::array<coordinate, rows* cols> _coeff = {};
@@ -378,9 +395,96 @@ namespace LCNS::Algebra
     }
 
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>
+    Matrix<coordinate, rows, cols>& Matrix<coordinate, rows, cols>::inverse() requires(rows == cols && (0 < rows && rows < 5)
+                                                                                       && std::is_floating_point_v<coordinate>)
+    {
+        if (const auto det = determinant(); std::abs(det) > 0.000'000'001)
+        {
+            _inverseImpl(_coeff, det);
+        }
+
+        return *this;
+    }
+
+    template <Coordinate coordinate, unsigned int rows, unsigned int cols>
+    constexpr Matrix<coordinate, rows, cols> Matrix<coordinate, rows, cols>::inversed() const
+    requires(rows == cols && (0 < rows && rows < 5) && std::is_floating_point_v<coordinate>)
+    {
+        Matrix<coordinate, rows, cols> result;
+
+        if (const auto det = determinant(); std::abs(det) > 0.000'000'001)
+        {
+            result._inverseImpl(_coeff, det);
+        }
+
+        return result;
+    }
+
+    template <Coordinate coordinate, unsigned int rows, unsigned int cols>
     inline constexpr unsigned int Matrix<coordinate, rows, cols>::_(unsigned int i, unsigned int j) const
     {
         return i * _cols + j;
+    }
+
+    template <Coordinate coordinate, unsigned int rows, unsigned int cols>
+    constexpr void Matrix<coordinate, rows, cols>::_inverseImpl(std::array<coordinate, rows * cols> copy,
+                                                                coordinate det) requires(rows == cols && (0 < rows && rows < 5)
+                                                                                         && std::is_floating_point_v<coordinate>)
+    {
+        if constexpr (rows == 1)
+        {
+            _coeff[0] = 1.0 / _coeff[0];
+        }
+        else if constexpr (rows == 2)
+        {
+            // clang-format off
+            _coeff[0] =  copy[3] / det;
+            _coeff[2] = -copy[2] / det;
+
+            _coeff[1] = -copy[1] / det;
+            _coeff[3] =  copy[0] / det;
+            // clang-format on
+        }
+        else if constexpr (rows == 3)
+        {
+            // clang-format off
+            _coeff[0] =  (copy[4] * copy[8] - copy[7] * copy[5]) / det;
+            _coeff[3] = -(copy[3] * copy[8] - copy[6] * copy[5]) / det;
+            _coeff[6] =  (copy[3] * copy[7] - copy[6] * copy[4]) / det;
+
+            _coeff[1] = -(copy[1] * copy[8] - copy[7] * copy[2]) / det;
+            _coeff[4] =  (copy[0] * copy[8] - copy[6] * copy[2]) / det;
+            _coeff[7] = -(copy[0] * copy[7] - copy[6] * copy[1]) / det;
+
+            _coeff[2] =  (copy[1] * copy[5] - copy[4] * copy[2]) / det;
+            _coeff[5] = -(copy[0] * copy[5] - copy[3] * copy[2]) / det;
+            _coeff[8] =  (copy[0] * copy[4] - copy[3] * copy[1]) / det;
+            // clang-format on
+        }
+        else if constexpr (rows == 4)
+        {
+            // clang-format off
+            _coeff[ 0] = (-copy[ 7] * copy[10] * copy[13]  +  copy[ 6] * copy[11] * copy[13]  +  copy[ 7] * copy[ 9] * copy[14]  -  copy[ 5] * copy[11] * copy[14]  -  copy[ 6] * copy[ 9] * copy[15]  +  copy[ 5] * copy[10] * copy[15]) / det;
+            _coeff[ 4] = ( copy[ 7] * copy[10] * copy[12]  -  copy[ 6] * copy[11] * copy[12]  -  copy[ 7] * copy[ 8] * copy[14]  +  copy[ 4] * copy[11] * copy[14]  +  copy[ 6] * copy[ 8] * copy[15]  -  copy[ 4] * copy[10] * copy[15]) / det;
+            _coeff[ 8] = (-copy[ 7] * copy[ 9] * copy[12]  +  copy[ 5] * copy[11] * copy[12]  +  copy[ 7] * copy[ 8] * copy[13]  -  copy[ 4] * copy[11] * copy[13]  -  copy[ 5] * copy[ 8] * copy[15]  +  copy[ 4] * copy[ 9] * copy[15]) / det;
+            _coeff[12] = ( copy[ 6] * copy[ 9] * copy[12]  -  copy[ 5] * copy[10] * copy[12]  -  copy[ 6] * copy[ 8] * copy[13]  +  copy[ 4] * copy[10] * copy[13]  +  copy[ 5] * copy[ 8] * copy[14]  -  copy[ 4] * copy[ 9] * copy[14]) / det;
+
+            _coeff[ 1] = ( copy[ 3] * copy[10] * copy[13]  -  copy[ 2] * copy[11] * copy[13]  -  copy[ 3] * copy[ 9] * copy[14]  +  copy[ 1] * copy[11] * copy[14]  +  copy[ 2] * copy[ 9] * copy[15]  -  copy[ 1] * copy[10] * copy[15]) / det;
+            _coeff[ 5] = (-copy[ 3] * copy[10] * copy[12]  +  copy[ 2] * copy[11] * copy[12]  +  copy[ 3] * copy[ 8] * copy[14]  -  copy[ 0] * copy[11] * copy[14]  -  copy[ 2] * copy[ 8] * copy[15]  +  copy[ 0] * copy[10] * copy[15]) / det;
+            _coeff[ 9] = ( copy[ 3] * copy[ 9] * copy[12]  -  copy[ 1] * copy[11] * copy[12]  -  copy[ 3] * copy[ 8] * copy[13]  +  copy[ 0] * copy[11] * copy[13]  +  copy[ 1] * copy[ 8] * copy[15]  -  copy[ 0] * copy[ 9] * copy[15]) / det;
+            _coeff[13] = (-copy[ 2] * copy[ 9] * copy[12]  +  copy[ 1] * copy[10] * copy[12]  +  copy[ 2] * copy[ 8] * copy[13]  -  copy[ 0] * copy[10] * copy[13]  -  copy[ 1] * copy[ 8] * copy[14]  +  copy[ 0] * copy[ 9] * copy[14]) / det;
+
+            _coeff[ 2] = (-copy[ 3] * copy[ 6] * copy[13]  +  copy[ 2] * copy[ 7] * copy[13]  +  copy[ 3] * copy[ 5] * copy[14]  -  copy[ 1] * copy[ 7] * copy[14]  -  copy[ 2] * copy[ 5] * copy[15]  +  copy[ 1] * copy[ 6] * copy[15]) / det;
+            _coeff[ 6] = ( copy[ 3] * copy[ 6] * copy[12]  -  copy[ 2] * copy[ 7] * copy[12]  -  copy[ 3] * copy[ 4] * copy[14]  +  copy[ 0] * copy[ 7] * copy[14]  +  copy[ 2] * copy[ 4] * copy[15]  -  copy[ 0] * copy[ 6] * copy[15]) / det;
+            _coeff[10] = (-copy[ 3] * copy[ 5] * copy[12]  +  copy[ 1] * copy[ 7] * copy[12]  +  copy[ 3] * copy[ 4] * copy[13]  -  copy[ 0] * copy[ 7] * copy[13]  -  copy[ 1] * copy[ 4] * copy[15]  +  copy[ 0] * copy[ 5] * copy[15]) / det;
+            _coeff[14] = ( copy[ 2] * copy[ 5] * copy[12]  -  copy[ 1] * copy[ 6] * copy[12]  -  copy[ 2] * copy[ 4] * copy[13]  +  copy[ 0] * copy[ 6] * copy[13]  +  copy[ 1] * copy[ 4] * copy[14]  -  copy[ 0] * copy[ 5] * copy[14]) / det;
+
+            _coeff[ 3] = ( copy[ 3] * copy[ 6] * copy[ 9]  -  copy[ 2] * copy[ 7] * copy[ 9]  -  copy[ 3] * copy[ 5] * copy[10]  +  copy[ 1] * copy[ 7] * copy[10]  +  copy[ 2] * copy[ 5] * copy[11]  -  copy[ 1] * copy[ 6] * copy[11]) / det;
+            _coeff[ 7] = (-copy[ 3] * copy[ 6] * copy[ 8]  +  copy[ 2] * copy[ 7] * copy[ 8]  +  copy[ 3] * copy[ 4] * copy[10]  -  copy[ 0] * copy[ 7] * copy[10]  -  copy[ 2] * copy[ 4] * copy[11]  +  copy[ 0] * copy[ 6] * copy[11]) / det;
+            _coeff[11] = ( copy[ 3] * copy[ 5] * copy[ 8]  -  copy[ 1] * copy[ 7] * copy[ 8]  -  copy[ 3] * copy[ 4] * copy[ 9]  +  copy[ 0] * copy[ 7] * copy[ 9]  +  copy[ 1] * copy[ 4] * copy[11]  -  copy[ 0] * copy[ 5] * copy[11]) / det;
+            _coeff[15] = (-copy[ 2] * copy[ 5] * copy[ 8]  +  copy[ 1] * copy[ 6] * copy[ 8]  +  copy[ 2] * copy[ 4] * copy[ 9]  -  copy[ 0] * copy[ 6] * copy[ 9]  -  copy[ 1] * copy[ 4] * copy[10]  +  copy[ 0] * copy[ 5] * copy[10]) / det;
+            // clang-format on
+        }
     }
 
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>

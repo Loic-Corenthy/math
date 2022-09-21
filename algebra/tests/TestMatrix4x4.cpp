@@ -62,3 +62,89 @@ TEMPLATE_LIST_TEST_CASE("Transpose", "[algebra][matrix][dim4][method]", Floating
 
     std::cout << "mat transpose is \n" << test.transposed() << '\n';
 }
+
+TEMPLATE_LIST_TEST_CASE("Inverse", "[algebra][matrix][dim4][method]", FloatingTypes)
+{
+    // clang-format off
+    constexpr TestType mat_00 =  4.0, mat_01 = -5.1, mat_02 = -9.9, mat_03 =  5.5,
+                       mat_10 = -8.3, mat_11 =  4.2, mat_12 = -1.1, mat_13 = -9.8,
+                       mat_20 =  6.4, mat_21 =  3.2, mat_22 =  7.0, mat_23 =  7.5,
+                       mat_30 = -9.1, mat_31 =  7.2, mat_32 =  8.7, mat_33 =  5.5;
+
+    Matrix<TestType, 4, 4> mat = { mat_00, mat_01, mat_02, mat_03, 
+                                   mat_10, mat_11, mat_12, mat_13,
+                                   mat_20, mat_21, mat_22, mat_23,
+                                   mat_30, mat_31, mat_32, mat_33 };
+
+    mat.inverse();
+
+    constexpr auto elp = epsilonLowPrecision<TestType>();
+
+    CHECK(std::abs(mat(0,0) -  0.0100878)  < elp);
+    CHECK(std::abs(mat(1,0) -  0.122482)   < elp);
+    CHECK(std::abs(mat(2,0) - -0.127655)   < elp);
+    CHECK(std::abs(mat(3,0) -  0.0582772)  < elp);
+
+    CHECK(std::abs(mat(0,1) -  0.0511035)  < elp);
+    CHECK(std::abs(mat(1,1) -  0.231093)   < elp);
+    CHECK(std::abs(mat(2,1) - -0.116827)   < elp);
+    CHECK(std::abs(mat(3,1) - -0.0331692)  < elp);
+
+    CHECK(std::abs(mat(0,2) -  0.112745)   < elp);
+    CHECK(std::abs(mat(1,2) -  0.215886)   < elp);
+    CHECK(std::abs(mat(2,2) - -0.0633572)  < elp);
+    CHECK(std::abs(mat(3,2) -  0.00414625) < elp);
+
+    CHECK(std::abs(mat(0,3) - -0.0727737)  < elp);
+    CHECK(std::abs(mat(1,3) - -0.00510675) < elp);
+    CHECK(std::abs(mat(2,3) -  0.0058859)  < elp);
+    CHECK(std::abs(mat(3,3) -  0.0587856)  < elp);
+
+    constexpr Matrix<TestType, 4, 4> mat2 = { mat_00, mat_01, mat_02, mat_03, 
+                                              mat_10, mat_11, mat_12, mat_13,
+                                              mat_20, mat_21, mat_22, mat_23,
+                                              mat_30, mat_31, mat_32, mat_33 };
+
+    constexpr auto inv = mat2.inversed();
+
+    static_assert(std::abs(inv(0,0) -  0.0100878)  < elp);
+    static_assert(std::abs(inv(1,0) -  0.122482)   < elp);
+    static_assert(std::abs(inv(2,0) - -0.127655)   < elp);
+    static_assert(std::abs(inv(3,0) -  0.0582772)  < elp);
+
+    static_assert(std::abs(inv(0,1) -  0.0511035)  < elp);
+    static_assert(std::abs(inv(1,1) -  0.231093)   < elp);
+    static_assert(std::abs(inv(2,1) - -0.116827)   < elp);
+    static_assert(std::abs(inv(3,1) - -0.0331692)  < elp);
+
+    static_assert(std::abs(inv(0,2) -  0.112745)   < elp);
+    static_assert(std::abs(inv(1,2) -  0.215886)   < elp);
+    static_assert(std::abs(inv(2,2) - -0.0633572)  < elp);
+    static_assert(std::abs(inv(3,2) -  0.00414625) < elp);
+
+    static_assert(std::abs(inv(0,3) - -0.0727737)  < elp);
+    static_assert(std::abs(inv(1,3) - -0.00510675) < elp);
+    static_assert(std::abs(inv(2,3) -  0.0058859)  < elp);
+    static_assert(std::abs(inv(3,3) -  0.0587856)  < elp);
+
+    CHECK(std::abs(inv(0,0) -  0.0100878)  < elp);
+    CHECK(std::abs(inv(1,0) -  0.122482)   < elp);
+    CHECK(std::abs(inv(2,0) - -0.127655)   < elp);
+    CHECK(std::abs(inv(3,0) -  0.0582772)  < elp);
+
+    CHECK(std::abs(inv(0,1) -  0.0511035)  < elp);
+    CHECK(std::abs(inv(1,1) -  0.231093)   < elp);
+    CHECK(std::abs(inv(2,1) - -0.116827)   < elp);
+    CHECK(std::abs(inv(3,1) - -0.0331692)  < elp);
+
+    CHECK(std::abs(inv(0,2) -  0.112745)   < elp);
+    CHECK(std::abs(inv(1,2) -  0.215886)   < elp);
+    CHECK(std::abs(inv(2,2) - -0.0633572)  < elp);
+    CHECK(std::abs(inv(3,2) -  0.00414625) < elp);
+
+    CHECK(std::abs(inv(0,3) - -0.0727737)  < elp);
+    CHECK(std::abs(inv(1,3) - -0.00510675) < elp);
+    CHECK(std::abs(inv(2,3) -  0.0058859)  < elp);
+    CHECK(std::abs(inv(3,3) -  0.0587856)  < elp);
+    // clang-format on
+}
