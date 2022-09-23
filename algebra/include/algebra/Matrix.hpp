@@ -1,6 +1,7 @@
 #pragma once
 
 #include "algebra/Internal.hpp"
+#include "algebra/Vector.hpp"
 
 #include <cmath>
 #include <cstring>
@@ -526,6 +527,19 @@ namespace LCNS::Algebra
             for (size_t j = 0; j < cols_lhs; ++j)
                 for (size_t k = 0; k < cols_lhs; ++k)
                     result(i, j) += lhs(i, k) * rhs(k, j);
+
+        return result;
+    }
+
+    template <Coordinate coordinate, unsigned int rows_lhs, unsigned int cols_lhs, unsigned int size_rhs>
+    constexpr Vector<coordinate, size_rhs> operator*(const Matrix<coordinate, rows_lhs, cols_lhs>& lhs,
+                                                     const Vector<coordinate, size_rhs>&           rhs) requires(cols_lhs == size_rhs)
+    {
+        Vector<coordinate, size_rhs> result;
+
+        for (size_t i = 0; i < rows_lhs; ++i)
+            for (size_t j = 0; j < cols_lhs; ++j)
+                result[i] += lhs(i, j) * rhs[j];
 
         return result;
     }

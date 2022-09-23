@@ -1,5 +1,5 @@
 #include "algebra/Matrix.hpp"
-
+#include "algebra/Vector.hpp"
 #include "Helper.hpp"
 
 #include <catch2/catch_test_macros.hpp>
@@ -9,6 +9,7 @@
 using LCNS::epsilonHighPrecision;
 using LCNS::epsilonLowPrecision;
 using LCNS::Algebra::Matrix;
+using LCNS::Algebra::Vector;
 
 using IntegerTypes  = std::tuple<short, int, long>;
 using FloatingTypes = std::tuple<float, double>;
@@ -688,4 +689,21 @@ TEMPLATE_LIST_TEST_CASE("Inverse", "[algebra][matrix][dim2][method]", FloatingTy
     CHECK(std::abs(inv(0, 1) - 0.45728) < elp);
     CHECK(std::abs(inv(1, 0) - 1.56438) < elp);
     CHECK(std::abs(inv(1, 1) - 1.100224) < elp);
+}
+
+TEMPLATE_LIST_TEST_CASE("Matrix vector multiplication", "[algebra][matrix][dim2][method]", IntegerTypes)
+{
+    constexpr TestType mat_00 = 8, mat_01 = 9, mat_10 = -42, mat_11 = -17;
+    constexpr TestType vec_0 = 5, vec_1 = 11;
+
+    constexpr Matrix<TestType, 2, 2> mat = { mat_00, mat_01, mat_10, mat_11 };
+    constexpr Vector<TestType, 2>    vec = { vec_0, vec_1 };
+
+    constexpr Vector<TestType, 2> mul = mat * vec;
+
+    static_assert(mul[0] == 139);
+    static_assert(mul[1] == -397);
+
+    CHECK(mul[0] == 139);
+    CHECK(mul[1] == -397);
 }
