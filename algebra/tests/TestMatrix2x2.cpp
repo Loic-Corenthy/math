@@ -270,10 +270,7 @@ TEMPLATE_LIST_TEST_CASE("Copy operator", "[algebra][matrix][dim2][operator]", Fl
 
 TEMPLATE_LIST_TEST_CASE("Move operator", "[algebra][matrix][dim2][operator]", IntegerTypes)
 {
-    constexpr TestType m00 = 1;
-    constexpr TestType m01 = 4;
-    constexpr TestType m10 = 27;
-    constexpr TestType m11 = 256;
+    constexpr TestType m00 = 1, m01 = 4, m10 = 27, m11 = 256;
 
     constexpr auto copy1(Matrix<TestType, 2, 2>({ m00, m01, m10, m11 }));
 
@@ -302,10 +299,7 @@ TEMPLATE_LIST_TEST_CASE("Move operator", "[algebra][matrix][dim2][operator]", In
 
 TEMPLATE_LIST_TEST_CASE("Move operator", "[algebra][matrix][dim2][operator]", FloatingTypes)
 {
-    constexpr TestType m00 = -18.1;
-    constexpr TestType m01 = 19.2;
-    constexpr TestType m10 = 20.3;
-    constexpr TestType m11 = -21.4;
+    constexpr TestType m00 = -18.1, m01 = 19.2, m10 = 20.3, m11 = -21.4;
 
     constexpr auto copy1(Matrix<TestType, 2, 2>({ m00, m01, m10, m11 }));
 
@@ -334,10 +328,7 @@ TEMPLATE_LIST_TEST_CASE("Move operator", "[algebra][matrix][dim2][operator]", Fl
 
 TEMPLATE_LIST_TEST_CASE("Comparision operator", "[algebra][matrix][dim2][operator]", IntegerTypes)
 {
-    constexpr TestType m00 = 321;
-    constexpr TestType m01 = 654;
-    constexpr TestType m10 = 987;
-    constexpr TestType m11 = -741;
+    constexpr TestType m00 = 321, m01 = 654, m10 = 987, m11 = -741;
 
     constexpr Matrix<TestType, 2, 2> mat       = { m00, m01, m10, m11 };
     constexpr Matrix<TestType, 2, 2> identical = { m00, m01, m10, m11 };
@@ -352,10 +343,7 @@ TEMPLATE_LIST_TEST_CASE("Comparision operator", "[algebra][matrix][dim2][operato
 
 TEMPLATE_LIST_TEST_CASE("Comparision operator", "[algebra][matrix][dim2][operator]", FloatingTypes)
 {
-    constexpr TestType m00 = -0.1;
-    constexpr TestType m01 = 0.2;
-    constexpr TestType m10 = 0.3;
-    constexpr TestType m11 = -0.4;
+    constexpr TestType m00 = -0.1, m01 = 0.2, m10 = 0.3, m11 = -0.4;
 
     constexpr Matrix<TestType, 2, 2> mat       = { m00, m01, m10, m11 };
     constexpr Matrix<TestType, 2, 2> identical = { m00, m01, m10, m11 };
@@ -454,6 +442,60 @@ TEMPLATE_LIST_TEST_CASE("Substraction operator", "[algebra][matrix][dim2][operat
     CHECK(diff(0, 1) == Catch::Approx(833.697).epsilon(ehp));
     CHECK(diff(1, 0) == Catch::Approx(22.87).epsilon(ehp));
     CHECK(diff(1, 1) == Catch::Approx(210.28).epsilon(ehp));
+}
+
+TEMPLATE_LIST_TEST_CASE("Dimensions", "[algebra][matrix][dim2][method]", IntegerTypes)
+{
+    constexpr Matrix<TestType, 2, 2> mat;
+
+    constexpr auto dims = mat.dimensions();
+
+    static_assert(std::get<0>(dims) == 2);
+    static_assert(std::get<1>(dims) == 2);
+
+    const auto [rows, cols] = mat.dimensions();
+
+    CHECK(rows == 2);
+    CHECK(cols == 2);
+}
+
+TEMPLATE_LIST_TEST_CASE("Dimensions", "[algebra][matrix][dim2][method]", FloatingTypes)
+{
+    constexpr Matrix<TestType, 2, 2> mat;
+
+    constexpr auto dims = mat.dimensions();
+
+    static_assert(std::get<0>(dims) == 2);
+    static_assert(std::get<1>(dims) == 2);
+
+    const auto [rows, cols] = mat.dimensions();
+
+    CHECK(rows == 2);
+    CHECK(cols == 2);
+}
+
+TEMPLATE_LIST_TEST_CASE("Internal data access", "[algebra][matrix][dim2][method]", IntegerTypes)
+{
+    TestType m00 = 321, m01 = 654, m10 = 987, m11 = -741;
+
+    Matrix<TestType, 2, 2> mat = { m00, m01, m10, m11 };
+
+    const auto* data = mat.data();
+
+    // static_assert(data[0] == 321);
+    // static_assert(data[1] == 654);
+    // static_assert(data[2] == 987);
+    // static_assert(data[3] == -741);
+
+
+    CHECK(data[0] == 321);
+    CHECK(data[1] == 654);
+    CHECK(data[2] == 987);
+    CHECK(data[3] == -741);
+}
+
+TEMPLATE_LIST_TEST_CASE("Internal data access", "[algebra][matrix][dim2][method]", FloatingTypes)
+{
 }
 
 TEMPLATE_LIST_TEST_CASE("Matrix multiplication operator", "[algebra][matrix][dim2][operator]", IntegerTypes)

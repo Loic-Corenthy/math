@@ -97,13 +97,13 @@ namespace LCNS::Algebra
          * @brief Get a pointer to the internal coefficients (read/write)
          * @return a pointer to the first element of _coeff
          */
-        coordinate* data();
+        constexpr coordinate* data();
 
         /*!
          * @brief Get a pointer to the internal coefficients (read only)
          * @return a pointer to the first element of _coeff
          */
-        coordinate* data() const;
+        constexpr const coordinate* data() const;
 
         /*!
          * @brief Transpose this matrix if it's a square matrix
@@ -296,13 +296,13 @@ namespace LCNS::Algebra
     }
 
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>
-    coordinate* Matrix<coordinate, rows, cols>::data()
+    constexpr coordinate* Matrix<coordinate, rows, cols>::data()
     {
         return _coeff.data();
     }
 
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>
-    coordinate* Matrix<coordinate, rows, cols>::data() const
+    constexpr const coordinate* Matrix<coordinate, rows, cols>::data() const
     {
         return _coeff.data();
     }
