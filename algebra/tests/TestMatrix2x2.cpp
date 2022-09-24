@@ -611,9 +611,9 @@ TEMPLATE_LIST_TEST_CASE("Determinant", "[algebra][matrix][dim2][method]", Floati
 
     const auto ehp = epsilonHighPrecision<TestType>();
 
-    CHECK(std::abs(det1 - -52.705) < elp);  // Precision warning: can't achieve high precision
-    CHECK(std::abs(det2 - 0.0) < ehp);
-    CHECK(std::abs(det3 - 1.0) < ehp);
+    CHECK(det1 == Catch::Approx(-52.705).epsilon(ehp));
+    CHECK(std::abs(det2 - 0.0) < ehp);  // error: -0.0f == Approx( 0.0 )
+    CHECK(det3 == Catch::Approx(1.0).epsilon(ehp));
 }
 
 TEMPLATE_LIST_TEST_CASE("Trace", "[algebra][matrix][dim2][method]", IntegerTypes)
@@ -669,26 +669,26 @@ TEMPLATE_LIST_TEST_CASE("Inverse", "[algebra][matrix][dim2][method]", FloatingTy
 
     mat.inverse();
 
-    constexpr auto elp = epsilonLowPrecision<TestType>();
+    constexpr auto ehp = epsilonHighPrecision<TestType>();
 
-    CHECK(std::abs(mat(0, 0) - 0.962696) < elp);
-    CHECK(std::abs(mat(0, 1) - 0.45728) < elp);
-    CHECK(std::abs(mat(1, 0) - 1.56438) < elp);
-    CHECK(std::abs(mat(1, 1) - 1.100224) < elp);
+    CHECK(mat(0, 0) == Catch::Approx(0.9626955475).epsilon(ehp));
+    CHECK(mat(0, 1) == Catch::Approx(0.4572803851).epsilon(ehp));
+    CHECK(mat(1, 0) == Catch::Approx(1.5643802647).epsilon(ehp));
+    CHECK(mat(1, 1) == Catch::Approx(1.1002234829).epsilon(ehp));
 
     constexpr Matrix<TestType, 2, 2> mat2 = { mat_00, mat_01, mat_10, mat_11 };
 
     constexpr auto inv = mat2.inversed();
 
-    static_assert(std::abs(inv(0, 0) - 0.962696) < elp);
-    static_assert(std::abs(inv(0, 1) - 0.45728) < elp);
-    static_assert(std::abs(inv(1, 0) - 1.56438) < elp);
-    static_assert(std::abs(inv(1, 1) - 1.100224) < elp);
+    static_assert(std::abs(inv(0, 0) - 0.9626955475) < ehp);
+    static_assert(std::abs(inv(0, 1) - 0.4572803851) < ehp);
+    static_assert(std::abs(inv(1, 0) - 1.5643802647) < ehp);
+    static_assert(std::abs(inv(1, 1) - 1.1002234829) < ehp);
 
-    CHECK(std::abs(inv(0, 0) - 0.962696) < elp);
-    CHECK(std::abs(inv(0, 1) - 0.45728) < elp);
-    CHECK(std::abs(inv(1, 0) - 1.56438) < elp);
-    CHECK(std::abs(inv(1, 1) - 1.100224) < elp);
+    CHECK(inv(0, 0) == Catch::Approx(0.9626955475).epsilon(ehp));
+    CHECK(inv(0, 1) == Catch::Approx(0.4572803851).epsilon(ehp));
+    CHECK(inv(1, 0) == Catch::Approx(1.5643802647).epsilon(ehp));
+    CHECK(inv(1, 1) == Catch::Approx(1.1002234829).epsilon(ehp));
 }
 
 TEMPLATE_LIST_TEST_CASE("Matrix vector multiplication", "[algebra][matrix][dim2][method]", IntegerTypes)
@@ -706,4 +706,25 @@ TEMPLATE_LIST_TEST_CASE("Matrix vector multiplication", "[algebra][matrix][dim2]
 
     CHECK(mul[0] == 139);
     CHECK(mul[1] == -397);
+}
+
+TEMPLATE_LIST_TEST_CASE("Matrix vector multiplication", "[algebra][matrix][dim2][method]", FloatingTypes)
+{
+    constexpr TestType mat_00 = 2.3, mat_01 = 12.1, mat_10 = 6.7, mat_11 = 9.66;
+    constexpr TestType vec_0 = -7.3, vec_1 = 10.2;
+
+    constexpr Matrix<TestType, 2, 2> mat = { mat_00, mat_01, mat_10, mat_11 };
+    constexpr Vector<TestType, 2>    vec = { vec_0, vec_1 };
+
+    constexpr Vector<TestType, 2> mul = mat * vec;
+
+    constexpr auto elp = epsilonLowPrecision<TestType>();
+
+    static_assert(std::abs(mul[0] - 106.63) < elp);
+    static_assert(std::abs(mul[1] - 49.622) < elp);
+
+    constexpr auto ehp = epsilonHighPrecision<TestType>();
+
+    CHECK(mul[0] == Catch::Approx(106.63).epsilon(ehp));
+    CHECK(mul[1] == Catch::Approx(49.622).epsilon(ehp));
 }
