@@ -545,20 +545,20 @@ namespace LCNS::Algebra
     }
 
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>
-    constexpr Matrix<coordinate, rows, cols> operator/(Matrix<coordinate, rows, cols>& lhs, auto rhs)
+    constexpr Matrix<coordinate, rows, cols> operator/(const Matrix<coordinate, rows, cols>& lhs, const coordinate rhs)
     {
-        static_assert(std::is_same_v<decltype(rhs), coordinate>);
-
         if (rhs == static_cast<coordinate>(0))
         {
             throw std::runtime_error("Divide by zero");
         }
 
+        Matrix<coordinate, rows, cols> result;
+
         for (size_t i = 0; i < rows; ++i)
             for (size_t j = 0; j < cols; ++j)
-                lhs(i, j) /= rhs;
+                result(i, j) = lhs(i, j) / rhs;
 
-        return lhs;
+        return result;
     }
 
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>
