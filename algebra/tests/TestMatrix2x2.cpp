@@ -448,6 +448,70 @@ TEMPLATE_LIST_TEST_CASE("Substraction operator", "[algebra][matrix][dim2][operat
     CHECK(diff(1, 1) == Catch::Approx(210.28).epsilon(ehp));
 }
 
+TEMPLATE_LIST_TEST_CASE("Times equal operator", "[algebra][matrix][dim2][operator]", IntegerTypes)
+{
+    TestType mat_00 = 8, mat_01 = 9, mat_10 = 2022, mat_11 = 10;
+    TestType scalar = 2;
+
+    Matrix<TestType, 2, 2> mat = { mat_00, mat_01, mat_10, mat_11 };
+
+    mat *= scalar;
+
+    CHECK(mat(0, 0) == 16);
+    CHECK(mat(0, 1) == 18);
+    CHECK(mat(1, 0) == 4044);
+    CHECK(mat(1, 1) == 20);
+}
+
+TEMPLATE_LIST_TEST_CASE("Times equal operator", "[algebra][matrix][dim2][operator]", FloatingTypes)
+{
+    TestType mat_00 = -77.3, mat_01 = 123.4, mat_10 = 10.01, mat_11 = -99.65;
+    TestType scalar = 17.2;
+
+    Matrix<TestType, 2, 2> mat = { mat_00, mat_01, mat_10, mat_11 };
+
+    mat *= scalar;
+
+    const auto ehp = epsilonHighPrecision<TestType>();
+
+    CHECK(mat(0, 0) == Catch::Approx(-1329.56).epsilon(ehp));
+    CHECK(mat(0, 1) == Catch::Approx(2122.48).epsilon(ehp));
+    CHECK(mat(1, 0) == Catch::Approx(172.172).epsilon(ehp));
+    CHECK(mat(1, 1) == Catch::Approx(-1713.98).epsilon(ehp));
+}
+
+TEMPLATE_LIST_TEST_CASE("Divide equal operator", "[algebra][matrix][dim2][operator]", IntegerTypes)
+{
+    TestType mat_00 = 7, mat_01 = 21, mat_10 = -49, mat_11 = 707;
+    TestType scalar = 7;
+
+    Matrix<TestType, 2, 2> mat = { mat_00, mat_01, mat_10, mat_11 };
+
+    mat /= scalar;
+
+    CHECK(mat(0, 0) == 1);
+    CHECK(mat(0, 1) == 3);
+    CHECK(mat(1, 0) == -7);
+    CHECK(mat(1, 1) == 101);
+}
+
+TEMPLATE_LIST_TEST_CASE("Divide equal operator", "[algebra][matrix][dim2][operator]", FloatingTypes)
+{
+    TestType mat_00 = -55.4, mat_01 = 369.25, mat_10 = 159.75, mat_11 = 268.42;
+    TestType scalar = -28.4;
+
+    Matrix<TestType, 2, 2> mat = { mat_00, mat_01, mat_10, mat_11 };
+
+    mat /= scalar;
+
+    const auto ehp = epsilonHighPrecision<TestType>();
+
+    CHECK(mat(0, 0) == Catch::Approx(1.950704225).epsilon(ehp));
+    CHECK(mat(0, 1) == Catch::Approx(-13.00176056).epsilon(ehp));
+    CHECK(mat(1, 0) == Catch::Approx(-5.625).epsilon(ehp));
+    CHECK(mat(1, 1) == Catch::Approx(-9.45140845).epsilon(ehp));
+}
+
 TEMPLATE_LIST_TEST_CASE("Dimensions", "[algebra][matrix][dim2][method]", IntegerTypes)
 {
     constexpr Matrix<TestType, 2, 2> mat;
