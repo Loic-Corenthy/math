@@ -97,13 +97,13 @@ namespace LCNS::Algebra
          * @brief Get a pointer to the internal coefficients (read/write)
          * @return a pointer to the first element of _coeff
          */
-        constexpr coordinate* data();
+        coordinate* data();
 
         /*!
          * @brief Get a pointer to the internal coefficients (read only)
          * @return a pointer to the first element of _coeff
          */
-        constexpr const coordinate* data() const;
+        const coordinate* data() const;
 
         /*!
          * @brief Transpose this matrix if it's a square matrix
@@ -115,7 +115,7 @@ namespace LCNS::Algebra
          * @brief Create a matrix that is the transpose of this, also works for rectangular matrices
          * @return a new matrix
          */
-        Matrix<coordinate, cols, rows> transposed() const;
+        constexpr Matrix<coordinate, cols, rows> transposed() const;
 
         /*!
          * @brief Compute the determinant of this matrix. Only works for square matrices of size 1,2,3 or 4
@@ -296,13 +296,13 @@ namespace LCNS::Algebra
     }
 
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>
-    constexpr coordinate* Matrix<coordinate, rows, cols>::data()
+    coordinate* Matrix<coordinate, rows, cols>::data()
     {
         return _coeff.data();
     }
 
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>
-    constexpr const coordinate* Matrix<coordinate, rows, cols>::data() const
+    const coordinate* Matrix<coordinate, rows, cols>::data() const
     {
         return _coeff.data();
     }
@@ -318,7 +318,7 @@ namespace LCNS::Algebra
     }
 
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>
-    Matrix<coordinate, cols, rows> Matrix<coordinate, rows, cols>::transposed() const
+    constexpr Matrix<coordinate, cols, rows> Matrix<coordinate, rows, cols>::transposed() const
     {
         Matrix<coordinate, cols, rows> result;
 

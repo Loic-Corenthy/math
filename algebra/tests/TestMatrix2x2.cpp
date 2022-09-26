@@ -272,7 +272,9 @@ TEMPLATE_LIST_TEST_CASE("Move operator", "[algebra][matrix][dim2][operator]", In
 {
     constexpr TestType m00 = 1, m01 = 4, m10 = 27, m11 = 256;
 
-    constexpr auto copy1(Matrix<TestType, 2, 2>({ m00, m01, m10, m11 }));
+    constexpr auto getMatrix = [=]() { return Matrix<TestType, 2, 2>({ m00, m01, m10, m11 }); };
+
+    constexpr auto copy1(getMatrix());
 
     static_assert(copy1(0, 0) == m00);
     static_assert(copy1(0, 1) == m01);
@@ -284,7 +286,7 @@ TEMPLATE_LIST_TEST_CASE("Move operator", "[algebra][matrix][dim2][operator]", In
     CHECK(copy1(1, 0) == m10);
     CHECK(copy1(1, 1) == m11);
 
-    constexpr auto copy2 = Matrix<TestType, 2, 2>({ m00, m01, m10, m11 });
+    constexpr auto copy2 = getMatrix();
 
     static_assert(copy2(0, 0) == m00);
     static_assert(copy2(0, 1) == m01);
@@ -301,7 +303,9 @@ TEMPLATE_LIST_TEST_CASE("Move operator", "[algebra][matrix][dim2][operator]", Fl
 {
     constexpr TestType m00 = -18.1, m01 = 19.2, m10 = 20.3, m11 = -21.4;
 
-    constexpr auto copy1(Matrix<TestType, 2, 2>({ m00, m01, m10, m11 }));
+    constexpr auto getMatrix = [=]() { return Matrix<TestType, 2, 2>({ m00, m01, m10, m11 }); };
+
+    constexpr auto copy1(getMatrix());
 
     static_assert(copy1(0, 0) == m00);
     static_assert(copy1(0, 1) == m01);
@@ -313,7 +317,7 @@ TEMPLATE_LIST_TEST_CASE("Move operator", "[algebra][matrix][dim2][operator]", Fl
     CHECK(copy1(1, 0) == m10);
     CHECK(copy1(1, 1) == m11);
 
-    constexpr auto copy2 = Matrix<TestType, 2, 2>({ m00, m01, m10, m11 });
+    constexpr auto copy2 = getMatrix();
 
     static_assert(copy2(0, 0) == m00);
     static_assert(copy2(0, 1) == m01);
@@ -478,24 +482,102 @@ TEMPLATE_LIST_TEST_CASE("Internal data access", "[algebra][matrix][dim2][method]
 {
     TestType m00 = 321, m01 = 654, m10 = 987, m11 = -741;
 
-    Matrix<TestType, 2, 2> mat = { m00, m01, m10, m11 };
+    Matrix<TestType, 2, 2>       mat1 = { m00, m01, m10, m11 };
+    const Matrix<TestType, 2, 2> mat2 = { m00, m01, m10, m11 };
 
-    const auto* data = mat.data();
+    auto*       data1 = mat1.data();
+    const auto* data2 = mat2.data();
 
-    // static_assert(data[0] == 321);
-    // static_assert(data[1] == 654);
-    // static_assert(data[2] == 987);
-    // static_assert(data[3] == -741);
+    CHECK(data1[0] == 321);
+    CHECK(data1[1] == 654);
+    CHECK(data1[2] == 987);
+    CHECK(data1[3] == -741);
 
-
-    CHECK(data[0] == 321);
-    CHECK(data[1] == 654);
-    CHECK(data[2] == 987);
-    CHECK(data[3] == -741);
+    CHECK(data2[0] == 321);
+    CHECK(data2[1] == 654);
+    CHECK(data2[2] == 987);
+    CHECK(data2[3] == -741);
 }
 
 TEMPLATE_LIST_TEST_CASE("Internal data access", "[algebra][matrix][dim2][method]", FloatingTypes)
 {
+    TestType m00 = 7.55, m01 = -96.25, m10 = -0.0001, m11 = 2.022;
+
+    Matrix<TestType, 2, 2>       mat1 = { m00, m01, m10, m11 };
+    const Matrix<TestType, 2, 2> mat2 = { m00, m01, m10, m11 };
+
+    auto*       data1 = mat1.data();
+    const auto* data2 = mat2.data();
+
+    const auto ehp = epsilonHighPrecision<TestType>();
+
+    CHECK(data1[0] == Catch::Approx(7.55).epsilon(ehp));
+    CHECK(data1[1] == Catch::Approx(-96.25).epsilon(ehp));
+    CHECK(data1[2] == Catch::Approx(-0.0001).epsilon(ehp));
+    CHECK(data1[3] == Catch::Approx(2.022).epsilon(ehp));
+
+    CHECK(data2[0] == Catch::Approx(7.55).epsilon(ehp));
+    CHECK(data2[1] == Catch::Approx(-96.25).epsilon(ehp));
+    CHECK(data2[2] == Catch::Approx(-0.0001).epsilon(ehp));
+    CHECK(data2[3] == Catch::Approx(2.022).epsilon(ehp));
+}
+
+TEMPLATE_LIST_TEST_CASE("Transpose", "[algebra][matrix][dim2][operator]", IntegerTypes)
+{
+    constexpr TestType mat1_00 = 97, mat1_01 = 288, mat1_10 = -666, mat1_11 = 89;
+
+    constexpr Matrix<TestType, 2, 2> mat1 = { mat1_00, mat1_01, mat1_10, mat1_11 };
+
+    constexpr Matrix<TestType, 2, 2> transposed = mat1.transposed();
+
+    static_assert(transposed(0, 0) == 97);
+    static_assert(transposed(0, 1) == -666);
+    static_assert(transposed(1, 0) == 288);
+    static_assert(transposed(1, 1) == 89);
+
+    static_assert(transposed.transposed() == mat1);
+
+    Matrix<TestType, 2, 2> mat2 = { mat1_00, mat1_01, mat1_10, mat1_11 };
+
+    mat2.transpose();
+
+    CHECK(mat2(0, 0) == 97);
+    CHECK(mat2(0, 1) == -666);
+    CHECK(mat2(1, 0) == 288);
+    CHECK(mat2(1, 1) == 89);
+
+    mat2.transpose();
+
+    CHECK(mat2 == mat1);
+}
+
+TEMPLATE_LIST_TEST_CASE("Transpose", "[algebra][matrix][dim2][operator]", FloatingTypes)
+{
+    constexpr TestType mat1_00 = 97.0, mat1_01 = 288.0, mat1_10 = -666.0, mat1_11 = 89.0;
+
+    constexpr Matrix<TestType, 2, 2> mat1 = { mat1_00, mat1_01, mat1_10, mat1_11 };
+
+    constexpr Matrix<TestType, 2, 2> transposed = mat1.transposed();
+
+    static_assert(transposed(0, 0) == 97.0);
+    static_assert(transposed(0, 1) == -666.0);
+    static_assert(transposed(1, 0) == 288.0);
+    static_assert(transposed(1, 1) == 89.0);
+
+    static_assert(transposed.transposed() == mat1);
+
+    Matrix<TestType, 2, 2> mat2 = { mat1_00, mat1_01, mat1_10, mat1_11 };
+
+    mat2.transpose();
+
+    CHECK(mat2(0, 0) == 97.0);
+    CHECK(mat2(0, 1) == -666.0);
+    CHECK(mat2(1, 0) == 288.0);
+    CHECK(mat2(1, 1) == 89.0);
+
+    mat2.transpose();
+
+    CHECK(mat2 == mat1);
 }
 
 TEMPLATE_LIST_TEST_CASE("Matrix multiplication operator", "[algebra][matrix][dim2][operator]", IntegerTypes)
