@@ -15,6 +15,84 @@ using LCNS::Algebra::Matrix;
 using IntegerTypes  = std::tuple<short, int, long>;
 using FloatingTypes = std::tuple<float, double>;
 
+TEMPLATE_LIST_TEST_CASE("Accessor operator", "[algebra][matrix][dim4][operator]", IntegerTypes)
+{
+    // clang-format off
+    constexpr TestType mat_00 =  100, mat_01 =  101, mat_02 = -102, mat_03 = -103,
+                       mat_10 = -110, mat_11 = -111, mat_12 = -112, mat_13 =  113,
+                       mat_20 =  120, mat_21 =  121, mat_22 = -122, mat_23 =  123,
+                       mat_30 =  130, mat_31 =  131, mat_32 = -132, mat_33 =  133;
+
+    constexpr Matrix<TestType, 4, 4> mat = { mat_00, mat_01, mat_02, mat_03, 
+                                             mat_10, mat_11, mat_12, mat_13,
+                                             mat_20, mat_21, mat_22, mat_23,
+                                             mat_30, mat_31, mat_32, mat_33 };
+
+    static_assert(mat(0, 0) == mat_00); static_assert(mat(0, 1) == mat_01); static_assert(mat(0, 2) == mat_02); static_assert(mat(0, 3) == mat_03);
+    static_assert(mat(1, 0) == mat_10); static_assert(mat(1, 1) == mat_11); static_assert(mat(1, 2) == mat_12); static_assert(mat(1, 3) == mat_13);
+    static_assert(mat(2, 0) == mat_20); static_assert(mat(2, 1) == mat_21); static_assert(mat(2, 2) == mat_22); static_assert(mat(2, 3) == mat_23);
+    static_assert(mat(3, 0) == mat_30); static_assert(mat(3, 1) == mat_31); static_assert(mat(3, 2) == mat_32); static_assert(mat(3, 3) == mat_33);
+
+    CHECK(mat(0, 0) == mat_00); CHECK(mat(0, 1) == mat_01); CHECK(mat(0, 2) == mat_02); CHECK(mat(0, 3) == mat_03);
+    CHECK(mat(1, 0) == mat_10); CHECK(mat(1, 1) == mat_11); CHECK(mat(1, 2) == mat_12); CHECK(mat(1, 3) == mat_13);
+    CHECK(mat(2, 0) == mat_20); CHECK(mat(2, 1) == mat_21); CHECK(mat(2, 2) == mat_22); CHECK(mat(2, 3) == mat_23);
+    CHECK(mat(3, 0) == mat_30); CHECK(mat(3, 1) == mat_31); CHECK(mat(3, 2) == mat_32); CHECK(mat(3, 3) == mat_33);
+
+    Matrix<TestType, 4, 4> mat2;
+    mat2(0, 0) = mat_00; mat2(0, 1) = mat_01; mat2(0, 2) = mat_02; mat2(0, 3) = mat_03;
+    mat2(1, 0) = mat_10; mat2(1, 1) = mat_11; mat2(1, 2) = mat_12; mat2(1, 3) = mat_13;
+    mat2(2, 0) = mat_20; mat2(2, 1) = mat_21; mat2(2, 2) = mat_22; mat2(2, 3) = mat_23;
+    mat2(3, 0) = mat_30; mat2(3, 1) = mat_31; mat2(3, 2) = mat_32; mat2(3, 3) = mat_33;
+
+    CHECK(mat2(0, 0) == mat_00); CHECK(mat2(0, 1) == mat_01); CHECK(mat2(0, 2) == mat_02); CHECK(mat2(0, 3) == mat_03);
+    CHECK(mat2(1, 0) == mat_10); CHECK(mat2(1, 1) == mat_11); CHECK(mat2(1, 2) == mat_12); CHECK(mat2(1, 3) == mat_13);
+    CHECK(mat2(2, 0) == mat_20); CHECK(mat2(2, 1) == mat_21); CHECK(mat2(2, 2) == mat_22); CHECK(mat2(2, 3) == mat_23);
+    CHECK(mat2(3, 0) == mat_30); CHECK(mat2(3, 1) == mat_31); CHECK(mat2(3, 2) == mat_32); CHECK(mat2(3, 3) == mat_33);
+
+    CHECK_THROWS(mat2(4, 0));
+    CHECK_THROWS(mat2(0, 4));
+    // clang-format on
+}
+
+TEMPLATE_LIST_TEST_CASE("Accessor operator", "[algebra][matrix][dim4][operator]", FloatingTypes)
+{
+    // clang-format off
+    constexpr TestType mat_00 =  100.1, mat_01 =  101.2, mat_02 = -102.3, mat_03 = -103.4,
+                       mat_10 = -110.1, mat_11 = -111.2, mat_12 = -112.3, mat_13 =  113.4,
+                       mat_20 =  120.1, mat_21 =  121.2, mat_22 = -122.3, mat_23 =  123.4,
+                       mat_30 =  130.1, mat_31 =  131.2, mat_32 = -132.3, mat_33 =  133.4;
+
+    constexpr Matrix<TestType, 4, 4> mat = { mat_00, mat_01, mat_02, mat_03, 
+                                             mat_10, mat_11, mat_12, mat_13,
+                                             mat_20, mat_21, mat_22, mat_23,
+                                             mat_30, mat_31, mat_32, mat_33 };
+
+    static_assert(mat(0, 0) == mat_00); static_assert(mat(0, 1) == mat_01); static_assert(mat(0, 2) == mat_02); static_assert(mat(0, 3) == mat_03);
+    static_assert(mat(1, 0) == mat_10); static_assert(mat(1, 1) == mat_11); static_assert(mat(1, 2) == mat_12); static_assert(mat(1, 3) == mat_13);
+    static_assert(mat(2, 0) == mat_20); static_assert(mat(2, 1) == mat_21); static_assert(mat(2, 2) == mat_22); static_assert(mat(2, 3) == mat_23);
+    static_assert(mat(3, 0) == mat_30); static_assert(mat(3, 1) == mat_31); static_assert(mat(3, 2) == mat_32); static_assert(mat(3, 3) == mat_33);
+
+    CHECK(mat(0, 0) == mat_00); CHECK(mat(0, 1) == mat_01); CHECK(mat(0, 2) == mat_02); CHECK(mat(0, 3) == mat_03);
+    CHECK(mat(1, 0) == mat_10); CHECK(mat(1, 1) == mat_11); CHECK(mat(1, 2) == mat_12); CHECK(mat(1, 3) == mat_13);
+    CHECK(mat(2, 0) == mat_20); CHECK(mat(2, 1) == mat_21); CHECK(mat(2, 2) == mat_22); CHECK(mat(2, 3) == mat_23);
+    CHECK(mat(3, 0) == mat_30); CHECK(mat(3, 1) == mat_31); CHECK(mat(3, 2) == mat_32); CHECK(mat(3, 3) == mat_33);
+
+    Matrix<TestType, 4, 4> mat2;
+    mat2(0, 0) = mat_00; mat2(0, 1) = mat_01; mat2(0, 2) = mat_02; mat2(0, 3) = mat_03;
+    mat2(1, 0) = mat_10; mat2(1, 1) = mat_11; mat2(1, 2) = mat_12; mat2(1, 3) = mat_13;
+    mat2(2, 0) = mat_20; mat2(2, 1) = mat_21; mat2(2, 2) = mat_22; mat2(2, 3) = mat_23;
+    mat2(3, 0) = mat_30; mat2(3, 1) = mat_31; mat2(3, 2) = mat_32; mat2(3, 3) = mat_33;
+
+    CHECK(mat2(0, 0) == mat_00); CHECK(mat2(0, 1) == mat_01); CHECK(mat2(0, 2) == mat_02); CHECK(mat2(0, 3) == mat_03);
+    CHECK(mat2(1, 0) == mat_10); CHECK(mat2(1, 1) == mat_11); CHECK(mat2(1, 2) == mat_12); CHECK(mat2(1, 3) == mat_13);
+    CHECK(mat2(2, 0) == mat_20); CHECK(mat2(2, 1) == mat_21); CHECK(mat2(2, 2) == mat_22); CHECK(mat2(2, 3) == mat_23);
+    CHECK(mat2(3, 0) == mat_30); CHECK(mat2(3, 1) == mat_31); CHECK(mat2(3, 2) == mat_32); CHECK(mat2(3, 3) == mat_33);
+
+    CHECK_THROWS(mat2(4, 0));
+    CHECK_THROWS(mat2(0, 4));
+    // clang-format on
+}
+
 TEMPLATE_LIST_TEST_CASE("Determinant", "[algebra][matrix][dim4][method]", FloatingTypes)
 {
     // clang-format off
