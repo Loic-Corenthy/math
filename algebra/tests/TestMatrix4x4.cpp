@@ -93,6 +93,151 @@ TEMPLATE_LIST_TEST_CASE("Accessor operator", "[algebra][matrix][dim4][operator]"
     // clang-format on
 }
 
+TEMPLATE_LIST_TEST_CASE("Default constructor", "[algebra][matrix][dim4][constructor]", IntegerTypes)
+{
+    constexpr TestType zero = 0;
+
+    constexpr Matrix<TestType, 4, 4> mat;
+
+    // clang-format off
+    static_assert(mat(0, 0) == zero); static_assert(mat(0, 1) == zero); static_assert(mat(0, 2) == zero); static_assert(mat(0, 3) == zero);
+    static_assert(mat(1, 0) == zero); static_assert(mat(1, 1) == zero); static_assert(mat(1, 2) == zero); static_assert(mat(1, 3) == zero);
+    static_assert(mat(2, 0) == zero); static_assert(mat(2, 1) == zero); static_assert(mat(2, 2) == zero); static_assert(mat(2, 3) == zero);
+    static_assert(mat(3, 0) == zero); static_assert(mat(3, 1) == zero); static_assert(mat(3, 2) == zero); static_assert(mat(3, 3) == zero);
+
+    CHECK(mat(0, 0) == zero); CHECK(mat(0, 1) == zero); CHECK(mat(0, 2) == zero); CHECK(mat(0, 3) == zero);
+    CHECK(mat(1, 0) == zero); CHECK(mat(1, 1) == zero); CHECK(mat(1, 2) == zero); CHECK(mat(1, 3) == zero);
+    CHECK(mat(2, 0) == zero); CHECK(mat(2, 1) == zero); CHECK(mat(2, 2) == zero); CHECK(mat(2, 3) == zero);
+    CHECK(mat(3, 0) == zero); CHECK(mat(3, 1) == zero); CHECK(mat(3, 2) == zero); CHECK(mat(3, 3) == zero);
+    // clang-format on
+}
+
+TEMPLATE_LIST_TEST_CASE("Default constructor", "[algebra][matrix][dim4][constructor]", FloatingTypes)
+{
+    constexpr TestType zero = 0.0;
+
+    constexpr Matrix<TestType, 4, 4> mat;
+
+    // clang-format off
+    static_assert(mat(0, 0) == zero); static_assert(mat(0, 1) == zero); static_assert(mat(0, 2) == zero); static_assert(mat(0, 3) == zero);
+    static_assert(mat(1, 0) == zero); static_assert(mat(1, 1) == zero); static_assert(mat(1, 2) == zero); static_assert(mat(1, 3) == zero);
+    static_assert(mat(2, 0) == zero); static_assert(mat(2, 1) == zero); static_assert(mat(2, 2) == zero); static_assert(mat(2, 3) == zero);
+    static_assert(mat(3, 0) == zero); static_assert(mat(3, 1) == zero); static_assert(mat(3, 2) == zero); static_assert(mat(3, 3) == zero);
+
+    CHECK(mat(0, 0) == zero); CHECK(mat(0, 1) == zero); CHECK(mat(0, 2) == zero); CHECK(mat(0, 3) == zero);
+    CHECK(mat(1, 0) == zero); CHECK(mat(1, 1) == zero); CHECK(mat(1, 2) == zero); CHECK(mat(1, 3) == zero);
+    CHECK(mat(2, 0) == zero); CHECK(mat(2, 1) == zero); CHECK(mat(2, 2) == zero); CHECK(mat(2, 3) == zero);
+    CHECK(mat(3, 0) == zero); CHECK(mat(3, 1) == zero); CHECK(mat(3, 2) == zero); CHECK(mat(3, 3) == zero);
+    // clang-format on
+}
+
+TEMPLATE_LIST_TEST_CASE("Constructor with diagonal coefficient", "[algebra][matrix][dim4][constructor]", IntegerTypes)
+{
+    constexpr TestType zero = 0;
+    constexpr TestType one  = 1;
+
+    constexpr Matrix<TestType, 4, 4> mat(one);
+
+    // clang-format off
+    static_assert(mat(0, 0) == one ); static_assert(mat(0, 1) == zero); static_assert(mat(0, 2) == zero); static_assert(mat(0, 3) == zero);
+    static_assert(mat(1, 0) == zero); static_assert(mat(1, 1) == one ); static_assert(mat(1, 2) == zero); static_assert(mat(1, 3) == zero);
+    static_assert(mat(2, 0) == zero); static_assert(mat(2, 1) == zero); static_assert(mat(2, 2) == one ); static_assert(mat(2, 3) == zero);
+    static_assert(mat(3, 0) == zero); static_assert(mat(3, 1) == zero); static_assert(mat(3, 2) == zero); static_assert(mat(3, 3) == one );
+
+    CHECK(mat(0, 0) == one ); CHECK(mat(0, 1) == zero); CHECK(mat(0, 2) == zero); CHECK(mat(0, 3) == zero);
+    CHECK(mat(1, 0) == zero); CHECK(mat(1, 1) == one ); CHECK(mat(1, 2) == zero); CHECK(mat(1, 3) == zero);
+    CHECK(mat(2, 0) == zero); CHECK(mat(2, 1) == zero); CHECK(mat(2, 2) == one ); CHECK(mat(2, 3) == zero);
+    CHECK(mat(3, 0) == zero); CHECK(mat(3, 1) == zero); CHECK(mat(3, 2) == zero); CHECK(mat(3, 3) == one );
+    // clang-format on
+}
+
+TEMPLATE_LIST_TEST_CASE("Constructor with diagonal coefficient", "[algebra][matrix][dim4][constructor]", FloatingTypes)
+{
+    constexpr TestType zero = 0.0;
+    constexpr TestType one  = 1.0;
+
+    constexpr Matrix<TestType, 4, 4> mat(one);
+
+    // clang-format off
+    static_assert(mat(0, 0) == one ); static_assert(mat(0, 1) == zero); static_assert(mat(0, 2) == zero); static_assert(mat(0, 3) == zero);
+    static_assert(mat(1, 0) == zero); static_assert(mat(1, 1) == one ); static_assert(mat(1, 2) == zero); static_assert(mat(1, 3) == zero);
+    static_assert(mat(2, 0) == zero); static_assert(mat(2, 1) == zero); static_assert(mat(2, 2) == one ); static_assert(mat(2, 3) == zero);
+    static_assert(mat(3, 0) == zero); static_assert(mat(3, 1) == zero); static_assert(mat(3, 2) == zero); static_assert(mat(3, 3) == one );
+
+    CHECK(mat(0, 0) == one ); CHECK(mat(0, 1) == zero); CHECK(mat(0, 2) == zero); CHECK(mat(0, 3) == zero);
+    CHECK(mat(1, 0) == zero); CHECK(mat(1, 1) == one ); CHECK(mat(1, 2) == zero); CHECK(mat(1, 3) == zero);
+    CHECK(mat(2, 0) == zero); CHECK(mat(2, 1) == zero); CHECK(mat(2, 2) == one ); CHECK(mat(2, 3) == zero);
+    CHECK(mat(3, 0) == zero); CHECK(mat(3, 1) == zero); CHECK(mat(3, 2) == zero); CHECK(mat(3, 3) == one );
+    // clang-format on
+}
+
+TEMPLATE_LIST_TEST_CASE("Constructor with initializer list", "[algebra][matrix][dim4][constructor]", IntegerTypes)
+{
+    // clang-format off
+    constexpr TestType mat_00 = 0, mat_01 = -1, mat_02 = -9, mat_03 =  5,
+                       mat_10 = 3, mat_11 =  2, mat_12 = -1, mat_13 = -8,
+                       mat_20 = 4, mat_21 =  2, mat_22 =  0, mat_23 =  5,
+                       mat_30 = 1, mat_31 =  2, mat_32 =  7, mat_33 =  5;
+
+    constexpr Matrix<TestType, 4, 4> mat = { mat_00, mat_01, mat_02, mat_03, 
+                                             mat_10, mat_11, mat_12, mat_13,
+                                             mat_20, mat_21, mat_22, mat_23,
+                                             mat_30, mat_31, mat_32, mat_33 };
+
+    static_assert(mat(0, 0) == mat_00); static_assert(mat(0, 1) == mat_01); static_assert(mat(0, 2) == mat_02); static_assert(mat(0, 3) == mat_03);
+    static_assert(mat(1, 0) == mat_10); static_assert(mat(1, 1) == mat_11); static_assert(mat(1, 2) == mat_12); static_assert(mat(1, 3) == mat_13);
+    static_assert(mat(2, 0) == mat_20); static_assert(mat(2, 1) == mat_21); static_assert(mat(2, 2) == mat_22); static_assert(mat(2, 3) == mat_23);
+    static_assert(mat(3, 0) == mat_30); static_assert(mat(3, 1) == mat_31); static_assert(mat(3, 2) == mat_32); static_assert(mat(3, 3) == mat_33);
+
+    CHECK(mat(0, 0) == mat_00); CHECK(mat(0, 1) == mat_01); CHECK(mat(0, 2) == mat_02); CHECK(mat(0, 3) == mat_03);
+    CHECK(mat(1, 0) == mat_10); CHECK(mat(1, 1) == mat_11); CHECK(mat(1, 2) == mat_12); CHECK(mat(1, 3) == mat_13);
+    CHECK(mat(2, 0) == mat_20); CHECK(mat(2, 1) == mat_21); CHECK(mat(2, 2) == mat_22); CHECK(mat(2, 3) == mat_23);
+    CHECK(mat(3, 0) == mat_30); CHECK(mat(3, 1) == mat_31); CHECK(mat(3, 2) == mat_32); CHECK(mat(3, 3) == mat_33);
+
+    CHECK_NOTHROW(Matrix<TestType, 4, 4>({}));
+    CHECK_NOTHROW(Matrix<TestType, 4, 4>({ mat_00, mat_01, mat_02, mat_03 }));
+
+    CHECK_THROWS(Matrix<TestType, 4, 4>({ mat_00, mat_01, mat_02, mat_03, 
+                                          mat_10, mat_11, mat_12, mat_13,
+                                          mat_20, mat_21, mat_22, mat_23,
+                                          mat_30, mat_31, mat_32, mat_33,
+                                          mat_30, mat_31, mat_32, mat_33 }));
+    // clang-format on
+}
+
+TEMPLATE_LIST_TEST_CASE("Constructor with initializer list", "[algebra][matrix][dim4][constructor]", FloatingTypes)
+{
+    // clang-format off
+    constexpr TestType mat_00 = 0.88, mat_01 = -1.98, mat_02 = -9.88, mat_03 =  5.68,
+                       mat_10 = 3.23, mat_11 =  2.45, mat_12 = -1.25, mat_13 = -8.46,
+                       mat_20 = 4.74, mat_21 =  2.37, mat_22 =  0.36, mat_23 =  5.72,
+                       mat_30 = 1.12, mat_31 =  2.11, mat_32 =  7.94, mat_33 =  5.97;
+
+    constexpr Matrix<TestType, 4, 4> mat = { mat_00, mat_01, mat_02, mat_03, 
+                                             mat_10, mat_11, mat_12, mat_13,
+                                             mat_20, mat_21, mat_22, mat_23,
+                                             mat_30, mat_31, mat_32, mat_33 };
+
+    static_assert(mat(0, 0) == mat_00); static_assert(mat(0, 1) == mat_01); static_assert(mat(0, 2) == mat_02); static_assert(mat(0, 3) == mat_03);
+    static_assert(mat(1, 0) == mat_10); static_assert(mat(1, 1) == mat_11); static_assert(mat(1, 2) == mat_12); static_assert(mat(1, 3) == mat_13);
+    static_assert(mat(2, 0) == mat_20); static_assert(mat(2, 1) == mat_21); static_assert(mat(2, 2) == mat_22); static_assert(mat(2, 3) == mat_23);
+    static_assert(mat(3, 0) == mat_30); static_assert(mat(3, 1) == mat_31); static_assert(mat(3, 2) == mat_32); static_assert(mat(3, 3) == mat_33);
+
+    CHECK(mat(0, 0) == mat_00); CHECK(mat(0, 1) == mat_01); CHECK(mat(0, 2) == mat_02); CHECK(mat(0, 3) == mat_03);
+    CHECK(mat(1, 0) == mat_10); CHECK(mat(1, 1) == mat_11); CHECK(mat(1, 2) == mat_12); CHECK(mat(1, 3) == mat_13);
+    CHECK(mat(2, 0) == mat_20); CHECK(mat(2, 1) == mat_21); CHECK(mat(2, 2) == mat_22); CHECK(mat(2, 3) == mat_23);
+    CHECK(mat(3, 0) == mat_30); CHECK(mat(3, 1) == mat_31); CHECK(mat(3, 2) == mat_32); CHECK(mat(3, 3) == mat_33);
+
+    CHECK_NOTHROW(Matrix<TestType, 4, 4>({}));
+    CHECK_NOTHROW(Matrix<TestType, 4, 4>({ mat_00, mat_01, mat_02, mat_03 }));
+
+    CHECK_THROWS(Matrix<TestType, 4, 4>({ mat_00, mat_01, mat_02, mat_03, 
+                                          mat_10, mat_11, mat_12, mat_13,
+                                          mat_20, mat_21, mat_22, mat_23,
+                                          mat_30, mat_31, mat_32, mat_33,
+                                          mat_30, mat_31, mat_32, mat_33 }));
+}
+
 TEMPLATE_LIST_TEST_CASE("Determinant", "[algebra][matrix][dim4][method]", FloatingTypes)
 {
     // clang-format off
