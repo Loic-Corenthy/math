@@ -336,13 +336,23 @@ TEMPLATE_LIST_TEST_CASE("Comparision operator", "[algebra][matrix][dim2][operato
 
     constexpr Matrix<TestType, 2, 2> mat       = { m00, m01, m10, m11 };
     constexpr Matrix<TestType, 2, 2> identical = { m00, m01, m10, m11 };
-    constexpr Matrix<TestType, 2, 2> different = { m00, m11, m10, m01 };
+    constexpr Matrix<TestType, 2, 2> different = { m00, m11, m10, 0 };
 
     static_assert(mat == identical);
     static_assert(mat != different);
 
     CHECK(mat == identical);
-    CHECK(mat != different);
+
+    for (size_t i = 0; i < 2; ++i)
+    {
+        for (size_t j = 0; j < 2; ++j)
+        {
+            Matrix<TestType, 2, 2> diff = mat;
+            diff(i, j)                  = 0;
+
+            CHECK(mat != diff);
+        }
+    }
 }
 
 TEMPLATE_LIST_TEST_CASE("Comparision operator", "[algebra][matrix][dim2][operator]", FloatingTypes)
@@ -351,13 +361,23 @@ TEMPLATE_LIST_TEST_CASE("Comparision operator", "[algebra][matrix][dim2][operato
 
     constexpr Matrix<TestType, 2, 2> mat       = { m00, m01, m10, m11 };
     constexpr Matrix<TestType, 2, 2> identical = { m00, m01, m10, m11 };
-    constexpr Matrix<TestType, 2, 2> different = { m00, m11, m10, m01 };
+    constexpr Matrix<TestType, 2, 2> different = { m00, m11, m10, 0.0 };
 
     static_assert(mat == identical);
     static_assert(mat != different);
 
     CHECK(mat == identical);
-    CHECK(mat != different);
+
+    for (size_t i = 0; i < 2; ++i)
+    {
+        for (size_t j = 0; j < 2; ++j)
+        {
+            Matrix<TestType, 2, 2> diff = mat;
+            diff(i, j)                  = 0;
+
+            CHECK(mat != diff);
+        }
+    }
 }
 
 TEMPLATE_LIST_TEST_CASE("Addition operator", "[algebra][matrix][dim2][operator]", IntegerTypes)
