@@ -513,6 +513,9 @@ TEMPLATE_LIST_TEST_CASE("Divide equal operator", "[algebra][matrix][dim2][operat
     CHECK(mat(0, 1) == 3);
     CHECK(mat(1, 0) == -7);
     CHECK(mat(1, 1) == 101);
+
+    TestType zero = 0;
+    CHECK_THROWS(mat /= zero);
 }
 
 TEMPLATE_LIST_TEST_CASE("Divide equal operator", "[algebra][matrix][dim2][operator]", FloatingTypes)
@@ -530,6 +533,9 @@ TEMPLATE_LIST_TEST_CASE("Divide equal operator", "[algebra][matrix][dim2][operat
     CHECK(mat(0, 1) == Catch::Approx(-13.00176056).epsilon(ehp));
     CHECK(mat(1, 0) == Catch::Approx(-5.625).epsilon(ehp));
     CHECK(mat(1, 1) == Catch::Approx(-9.45140845).epsilon(ehp));
+
+    TestType zero = 0.0;
+    CHECK_THROWS(mat /= zero);
 }
 
 TEMPLATE_LIST_TEST_CASE("Dimensions", "[algebra][matrix][dim2][method]", IntegerTypes)

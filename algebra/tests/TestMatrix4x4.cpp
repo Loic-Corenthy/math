@@ -1269,6 +1269,172 @@ TEMPLATE_LIST_TEST_CASE("Substraction operator", "[algebra][matrix][dim4][operat
     CHECK(diff(3, 3) == Catch::Approx(25.41).epsilon(ehp));
 }
 
+TEMPLATE_LIST_TEST_CASE("Times equal", "[algebra][matrix][dim4][operator]", IntegerTypes)
+{
+    // clang-format off
+    TestType mat_00 =  1, mat_01 =  5, mat_02 =   9, mat_03 =  13,
+             mat_10 = -2, mat_11 = -6, mat_12 = -10, mat_13 = -14,
+             mat_20 =  3, mat_21 =  7, mat_22 =  11, mat_23 =  15,
+             mat_30 = -4, mat_31 = -8, mat_32 = -12, mat_33 = -16;
+
+    TestType scalar = 5;
+
+    Matrix<TestType, 4, 4> mat = { mat_00, mat_01, mat_02, mat_03,
+                                   mat_10, mat_11, mat_12, mat_13,
+                                   mat_20, mat_21, mat_22, mat_23,
+                                   mat_30, mat_31, mat_32, mat_33 };
+    // clang-format on
+
+    mat *= scalar;
+
+    CHECK(mat(0, 0) == 5);
+    CHECK(mat(1, 0) == -10);
+    CHECK(mat(2, 0) == 15);
+    CHECK(mat(3, 0) == -20);
+
+    CHECK(mat(0, 1) == 25);
+    CHECK(mat(1, 1) == -30);
+    CHECK(mat(2, 1) == 35);
+    CHECK(mat(3, 1) == -40);
+
+    CHECK(mat(0, 2) == 45);
+    CHECK(mat(1, 2) == -50);
+    CHECK(mat(2, 2) == 55);
+    CHECK(mat(3, 2) == -60);
+
+    CHECK(mat(0, 3) == 65);
+    CHECK(mat(1, 3) == -70);
+    CHECK(mat(2, 3) == 75);
+    CHECK(mat(3, 3) == -80);
+}
+
+TEMPLATE_LIST_TEST_CASE("Times equal", "[algebra][matrix][dim4][operator]", FloatingTypes)
+{
+    // clang-format off
+    TestType mat_00 = 9.49, mat_01 =  1.1, mat_02 = 85.4, mat_03 =  -7.0,
+             mat_10 = 4.78, mat_11 = -3.8, mat_12 = 33.3, mat_13 = -27.4,
+             mat_20 = -5.3, mat_21 =  4.4, mat_22 = -9.8, mat_23 = -82.7,
+             mat_30 =  7.1, mat_31 = 3.21, mat_32 = 19.9, mat_33 = 253.2;
+
+    TestType scalar = 8.6;
+
+    Matrix<TestType, 4, 4> mat = { mat_00, mat_01, mat_02, mat_03, 
+                                   mat_10, mat_11, mat_12, mat_13,
+                                   mat_20, mat_21, mat_22, mat_23,
+                                   mat_30, mat_31, mat_32, mat_33 };
+    // clang-format on
+
+    mat *= scalar;
+
+    const auto ehp = epsilonHighPrecision<TestType>();
+
+    CHECK(mat(0, 0) == Catch::Approx(81.614).epsilon(ehp));
+    CHECK(mat(1, 0) == Catch::Approx(41.108).epsilon(ehp));
+    CHECK(mat(2, 0) == Catch::Approx(-45.58).epsilon(ehp));
+    CHECK(mat(3, 0) == Catch::Approx(61.06).epsilon(ehp));
+
+    CHECK(mat(0, 1) == Catch::Approx(9.46).epsilon(ehp));
+    CHECK(mat(1, 1) == Catch::Approx(-32.68).epsilon(ehp));
+    CHECK(mat(2, 1) == Catch::Approx(37.84).epsilon(ehp));
+    CHECK(mat(3, 1) == Catch::Approx(27.606).epsilon(ehp));
+
+    CHECK(mat(0, 2) == Catch::Approx(734.44).epsilon(ehp));
+    CHECK(mat(1, 2) == Catch::Approx(286.38).epsilon(ehp));
+    CHECK(mat(2, 2) == Catch::Approx(-84.28).epsilon(ehp));
+    CHECK(mat(3, 2) == Catch::Approx(171.14).epsilon(ehp));
+
+    CHECK(mat(0, 3) == Catch::Approx(-60.2).epsilon(ehp));
+    CHECK(mat(1, 3) == Catch::Approx(-235.64).epsilon(ehp));
+    CHECK(mat(2, 3) == Catch::Approx(-711.22).epsilon(ehp));
+    CHECK(mat(3, 3) == Catch::Approx(2177.52).epsilon(ehp));
+}
+
+TEMPLATE_LIST_TEST_CASE("Divide equal", "[algebra][matrix][dim4][operator]", IntegerTypes)
+{
+    // clang-format off
+    TestType mat_00 =  10, mat_01 =  50, mat_02 =   90, mat_03 =  130,
+             mat_10 = -20, mat_11 = -60, mat_12 = -100, mat_13 = -140,
+             mat_20 =  30, mat_21 =  70, mat_22 =  110, mat_23 =  150,
+             mat_30 = -40, mat_31 = -80, mat_32 = -120, mat_33 = -160;
+
+    TestType scalar = -2;
+
+    Matrix<TestType, 4, 4> mat = { mat_00, mat_01, mat_02, mat_03,
+                                   mat_10, mat_11, mat_12, mat_13,
+                                   mat_20, mat_21, mat_22, mat_23,
+                                   mat_30, mat_31, mat_32, mat_33 };
+    // clang-format on
+
+    mat /= scalar;
+
+    CHECK(mat(0, 0) == -5);
+    CHECK(mat(1, 0) == 10);
+    CHECK(mat(2, 0) == -15);
+    CHECK(mat(3, 0) == 20);
+
+    CHECK(mat(0, 1) == -25);
+    CHECK(mat(1, 1) == 30);
+    CHECK(mat(2, 1) == -35);
+    CHECK(mat(3, 1) == 40);
+
+    CHECK(mat(0, 2) == -45);
+    CHECK(mat(1, 2) == 50);
+    CHECK(mat(2, 2) == -55);
+    CHECK(mat(3, 2) == 60);
+
+    CHECK(mat(0, 3) == -65);
+    CHECK(mat(1, 3) == 70);
+    CHECK(mat(2, 3) == -75);
+    CHECK(mat(3, 3) == 80);
+
+    TestType zero = 0;
+    CHECK_THROWS(mat /= zero);
+}
+
+TEMPLATE_LIST_TEST_CASE("Divide equal", "[algebra][matrix][dim4][operator]", FloatingTypes)
+{
+    // clang-format off
+    TestType mat_00 = 9.49, mat_01 =  1.1, mat_02 = 85.4, mat_03 =  -7.0,
+             mat_10 = 4.78, mat_11 = -3.8, mat_12 = 33.3, mat_13 = -27.4,
+             mat_20 = -5.3, mat_21 =  4.4, mat_22 = -9.8, mat_23 = -82.7,
+             mat_30 =  7.1, mat_31 = 3.21, mat_32 = 19.9, mat_33 = 253.2;
+
+    TestType scalar = 8.6;
+
+    Matrix<TestType, 4, 4> mat = { mat_00, mat_01, mat_02, mat_03, 
+                                   mat_10, mat_11, mat_12, mat_13,
+                                   mat_20, mat_21, mat_22, mat_23,
+                                   mat_30, mat_31, mat_32, mat_33 };
+    // clang-format on
+
+    mat /= scalar;
+
+    const auto ehp = epsilonHighPrecision<TestType>();
+
+    CHECK(mat(0, 0) == Catch::Approx(1.10348837209302).epsilon(ehp));
+    CHECK(mat(1, 0) == Catch::Approx(0.555813953488372).epsilon(ehp));
+    CHECK(mat(2, 0) == Catch::Approx(-0.616279069767442).epsilon(ehp));
+    CHECK(mat(3, 0) == Catch::Approx(0.825581395348837).epsilon(ehp));
+
+    CHECK(mat(0, 1) == Catch::Approx(0.127906976744186).epsilon(ehp));
+    CHECK(mat(1, 1) == Catch::Approx(-0.441860465116279).epsilon(ehp));
+    CHECK(mat(2, 1) == Catch::Approx(0.511627906976744).epsilon(ehp));
+    CHECK(mat(3, 1) == Catch::Approx(0.373255813953488).epsilon(ehp));
+
+    CHECK(mat(0, 2) == Catch::Approx(9.93023255813954).epsilon(ehp));
+    CHECK(mat(1, 2) == Catch::Approx(3.87209302325581).epsilon(ehp));
+    CHECK(mat(2, 2) == Catch::Approx(-1.13953488372093).epsilon(ehp));
+    CHECK(mat(3, 2) == Catch::Approx(2.31395348837209).epsilon(ehp));
+
+    CHECK(mat(0, 3) == Catch::Approx(-0.813953488372093).epsilon(ehp));
+    CHECK(mat(1, 3) == Catch::Approx(-3.18604651162791).epsilon(ehp));
+    CHECK(mat(2, 3) == Catch::Approx(-9.61627906976744).epsilon(ehp));
+    CHECK(mat(3, 3) == Catch::Approx(29.4418604651163).epsilon(ehp));
+
+    TestType zero = 0.0;
+    CHECK_THROWS(mat /= zero);
+}
+
 TEMPLATE_LIST_TEST_CASE("Determinant", "[algebra][matrix][dim4][method]", FloatingTypes)
 {
     // clang-format off
