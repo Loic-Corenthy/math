@@ -5,6 +5,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_template_test_macros.hpp>
 #include <catch2/catch_approx.hpp>
+#include <catch2/generators/catch_generators_random.hpp>
 
 #include <iostream>
 
@@ -994,6 +995,279 @@ TEMPLATE_LIST_TEST_CASE("Comparision operator", "[algebra][matrix][dim4][operato
     }
 }
 
+TEMPLATE_LIST_TEST_CASE("Addition operator", "[algebra][matrix][dim4][operator]", IntegerTypes)
+{
+    // clang-format off
+    constexpr TestType mat1_00 = 854, mat1_01 =    7, mat1_02 = 9449, mat1_03 = 1659,
+                       mat1_10 = 333, mat1_11 = -274, mat1_12 = 4528, mat1_13 = -379,
+                       mat1_20 = -98, mat1_21 = -982, mat1_22 = -563, mat1_23 = 4714,
+                       mat1_30 = 199, mat1_31 = 2532, mat1_32 = -700, mat1_33 = 3214;
+
+    constexpr TestType mat2_00 =   -5, mat2_01 = -607, mat2_02 = -979, mat2_03 = 1010,
+                       mat2_10 = -563, mat2_11 = -274, mat2_12 = 4028, mat2_13 = -654,
+                       mat2_20 = 1178, mat2_21 =  974, mat2_22 = 4563, mat2_23 = -514,
+                       mat2_30 = 2230, mat2_31 = -439, mat2_32 = -705, mat2_33 = -222;
+
+    constexpr Matrix<TestType, 4, 4> mat1 = { mat1_00, mat1_01, mat1_02, mat1_03,
+                                              mat1_10, mat1_11, mat1_12, mat1_13,
+                                              mat1_20, mat1_21, mat1_22, mat1_23,
+                                              mat1_30, mat1_31, mat1_32, mat1_33 };
+
+    constexpr Matrix<TestType, 4, 4> mat2 = { mat2_00, mat2_01, mat2_02, mat2_03,
+                                              mat2_10, mat2_11, mat2_12, mat2_13,
+                                              mat2_20, mat2_21, mat2_22, mat2_23,
+                                              mat2_30, mat2_31, mat2_32, mat2_33 };
+    // clang-format on
+
+    constexpr Matrix<TestType, 4, 4> sum = mat1 + mat2;
+
+    static_assert(sum(0, 0) == 849);
+    static_assert(sum(1, 0) == -230);
+    static_assert(sum(2, 0) == 1080);
+    static_assert(sum(3, 0) == 2429);
+
+    static_assert(sum(0, 1) == -600);
+    static_assert(sum(1, 1) == -548);
+    static_assert(sum(2, 1) == -8);
+    static_assert(sum(3, 1) == 2093);
+
+    static_assert(sum(0, 2) == 8470);
+    static_assert(sum(1, 2) == 8556);
+    static_assert(sum(2, 2) == 4000);
+    static_assert(sum(3, 2) == -1405);
+
+    static_assert(sum(0, 3) == 2669);
+    static_assert(sum(1, 3) == -1033);
+    static_assert(sum(2, 3) == 4200);
+    static_assert(sum(3, 3) == 2992);
+
+    CHECK(sum(0, 0) == 849);
+    CHECK(sum(1, 0) == -230);
+    CHECK(sum(2, 0) == 1080);
+    CHECK(sum(3, 0) == 2429);
+
+    CHECK(sum(0, 1) == -600);
+    CHECK(sum(1, 1) == -548);
+    CHECK(sum(2, 1) == -8);
+    CHECK(sum(3, 1) == 2093);
+
+    CHECK(sum(0, 2) == 8470);
+    CHECK(sum(1, 2) == 8556);
+    CHECK(sum(2, 2) == 4000);
+    CHECK(sum(3, 2) == -1405);
+
+    CHECK(sum(0, 3) == 2669);
+    CHECK(sum(1, 3) == -1033);
+    CHECK(sum(2, 3) == 4200);
+    CHECK(sum(3, 3) == 2992);
+}
+
+TEMPLATE_LIST_TEST_CASE("Addition operator", "[algebra][matrix][dim4][operator]", FloatingTypes)
+{
+    // clang-format off
+    constexpr TestType mat1_00 = 85.4, mat1_01 =   7.1, mat1_02 = 9.49, mat1_03 =  1.1,
+                       mat1_10 = 33.3, mat1_11 = -27.4, mat1_12 = 4.78, mat1_13 = -3.8,
+                       mat1_20 = -9.8, mat1_21 = -82.7, mat1_22 = -5.3, mat1_23 =  4.4,
+                       mat1_30 = 19.9, mat1_31 = 253.2, mat1_32 = -7.0, mat1_33 = 3.21;
+
+    constexpr TestType mat2_00 =  -5.1, mat2_01 = -60.7, mat2_02 = -9.7, mat2_03 = 101.0,
+                       mat2_10 = -63.3, mat2_11 = -27.4, mat2_12 = 40.2, mat2_13 = -65.4,
+                       mat2_20 = 178.7, mat2_21 =  97.4, mat2_22 = 45.6, mat2_23 = -51.4,
+                       mat2_30 = 220.5, mat2_31 = -43.9, mat2_32 =  7.0, mat2_33 = -22.2;
+
+    constexpr Matrix<TestType, 4, 4> mat1 = { mat1_00, mat1_01, mat1_02, mat1_03, 
+                                              mat1_10, mat1_11, mat1_12, mat1_13,
+                                              mat1_20, mat1_21, mat1_22, mat1_23,
+                                              mat1_30, mat1_31, mat1_32, mat1_33 };
+
+    constexpr Matrix<TestType, 4, 4> mat2 = { mat2_00, mat2_01, mat2_02, mat2_03, 
+                                              mat2_10, mat2_11, mat2_12, mat2_13,
+                                              mat2_20, mat2_21, mat2_22, mat2_23,
+                                              mat2_30, mat2_31, mat2_32, mat2_33 };
+    // clang-format on
+    constexpr Matrix<TestType, 4, 4> sum = mat1 + mat2;
+
+    constexpr auto elp = epsilonLowPrecision<TestType>();
+
+    static_assert(std::abs(sum(0, 0) - 80.3) < elp);
+    static_assert(std::abs(sum(1, 0) - -30.0) < elp);
+    static_assert(std::abs(sum(2, 0) - 168.9) < elp);
+    static_assert(std::abs(sum(3, 0) - 240.4) < elp);
+
+    static_assert(std::abs(sum(0, 1) - -53.6) < elp);
+    static_assert(std::abs(sum(1, 1) - -54.8) < elp);
+    static_assert(std::abs(sum(2, 1) - 14.7) < elp);
+    static_assert(std::abs(sum(3, 1) - 209.3) < elp);
+
+    static_assert(std::abs(sum(0, 2) - -0.21) < elp);
+    static_assert(std::abs(sum(1, 2) - 44.98) < elp);
+    static_assert(std::abs(sum(2, 2) - 40.3) < elp);
+    static_assert(std::abs(sum(3, 2) - 0.0) < elp);
+
+    static_assert(std::abs(sum(0, 3) - 102.1) < elp);
+    static_assert(std::abs(sum(1, 3) - -69.2) < elp);
+    static_assert(std::abs(sum(2, 3) - -47.0) < elp);
+    static_assert(std::abs(sum(3, 3) - -18.99) < elp);
+
+    const auto ehp = epsilonHighPrecision<TestType>();
+
+    CHECK(sum(0, 0) == Catch::Approx(80.3).epsilon(ehp));
+    CHECK(sum(1, 0) == Catch::Approx(-30.0).epsilon(ehp));
+    CHECK(sum(2, 0) == Catch::Approx(168.9).epsilon(ehp));
+    CHECK(sum(3, 0) == Catch::Approx(240.4).epsilon(ehp));
+
+    CHECK(sum(0, 1) == Catch::Approx(-53.6).epsilon(ehp));
+    CHECK(sum(1, 1) == Catch::Approx(-54.8).epsilon(ehp));
+    CHECK(sum(2, 1) == Catch::Approx(14.7).epsilon(ehp));
+    CHECK(sum(3, 1) == Catch::Approx(209.3).epsilon(ehp));
+
+    CHECK(sum(0, 2) == Catch::Approx(-0.21).epsilon(ehp));
+    CHECK(sum(1, 2) == Catch::Approx(44.98).epsilon(ehp));
+    CHECK(sum(2, 2) == Catch::Approx(40.3).epsilon(ehp));
+    CHECK(sum(3, 2) == Catch::Approx(0.0).epsilon(ehp));
+
+    CHECK(sum(0, 3) == Catch::Approx(102.1).epsilon(ehp));
+    CHECK(sum(1, 3) == Catch::Approx(-69.2).epsilon(ehp));
+    CHECK(sum(2, 3) == Catch::Approx(-47.0).epsilon(ehp));
+    CHECK(sum(3, 3) == Catch::Approx(-18.99).epsilon(ehp));
+}
+
+TEMPLATE_LIST_TEST_CASE("Substraction operator", "[algebra][matrix][dim4][operator]", IntegerTypes)
+{
+    // clang-format off
+    constexpr TestType mat1_00 = 854, mat1_01 =    7, mat1_02 = 9449, mat1_03 = 1659,
+                       mat1_10 = 333, mat1_11 = -274, mat1_12 = 4528, mat1_13 = -379,
+                       mat1_20 = -98, mat1_21 = -982, mat1_22 = -563, mat1_23 = 4714,
+                       mat1_30 = 199, mat1_31 = 2532, mat1_32 = -700, mat1_33 = 3214;
+
+    constexpr TestType mat2_00 =   -5, mat2_01 = -607, mat2_02 = -979, mat2_03 = 1010,
+                       mat2_10 = -563, mat2_11 = -274, mat2_12 = 4028, mat2_13 = -654,
+                       mat2_20 = 1178, mat2_21 =  974, mat2_22 = 4563, mat2_23 = -514,
+                       mat2_30 = 2230, mat2_31 = -439, mat2_32 = -705, mat2_33 = -222;
+
+    constexpr Matrix<TestType, 4, 4> mat1 = { mat1_00, mat1_01, mat1_02, mat1_03,
+                                              mat1_10, mat1_11, mat1_12, mat1_13,
+                                              mat1_20, mat1_21, mat1_22, mat1_23,
+                                              mat1_30, mat1_31, mat1_32, mat1_33 };
+
+    constexpr Matrix<TestType, 4, 4> mat2 = { mat2_00, mat2_01, mat2_02, mat2_03,
+                                              mat2_10, mat2_11, mat2_12, mat2_13,
+                                              mat2_20, mat2_21, mat2_22, mat2_23,
+                                              mat2_30, mat2_31, mat2_32, mat2_33 };
+    // clang-format on
+
+    constexpr Matrix<TestType, 4, 4> diff = mat1 - mat2;
+
+    static_assert(diff(0, 0) == 859);
+    static_assert(diff(1, 0) == 896);
+    static_assert(diff(2, 0) == -1276);
+    static_assert(diff(3, 0) == -2031);
+
+    static_assert(diff(0, 1) == 614);
+    static_assert(diff(1, 1) == 0);
+    static_assert(diff(2, 1) == -1956);
+    static_assert(diff(3, 1) == 2971);
+
+    static_assert(diff(0, 2) == 10428);
+    static_assert(diff(1, 2) == 500);
+    static_assert(diff(2, 2) == -5126);
+    static_assert(diff(3, 2) == 5);
+
+    static_assert(diff(0, 3) == 649);
+    static_assert(diff(1, 3) == 275);
+    static_assert(diff(2, 3) == 5228);
+    static_assert(diff(3, 3) == 3436);
+
+    CHECK(diff(0, 0) == 859);
+    CHECK(diff(1, 0) == 896);
+    CHECK(diff(2, 0) == -1276);
+    CHECK(diff(3, 0) == -2031);
+
+    CHECK(diff(0, 1) == 614);
+    CHECK(diff(1, 1) == 0);
+    CHECK(diff(2, 1) == -1956);
+    CHECK(diff(3, 1) == 2971);
+
+    CHECK(diff(0, 2) == 10428);
+    CHECK(diff(1, 2) == 500);
+    CHECK(diff(2, 2) == -5126);
+    CHECK(diff(3, 2) == 5);
+
+    CHECK(diff(0, 3) == 649);
+    CHECK(diff(1, 3) == 275);
+    CHECK(diff(2, 3) == 5228);
+    CHECK(diff(3, 3) == 3436);
+}
+
+TEMPLATE_LIST_TEST_CASE("Substraction operator", "[algebra][matrix][dim4][operator]", FloatingTypes)
+{
+    // clang-format off
+    constexpr TestType mat1_00 = 85.4, mat1_01 =   7.1, mat1_02 = 9.49, mat1_03 =  1.1,
+                       mat1_10 = 33.3, mat1_11 = -27.4, mat1_12 = 4.78, mat1_13 = -3.8,
+                       mat1_20 = -9.8, mat1_21 = -82.7, mat1_22 = -5.3, mat1_23 =  4.4,
+                       mat1_30 = 19.9, mat1_31 = 253.2, mat1_32 = -7.0, mat1_33 = 3.21;
+
+    constexpr TestType mat2_00 =  -5.1, mat2_01 = -60.7, mat2_02 = -9.7, mat2_03 = 101.0,
+                       mat2_10 = -63.3, mat2_11 = -27.4, mat2_12 = 40.2, mat2_13 = -65.4,
+                       mat2_20 = 178.7, mat2_21 =  97.4, mat2_22 = 45.6, mat2_23 = -51.4,
+                       mat2_30 = 220.5, mat2_31 = -43.9, mat2_32 =  7.0, mat2_33 = -22.2;
+
+    constexpr Matrix<TestType, 4, 4> mat1 = { mat1_00, mat1_01, mat1_02, mat1_03, 
+                                              mat1_10, mat1_11, mat1_12, mat1_13,
+                                              mat1_20, mat1_21, mat1_22, mat1_23,
+                                              mat1_30, mat1_31, mat1_32, mat1_33 };
+
+    constexpr Matrix<TestType, 4, 4> mat2 = { mat2_00, mat2_01, mat2_02, mat2_03, 
+                                              mat2_10, mat2_11, mat2_12, mat2_13,
+                                              mat2_20, mat2_21, mat2_22, mat2_23,
+                                              mat2_30, mat2_31, mat2_32, mat2_33 };
+    // clang-format on
+    constexpr Matrix<TestType, 4, 4> diff = mat1 - mat2;
+
+    constexpr auto elp = epsilonLowPrecision<TestType>();
+
+    static_assert(std::abs(diff(0, 0) - 90.5) < elp);
+    static_assert(std::abs(diff(1, 0) - 96.6) < elp);
+    static_assert(std::abs(diff(2, 0) - -188.5) < elp);
+    static_assert(std::abs(diff(3, 0) - -200.6) < elp);
+
+    static_assert(std::abs(diff(0, 1) - 67.8) < elp);
+    static_assert(std::abs(diff(1, 1) - 0.0) < elp);
+    static_assert(std::abs(diff(2, 1) - -180.1) < elp);
+    static_assert(std::abs(diff(3, 1) - 297.1) < elp);
+
+    static_assert(std::abs(diff(0, 2) - 19.19) < elp);
+    static_assert(std::abs(diff(1, 2) - -35.42) < elp);
+    static_assert(std::abs(diff(2, 2) - -50.9) < elp);
+    static_assert(std::abs(diff(3, 2) - -14.0) < elp);
+
+    static_assert(std::abs(diff(0, 3) - -99.9) < elp);
+    static_assert(std::abs(diff(1, 3) - 61.6) < elp);
+    static_assert(std::abs(diff(2, 3) - 55.8) < elp);
+    static_assert(std::abs(diff(3, 3) - 25.41) < elp);
+
+    const auto ehp = epsilonHighPrecision<TestType>();
+
+    CHECK(diff(0, 0) == Catch::Approx(90.5).epsilon(ehp));
+    CHECK(diff(1, 0) == Catch::Approx(96.6).epsilon(ehp));
+    CHECK(diff(2, 0) == Catch::Approx(-188.5).epsilon(ehp));
+    CHECK(diff(3, 0) == Catch::Approx(-200.6).epsilon(ehp));
+
+    CHECK(diff(0, 1) == Catch::Approx(67.8).epsilon(ehp));
+    CHECK(diff(1, 1) == Catch::Approx(0.0).epsilon(ehp));
+    CHECK(diff(2, 1) == Catch::Approx(-180.1).epsilon(ehp));
+    CHECK(diff(3, 1) == Catch::Approx(297.1).epsilon(ehp));
+
+    CHECK(diff(0, 2) == Catch::Approx(19.19).epsilon(ehp));
+    CHECK(diff(1, 2) == Catch::Approx(-35.42).epsilon(ehp));
+    CHECK(diff(2, 2) == Catch::Approx(-50.9).epsilon(ehp));
+    CHECK(diff(3, 2) == Catch::Approx(-14.0).epsilon(ehp));
+
+    CHECK(diff(0, 3) == Catch::Approx(-99.9).epsilon(ehp));
+    CHECK(diff(1, 3) == Catch::Approx(61.6).epsilon(ehp));
+    CHECK(diff(2, 3) == Catch::Approx(55.8).epsilon(ehp));
+    CHECK(diff(3, 3) == Catch::Approx(25.41).epsilon(ehp));
+}
 
 TEMPLATE_LIST_TEST_CASE("Determinant", "[algebra][matrix][dim4][method]", FloatingTypes)
 {
