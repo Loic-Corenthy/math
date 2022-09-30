@@ -27,31 +27,78 @@ TEMPLATE_LIST_TEST_CASE("Accessor operator", "[algebra][matrix][dim4][operator]"
                                              mat_10, mat_11, mat_12, mat_13,
                                              mat_20, mat_21, mat_22, mat_23,
                                              mat_30, mat_31, mat_32, mat_33 };
+    // clang-format on
 
-    static_assert(mat(0, 0) == mat_00); static_assert(mat(0, 1) == mat_01); static_assert(mat(0, 2) == mat_02); static_assert(mat(0, 3) == mat_03);
-    static_assert(mat(1, 0) == mat_10); static_assert(mat(1, 1) == mat_11); static_assert(mat(1, 2) == mat_12); static_assert(mat(1, 3) == mat_13);
-    static_assert(mat(2, 0) == mat_20); static_assert(mat(2, 1) == mat_21); static_assert(mat(2, 2) == mat_22); static_assert(mat(2, 3) == mat_23);
-    static_assert(mat(3, 0) == mat_30); static_assert(mat(3, 1) == mat_31); static_assert(mat(3, 2) == mat_32); static_assert(mat(3, 3) == mat_33);
+    static_assert(mat(0, 0) == mat_00);
+    static_assert(mat(1, 0) == mat_10);
+    static_assert(mat(2, 0) == mat_20);
+    static_assert(mat(3, 0) == mat_30);
 
-    CHECK(mat(0, 0) == mat_00); CHECK(mat(0, 1) == mat_01); CHECK(mat(0, 2) == mat_02); CHECK(mat(0, 3) == mat_03);
-    CHECK(mat(1, 0) == mat_10); CHECK(mat(1, 1) == mat_11); CHECK(mat(1, 2) == mat_12); CHECK(mat(1, 3) == mat_13);
-    CHECK(mat(2, 0) == mat_20); CHECK(mat(2, 1) == mat_21); CHECK(mat(2, 2) == mat_22); CHECK(mat(2, 3) == mat_23);
-    CHECK(mat(3, 0) == mat_30); CHECK(mat(3, 1) == mat_31); CHECK(mat(3, 2) == mat_32); CHECK(mat(3, 3) == mat_33);
+    static_assert(mat(0, 1) == mat_01);
+    static_assert(mat(1, 1) == mat_11);
+    static_assert(mat(2, 1) == mat_21);
+    static_assert(mat(3, 1) == mat_31);
 
+    static_assert(mat(0, 2) == mat_02);
+    static_assert(mat(1, 2) == mat_12);
+    static_assert(mat(2, 2) == mat_22);
+    static_assert(mat(3, 2) == mat_32);
+
+    static_assert(mat(0, 3) == mat_03);
+    static_assert(mat(1, 3) == mat_13);
+    static_assert(mat(2, 3) == mat_23);
+    static_assert(mat(3, 3) == mat_33);
+
+    CHECK(mat(0, 0) == mat_00);
+    CHECK(mat(1, 0) == mat_10);
+    CHECK(mat(2, 0) == mat_20);
+    CHECK(mat(3, 0) == mat_30);
+
+    CHECK(mat(0, 1) == mat_01);
+    CHECK(mat(1, 1) == mat_11);
+    CHECK(mat(2, 1) == mat_21);
+    CHECK(mat(3, 1) == mat_31);
+
+    CHECK(mat(0, 2) == mat_02);
+    CHECK(mat(1, 2) == mat_12);
+    CHECK(mat(2, 2) == mat_22);
+    CHECK(mat(3, 2) == mat_32);
+
+    CHECK(mat(0, 3) == mat_03);
+    CHECK(mat(1, 3) == mat_13);
+    CHECK(mat(2, 3) == mat_23);
+    CHECK(mat(3, 3) == mat_33);
+
+    // clang-format off
     Matrix<TestType, 4, 4> mat2;
     mat2(0, 0) = mat_00; mat2(0, 1) = mat_01; mat2(0, 2) = mat_02; mat2(0, 3) = mat_03;
     mat2(1, 0) = mat_10; mat2(1, 1) = mat_11; mat2(1, 2) = mat_12; mat2(1, 3) = mat_13;
     mat2(2, 0) = mat_20; mat2(2, 1) = mat_21; mat2(2, 2) = mat_22; mat2(2, 3) = mat_23;
     mat2(3, 0) = mat_30; mat2(3, 1) = mat_31; mat2(3, 2) = mat_32; mat2(3, 3) = mat_33;
+    // clang-format on
 
-    CHECK(mat2(0, 0) == mat_00); CHECK(mat2(0, 1) == mat_01); CHECK(mat2(0, 2) == mat_02); CHECK(mat2(0, 3) == mat_03);
-    CHECK(mat2(1, 0) == mat_10); CHECK(mat2(1, 1) == mat_11); CHECK(mat2(1, 2) == mat_12); CHECK(mat2(1, 3) == mat_13);
-    CHECK(mat2(2, 0) == mat_20); CHECK(mat2(2, 1) == mat_21); CHECK(mat2(2, 2) == mat_22); CHECK(mat2(2, 3) == mat_23);
-    CHECK(mat2(3, 0) == mat_30); CHECK(mat2(3, 1) == mat_31); CHECK(mat2(3, 2) == mat_32); CHECK(mat2(3, 3) == mat_33);
+    CHECK(mat2(0, 0) == mat_00);
+    CHECK(mat2(1, 0) == mat_10);
+    CHECK(mat2(2, 0) == mat_20);
+    CHECK(mat2(3, 0) == mat_30);
+
+    CHECK(mat2(0, 1) == mat_01);
+    CHECK(mat2(1, 1) == mat_11);
+    CHECK(mat2(2, 1) == mat_21);
+    CHECK(mat2(3, 1) == mat_31);
+
+    CHECK(mat2(0, 2) == mat_02);
+    CHECK(mat2(1, 2) == mat_12);
+    CHECK(mat2(2, 2) == mat_22);
+    CHECK(mat2(3, 2) == mat_32);
+
+    CHECK(mat2(0, 3) == mat_03);
+    CHECK(mat2(1, 3) == mat_13);
+    CHECK(mat2(2, 3) == mat_23);
+    CHECK(mat2(3, 3) == mat_33);
 
     CHECK_THROWS(mat2(4, 0));
     CHECK_THROWS(mat2(0, 4));
-    // clang-format on
 }
 
 TEMPLATE_LIST_TEST_CASE("Accessor operator", "[algebra][matrix][dim4][operator]", FloatingTypes)
@@ -66,31 +113,77 @@ TEMPLATE_LIST_TEST_CASE("Accessor operator", "[algebra][matrix][dim4][operator]"
                                              mat_10, mat_11, mat_12, mat_13,
                                              mat_20, mat_21, mat_22, mat_23,
                                              mat_30, mat_31, mat_32, mat_33 };
+    // clang-format on
+    static_assert(mat(0, 0) == mat_00);
+    static_assert(mat(1, 0) == mat_10);
+    static_assert(mat(2, 0) == mat_20);
+    static_assert(mat(3, 0) == mat_30);
 
-    static_assert(mat(0, 0) == mat_00); static_assert(mat(0, 1) == mat_01); static_assert(mat(0, 2) == mat_02); static_assert(mat(0, 3) == mat_03);
-    static_assert(mat(1, 0) == mat_10); static_assert(mat(1, 1) == mat_11); static_assert(mat(1, 2) == mat_12); static_assert(mat(1, 3) == mat_13);
-    static_assert(mat(2, 0) == mat_20); static_assert(mat(2, 1) == mat_21); static_assert(mat(2, 2) == mat_22); static_assert(mat(2, 3) == mat_23);
-    static_assert(mat(3, 0) == mat_30); static_assert(mat(3, 1) == mat_31); static_assert(mat(3, 2) == mat_32); static_assert(mat(3, 3) == mat_33);
+    static_assert(mat(0, 1) == mat_01);
+    static_assert(mat(1, 1) == mat_11);
+    static_assert(mat(2, 1) == mat_21);
+    static_assert(mat(3, 1) == mat_31);
 
-    CHECK(mat(0, 0) == mat_00); CHECK(mat(0, 1) == mat_01); CHECK(mat(0, 2) == mat_02); CHECK(mat(0, 3) == mat_03);
-    CHECK(mat(1, 0) == mat_10); CHECK(mat(1, 1) == mat_11); CHECK(mat(1, 2) == mat_12); CHECK(mat(1, 3) == mat_13);
-    CHECK(mat(2, 0) == mat_20); CHECK(mat(2, 1) == mat_21); CHECK(mat(2, 2) == mat_22); CHECK(mat(2, 3) == mat_23);
-    CHECK(mat(3, 0) == mat_30); CHECK(mat(3, 1) == mat_31); CHECK(mat(3, 2) == mat_32); CHECK(mat(3, 3) == mat_33);
+    static_assert(mat(0, 2) == mat_02);
+    static_assert(mat(1, 2) == mat_12);
+    static_assert(mat(2, 2) == mat_22);
+    static_assert(mat(3, 2) == mat_32);
 
+    static_assert(mat(0, 3) == mat_03);
+    static_assert(mat(1, 3) == mat_13);
+    static_assert(mat(2, 3) == mat_23);
+    static_assert(mat(3, 3) == mat_33);
+
+    CHECK(mat(0, 0) == mat_00);
+    CHECK(mat(1, 0) == mat_10);
+    CHECK(mat(2, 0) == mat_20);
+    CHECK(mat(3, 0) == mat_30);
+
+    CHECK(mat(0, 1) == mat_01);
+    CHECK(mat(1, 1) == mat_11);
+    CHECK(mat(2, 1) == mat_21);
+    CHECK(mat(3, 1) == mat_31);
+
+    CHECK(mat(0, 2) == mat_02);
+    CHECK(mat(1, 2) == mat_12);
+    CHECK(mat(2, 2) == mat_22);
+    CHECK(mat(3, 2) == mat_32);
+
+    CHECK(mat(0, 3) == mat_03);
+    CHECK(mat(1, 3) == mat_13);
+    CHECK(mat(2, 3) == mat_23);
+    CHECK(mat(3, 3) == mat_33);
+
+    // clang-format off
     Matrix<TestType, 4, 4> mat2;
     mat2(0, 0) = mat_00; mat2(0, 1) = mat_01; mat2(0, 2) = mat_02; mat2(0, 3) = mat_03;
     mat2(1, 0) = mat_10; mat2(1, 1) = mat_11; mat2(1, 2) = mat_12; mat2(1, 3) = mat_13;
     mat2(2, 0) = mat_20; mat2(2, 1) = mat_21; mat2(2, 2) = mat_22; mat2(2, 3) = mat_23;
     mat2(3, 0) = mat_30; mat2(3, 1) = mat_31; mat2(3, 2) = mat_32; mat2(3, 3) = mat_33;
+    // clang-format on
 
-    CHECK(mat2(0, 0) == mat_00); CHECK(mat2(0, 1) == mat_01); CHECK(mat2(0, 2) == mat_02); CHECK(mat2(0, 3) == mat_03);
-    CHECK(mat2(1, 0) == mat_10); CHECK(mat2(1, 1) == mat_11); CHECK(mat2(1, 2) == mat_12); CHECK(mat2(1, 3) == mat_13);
-    CHECK(mat2(2, 0) == mat_20); CHECK(mat2(2, 1) == mat_21); CHECK(mat2(2, 2) == mat_22); CHECK(mat2(2, 3) == mat_23);
-    CHECK(mat2(3, 0) == mat_30); CHECK(mat2(3, 1) == mat_31); CHECK(mat2(3, 2) == mat_32); CHECK(mat2(3, 3) == mat_33);
+    CHECK(mat2(0, 0) == mat_00);
+    CHECK(mat2(1, 0) == mat_10);
+    CHECK(mat2(2, 0) == mat_20);
+    CHECK(mat2(3, 0) == mat_30);
+
+    CHECK(mat2(0, 1) == mat_01);
+    CHECK(mat2(1, 1) == mat_11);
+    CHECK(mat2(2, 1) == mat_21);
+    CHECK(mat2(3, 1) == mat_31);
+
+    CHECK(mat2(0, 2) == mat_02);
+    CHECK(mat2(1, 2) == mat_12);
+    CHECK(mat2(2, 2) == mat_22);
+    CHECK(mat2(3, 2) == mat_32);
+
+    CHECK(mat2(0, 3) == mat_03);
+    CHECK(mat2(1, 3) == mat_13);
+    CHECK(mat2(2, 3) == mat_23);
+    CHECK(mat2(3, 3) == mat_33);
 
     CHECK_THROWS(mat2(4, 0));
     CHECK_THROWS(mat2(0, 4));
-    // clang-format on
 }
 
 TEMPLATE_LIST_TEST_CASE("Default constructor", "[algebra][matrix][dim4][constructor]", IntegerTypes)
@@ -99,17 +192,45 @@ TEMPLATE_LIST_TEST_CASE("Default constructor", "[algebra][matrix][dim4][construc
 
     constexpr Matrix<TestType, 4, 4> mat;
 
-    // clang-format off
-    static_assert(mat(0, 0) == zero); static_assert(mat(0, 1) == zero); static_assert(mat(0, 2) == zero); static_assert(mat(0, 3) == zero);
-    static_assert(mat(1, 0) == zero); static_assert(mat(1, 1) == zero); static_assert(mat(1, 2) == zero); static_assert(mat(1, 3) == zero);
-    static_assert(mat(2, 0) == zero); static_assert(mat(2, 1) == zero); static_assert(mat(2, 2) == zero); static_assert(mat(2, 3) == zero);
-    static_assert(mat(3, 0) == zero); static_assert(mat(3, 1) == zero); static_assert(mat(3, 2) == zero); static_assert(mat(3, 3) == zero);
+    static_assert(mat(0, 0) == zero);
+    static_assert(mat(1, 0) == zero);
+    static_assert(mat(2, 0) == zero);
+    static_assert(mat(3, 0) == zero);
 
-    CHECK(mat(0, 0) == zero); CHECK(mat(0, 1) == zero); CHECK(mat(0, 2) == zero); CHECK(mat(0, 3) == zero);
-    CHECK(mat(1, 0) == zero); CHECK(mat(1, 1) == zero); CHECK(mat(1, 2) == zero); CHECK(mat(1, 3) == zero);
-    CHECK(mat(2, 0) == zero); CHECK(mat(2, 1) == zero); CHECK(mat(2, 2) == zero); CHECK(mat(2, 3) == zero);
-    CHECK(mat(3, 0) == zero); CHECK(mat(3, 1) == zero); CHECK(mat(3, 2) == zero); CHECK(mat(3, 3) == zero);
-    // clang-format on
+    static_assert(mat(0, 1) == zero);
+    static_assert(mat(1, 1) == zero);
+    static_assert(mat(2, 1) == zero);
+    static_assert(mat(3, 1) == zero);
+
+    static_assert(mat(0, 2) == zero);
+    static_assert(mat(1, 2) == zero);
+    static_assert(mat(2, 2) == zero);
+    static_assert(mat(3, 2) == zero);
+
+    static_assert(mat(0, 3) == zero);
+    static_assert(mat(1, 3) == zero);
+    static_assert(mat(2, 3) == zero);
+    static_assert(mat(3, 3) == zero);
+
+    CHECK(mat(0, 0) == zero);
+    CHECK(mat(1, 0) == zero);
+    CHECK(mat(2, 0) == zero);
+    CHECK(mat(3, 0) == zero);
+
+    CHECK(mat(0, 1) == zero);
+    CHECK(mat(1, 1) == zero);
+    CHECK(mat(2, 1) == zero);
+    CHECK(mat(3, 1) == zero);
+
+    CHECK(mat(0, 2) == zero);
+    CHECK(mat(1, 2) == zero);
+    CHECK(mat(2, 2) == zero);
+    CHECK(mat(3, 2) == zero);
+
+    CHECK(mat(0, 3) == zero);
+    CHECK(mat(1, 3) == zero);
+    CHECK(mat(2, 3) == zero);
+    CHECK(mat(3, 3) == zero);
 }
 
 TEMPLATE_LIST_TEST_CASE("Default constructor", "[algebra][matrix][dim4][constructor]", FloatingTypes)
@@ -118,17 +239,45 @@ TEMPLATE_LIST_TEST_CASE("Default constructor", "[algebra][matrix][dim4][construc
 
     constexpr Matrix<TestType, 4, 4> mat;
 
-    // clang-format off
-    static_assert(mat(0, 0) == zero); static_assert(mat(0, 1) == zero); static_assert(mat(0, 2) == zero); static_assert(mat(0, 3) == zero);
-    static_assert(mat(1, 0) == zero); static_assert(mat(1, 1) == zero); static_assert(mat(1, 2) == zero); static_assert(mat(1, 3) == zero);
-    static_assert(mat(2, 0) == zero); static_assert(mat(2, 1) == zero); static_assert(mat(2, 2) == zero); static_assert(mat(2, 3) == zero);
-    static_assert(mat(3, 0) == zero); static_assert(mat(3, 1) == zero); static_assert(mat(3, 2) == zero); static_assert(mat(3, 3) == zero);
+    static_assert(mat(0, 0) == zero);
+    static_assert(mat(1, 0) == zero);
+    static_assert(mat(2, 0) == zero);
+    static_assert(mat(3, 0) == zero);
 
-    CHECK(mat(0, 0) == zero); CHECK(mat(0, 1) == zero); CHECK(mat(0, 2) == zero); CHECK(mat(0, 3) == zero);
-    CHECK(mat(1, 0) == zero); CHECK(mat(1, 1) == zero); CHECK(mat(1, 2) == zero); CHECK(mat(1, 3) == zero);
-    CHECK(mat(2, 0) == zero); CHECK(mat(2, 1) == zero); CHECK(mat(2, 2) == zero); CHECK(mat(2, 3) == zero);
-    CHECK(mat(3, 0) == zero); CHECK(mat(3, 1) == zero); CHECK(mat(3, 2) == zero); CHECK(mat(3, 3) == zero);
-    // clang-format on
+    static_assert(mat(0, 1) == zero);
+    static_assert(mat(1, 1) == zero);
+    static_assert(mat(2, 1) == zero);
+    static_assert(mat(3, 1) == zero);
+
+    static_assert(mat(0, 2) == zero);
+    static_assert(mat(1, 2) == zero);
+    static_assert(mat(2, 2) == zero);
+    static_assert(mat(3, 2) == zero);
+
+    static_assert(mat(0, 3) == zero);
+    static_assert(mat(1, 3) == zero);
+    static_assert(mat(2, 3) == zero);
+    static_assert(mat(3, 3) == zero);
+
+    CHECK(mat(0, 0) == zero);
+    CHECK(mat(1, 0) == zero);
+    CHECK(mat(2, 0) == zero);
+    CHECK(mat(3, 0) == zero);
+
+    CHECK(mat(0, 1) == zero);
+    CHECK(mat(1, 1) == zero);
+    CHECK(mat(2, 1) == zero);
+    CHECK(mat(3, 1) == zero);
+
+    CHECK(mat(0, 2) == zero);
+    CHECK(mat(1, 2) == zero);
+    CHECK(mat(2, 2) == zero);
+    CHECK(mat(3, 2) == zero);
+
+    CHECK(mat(0, 3) == zero);
+    CHECK(mat(1, 3) == zero);
+    CHECK(mat(2, 3) == zero);
+    CHECK(mat(3, 3) == zero);
 }
 
 TEMPLATE_LIST_TEST_CASE("Constructor with diagonal coefficient", "[algebra][matrix][dim4][constructor]", IntegerTypes)
@@ -138,17 +287,45 @@ TEMPLATE_LIST_TEST_CASE("Constructor with diagonal coefficient", "[algebra][matr
 
     constexpr Matrix<TestType, 4, 4> mat(one);
 
-    // clang-format off
-    static_assert(mat(0, 0) == one ); static_assert(mat(0, 1) == zero); static_assert(mat(0, 2) == zero); static_assert(mat(0, 3) == zero);
-    static_assert(mat(1, 0) == zero); static_assert(mat(1, 1) == one ); static_assert(mat(1, 2) == zero); static_assert(mat(1, 3) == zero);
-    static_assert(mat(2, 0) == zero); static_assert(mat(2, 1) == zero); static_assert(mat(2, 2) == one ); static_assert(mat(2, 3) == zero);
-    static_assert(mat(3, 0) == zero); static_assert(mat(3, 1) == zero); static_assert(mat(3, 2) == zero); static_assert(mat(3, 3) == one );
+    static_assert(mat(0, 0) == one);
+    static_assert(mat(1, 0) == zero);
+    static_assert(mat(2, 0) == zero);
+    static_assert(mat(3, 0) == zero);
 
-    CHECK(mat(0, 0) == one ); CHECK(mat(0, 1) == zero); CHECK(mat(0, 2) == zero); CHECK(mat(0, 3) == zero);
-    CHECK(mat(1, 0) == zero); CHECK(mat(1, 1) == one ); CHECK(mat(1, 2) == zero); CHECK(mat(1, 3) == zero);
-    CHECK(mat(2, 0) == zero); CHECK(mat(2, 1) == zero); CHECK(mat(2, 2) == one ); CHECK(mat(2, 3) == zero);
-    CHECK(mat(3, 0) == zero); CHECK(mat(3, 1) == zero); CHECK(mat(3, 2) == zero); CHECK(mat(3, 3) == one );
-    // clang-format on
+    static_assert(mat(0, 1) == zero);
+    static_assert(mat(1, 1) == one);
+    static_assert(mat(2, 1) == zero);
+    static_assert(mat(3, 1) == zero);
+
+    static_assert(mat(0, 2) == zero);
+    static_assert(mat(1, 2) == zero);
+    static_assert(mat(2, 2) == one);
+    static_assert(mat(3, 2) == zero);
+
+    static_assert(mat(0, 3) == zero);
+    static_assert(mat(1, 3) == zero);
+    static_assert(mat(2, 3) == zero);
+    static_assert(mat(3, 3) == one);
+
+    CHECK(mat(0, 0) == one);
+    CHECK(mat(1, 0) == zero);
+    CHECK(mat(2, 0) == zero);
+    CHECK(mat(3, 0) == zero);
+
+    CHECK(mat(0, 1) == zero);
+    CHECK(mat(1, 1) == one);
+    CHECK(mat(2, 1) == zero);
+    CHECK(mat(3, 1) == zero);
+
+    CHECK(mat(0, 2) == zero);
+    CHECK(mat(1, 2) == zero);
+    CHECK(mat(2, 2) == one);
+    CHECK(mat(3, 2) == zero);
+
+    CHECK(mat(0, 3) == zero);
+    CHECK(mat(1, 3) == zero);
+    CHECK(mat(2, 3) == zero);
+    CHECK(mat(3, 3) == one);
 }
 
 TEMPLATE_LIST_TEST_CASE("Constructor with diagonal coefficient", "[algebra][matrix][dim4][constructor]", FloatingTypes)
@@ -158,17 +335,46 @@ TEMPLATE_LIST_TEST_CASE("Constructor with diagonal coefficient", "[algebra][matr
 
     constexpr Matrix<TestType, 4, 4> mat(one);
 
-    // clang-format off
-    static_assert(mat(0, 0) == one ); static_assert(mat(0, 1) == zero); static_assert(mat(0, 2) == zero); static_assert(mat(0, 3) == zero);
-    static_assert(mat(1, 0) == zero); static_assert(mat(1, 1) == one ); static_assert(mat(1, 2) == zero); static_assert(mat(1, 3) == zero);
-    static_assert(mat(2, 0) == zero); static_assert(mat(2, 1) == zero); static_assert(mat(2, 2) == one ); static_assert(mat(2, 3) == zero);
-    static_assert(mat(3, 0) == zero); static_assert(mat(3, 1) == zero); static_assert(mat(3, 2) == zero); static_assert(mat(3, 3) == one );
+    static_assert(mat(0, 0) == one);
+    static_assert(mat(1, 0) == zero);
+    static_assert(mat(2, 0) == zero);
+    static_assert(mat(3, 0) == zero);
 
-    CHECK(mat(0, 0) == one ); CHECK(mat(0, 1) == zero); CHECK(mat(0, 2) == zero); CHECK(mat(0, 3) == zero);
-    CHECK(mat(1, 0) == zero); CHECK(mat(1, 1) == one ); CHECK(mat(1, 2) == zero); CHECK(mat(1, 3) == zero);
-    CHECK(mat(2, 0) == zero); CHECK(mat(2, 1) == zero); CHECK(mat(2, 2) == one ); CHECK(mat(2, 3) == zero);
-    CHECK(mat(3, 0) == zero); CHECK(mat(3, 1) == zero); CHECK(mat(3, 2) == zero); CHECK(mat(3, 3) == one );
-    // clang-format on
+    static_assert(mat(0, 1) == zero);
+    static_assert(mat(1, 1) == one);
+    static_assert(mat(2, 1) == zero);
+    static_assert(mat(3, 1) == zero);
+
+    static_assert(mat(0, 2) == zero);
+    static_assert(mat(1, 2) == zero);
+    static_assert(mat(2, 2) == one);
+    static_assert(mat(3, 2) == zero);
+
+    static_assert(mat(0, 3) == zero);
+    static_assert(mat(1, 3) == zero);
+    static_assert(mat(2, 3) == zero);
+    static_assert(mat(3, 3) == one);
+
+
+    CHECK(mat(0, 0) == one);
+    CHECK(mat(1, 0) == zero);
+    CHECK(mat(2, 0) == zero);
+    CHECK(mat(3, 0) == zero);
+
+    CHECK(mat(0, 1) == zero);
+    CHECK(mat(1, 1) == one);
+    CHECK(mat(2, 1) == zero);
+    CHECK(mat(3, 1) == zero);
+
+    CHECK(mat(0, 2) == zero);
+    CHECK(mat(1, 2) == zero);
+    CHECK(mat(2, 2) == one);
+    CHECK(mat(3, 2) == zero);
+
+    CHECK(mat(0, 3) == zero);
+    CHECK(mat(1, 3) == zero);
+    CHECK(mat(2, 3) == zero);
+    CHECK(mat(3, 3) == one);
 }
 
 TEMPLATE_LIST_TEST_CASE("Constructor with initializer list", "[algebra][matrix][dim4][constructor]", IntegerTypes)
@@ -183,21 +389,53 @@ TEMPLATE_LIST_TEST_CASE("Constructor with initializer list", "[algebra][matrix][
                                              mat_10, mat_11, mat_12, mat_13,
                                              mat_20, mat_21, mat_22, mat_23,
                                              mat_30, mat_31, mat_32, mat_33 };
+    // clang-format on
 
-    static_assert(mat(0, 0) == mat_00); static_assert(mat(0, 1) == mat_01); static_assert(mat(0, 2) == mat_02); static_assert(mat(0, 3) == mat_03);
-    static_assert(mat(1, 0) == mat_10); static_assert(mat(1, 1) == mat_11); static_assert(mat(1, 2) == mat_12); static_assert(mat(1, 3) == mat_13);
-    static_assert(mat(2, 0) == mat_20); static_assert(mat(2, 1) == mat_21); static_assert(mat(2, 2) == mat_22); static_assert(mat(2, 3) == mat_23);
-    static_assert(mat(3, 0) == mat_30); static_assert(mat(3, 1) == mat_31); static_assert(mat(3, 2) == mat_32); static_assert(mat(3, 3) == mat_33);
+    static_assert(mat(0, 0) == mat_00);
+    static_assert(mat(1, 0) == mat_10);
+    static_assert(mat(2, 0) == mat_20);
+    static_assert(mat(3, 0) == mat_30);
 
-    CHECK(mat(0, 0) == mat_00); CHECK(mat(0, 1) == mat_01); CHECK(mat(0, 2) == mat_02); CHECK(mat(0, 3) == mat_03);
-    CHECK(mat(1, 0) == mat_10); CHECK(mat(1, 1) == mat_11); CHECK(mat(1, 2) == mat_12); CHECK(mat(1, 3) == mat_13);
-    CHECK(mat(2, 0) == mat_20); CHECK(mat(2, 1) == mat_21); CHECK(mat(2, 2) == mat_22); CHECK(mat(2, 3) == mat_23);
-    CHECK(mat(3, 0) == mat_30); CHECK(mat(3, 1) == mat_31); CHECK(mat(3, 2) == mat_32); CHECK(mat(3, 3) == mat_33);
+    static_assert(mat(0, 1) == mat_01);
+    static_assert(mat(1, 1) == mat_11);
+    static_assert(mat(2, 1) == mat_21);
+    static_assert(mat(3, 1) == mat_31);
+
+    static_assert(mat(0, 2) == mat_02);
+    static_assert(mat(1, 2) == mat_12);
+    static_assert(mat(2, 2) == mat_22);
+    static_assert(mat(3, 2) == mat_32);
+
+    static_assert(mat(0, 3) == mat_03);
+    static_assert(mat(1, 3) == mat_13);
+    static_assert(mat(2, 3) == mat_23);
+    static_assert(mat(3, 3) == mat_33);
+
+    CHECK(mat(0, 0) == mat_00);
+    CHECK(mat(1, 0) == mat_10);
+    CHECK(mat(2, 0) == mat_20);
+    CHECK(mat(3, 0) == mat_30);
+
+    CHECK(mat(0, 1) == mat_01);
+    CHECK(mat(1, 1) == mat_11);
+    CHECK(mat(2, 1) == mat_21);
+    CHECK(mat(3, 1) == mat_31);
+
+    CHECK(mat(0, 2) == mat_02);
+    CHECK(mat(1, 2) == mat_12);
+    CHECK(mat(2, 2) == mat_22);
+    CHECK(mat(3, 2) == mat_32);
+
+    CHECK(mat(0, 3) == mat_03);
+    CHECK(mat(1, 3) == mat_13);
+    CHECK(mat(2, 3) == mat_23);
+    CHECK(mat(3, 3) == mat_33);
 
     CHECK_NOTHROW(Matrix<TestType, 4, 4>({}));
     CHECK_NOTHROW(Matrix<TestType, 4, 4>({ mat_00, mat_01, mat_02, mat_03 }));
 
-    CHECK_THROWS(Matrix<TestType, 4, 4>({ mat_00, mat_01, mat_02, mat_03, 
+    // clang-format off
+    CHECK_THROWS(Matrix<TestType, 4, 4>({ mat_00, mat_01, mat_02, mat_03,
                                           mat_10, mat_11, mat_12, mat_13,
                                           mat_20, mat_21, mat_22, mat_23,
                                           mat_30, mat_31, mat_32, mat_33,
@@ -213,25 +451,57 @@ TEMPLATE_LIST_TEST_CASE("Constructor with initializer list", "[algebra][matrix][
                        mat_20 = 4.74, mat_21 =  2.37, mat_22 =  0.36, mat_23 =  5.72,
                        mat_30 = 1.12, mat_31 =  2.11, mat_32 =  7.94, mat_33 =  5.97;
 
-    constexpr Matrix<TestType, 4, 4> mat = { mat_00, mat_01, mat_02, mat_03, 
+    constexpr Matrix<TestType, 4, 4> mat = { mat_00, mat_01, mat_02, mat_03,
                                              mat_10, mat_11, mat_12, mat_13,
                                              mat_20, mat_21, mat_22, mat_23,
                                              mat_30, mat_31, mat_32, mat_33 };
+    // clang-format on
 
-    static_assert(mat(0, 0) == mat_00); static_assert(mat(0, 1) == mat_01); static_assert(mat(0, 2) == mat_02); static_assert(mat(0, 3) == mat_03);
-    static_assert(mat(1, 0) == mat_10); static_assert(mat(1, 1) == mat_11); static_assert(mat(1, 2) == mat_12); static_assert(mat(1, 3) == mat_13);
-    static_assert(mat(2, 0) == mat_20); static_assert(mat(2, 1) == mat_21); static_assert(mat(2, 2) == mat_22); static_assert(mat(2, 3) == mat_23);
-    static_assert(mat(3, 0) == mat_30); static_assert(mat(3, 1) == mat_31); static_assert(mat(3, 2) == mat_32); static_assert(mat(3, 3) == mat_33);
+    static_assert(mat(0, 0) == mat_00);
+    static_assert(mat(1, 0) == mat_10);
+    static_assert(mat(2, 0) == mat_20);
+    static_assert(mat(3, 0) == mat_30);
 
-    CHECK(mat(0, 0) == mat_00); CHECK(mat(0, 1) == mat_01); CHECK(mat(0, 2) == mat_02); CHECK(mat(0, 3) == mat_03);
-    CHECK(mat(1, 0) == mat_10); CHECK(mat(1, 1) == mat_11); CHECK(mat(1, 2) == mat_12); CHECK(mat(1, 3) == mat_13);
-    CHECK(mat(2, 0) == mat_20); CHECK(mat(2, 1) == mat_21); CHECK(mat(2, 2) == mat_22); CHECK(mat(2, 3) == mat_23);
-    CHECK(mat(3, 0) == mat_30); CHECK(mat(3, 1) == mat_31); CHECK(mat(3, 2) == mat_32); CHECK(mat(3, 3) == mat_33);
+    static_assert(mat(0, 1) == mat_01);
+    static_assert(mat(1, 1) == mat_11);
+    static_assert(mat(2, 1) == mat_21);
+    static_assert(mat(3, 1) == mat_31);
+
+    static_assert(mat(0, 2) == mat_02);
+    static_assert(mat(1, 2) == mat_12);
+    static_assert(mat(2, 2) == mat_22);
+    static_assert(mat(3, 2) == mat_32);
+
+    static_assert(mat(0, 3) == mat_03);
+    static_assert(mat(1, 3) == mat_13);
+    static_assert(mat(2, 3) == mat_23);
+    static_assert(mat(3, 3) == mat_33);
+
+    CHECK(mat(0, 0) == mat_00);
+    CHECK(mat(1, 0) == mat_10);
+    CHECK(mat(2, 0) == mat_20);
+    CHECK(mat(3, 0) == mat_30);
+
+    CHECK(mat(0, 1) == mat_01);
+    CHECK(mat(1, 1) == mat_11);
+    CHECK(mat(2, 1) == mat_21);
+    CHECK(mat(3, 1) == mat_31);
+
+    CHECK(mat(0, 2) == mat_02);
+    CHECK(mat(1, 2) == mat_12);
+    CHECK(mat(2, 2) == mat_22);
+    CHECK(mat(3, 2) == mat_32);
+
+    CHECK(mat(0, 3) == mat_03);
+    CHECK(mat(1, 3) == mat_13);
+    CHECK(mat(2, 3) == mat_23);
+    CHECK(mat(3, 3) == mat_33);
 
     CHECK_NOTHROW(Matrix<TestType, 4, 4>({}));
     CHECK_NOTHROW(Matrix<TestType, 4, 4>({ mat_00, mat_01, mat_02, mat_03 }));
 
-    CHECK_THROWS(Matrix<TestType, 4, 4>({ mat_00, mat_01, mat_02, mat_03, 
+    // clang-format off
+    CHECK_THROWS(Matrix<TestType, 4, 4>({ mat_00, mat_01, mat_02, mat_03,
                                           mat_10, mat_11, mat_12, mat_13,
                                           mat_20, mat_21, mat_22, mat_23,
                                           mat_30, mat_31, mat_32, mat_33,
@@ -247,35 +517,96 @@ TEMPLATE_LIST_TEST_CASE("Copy operator", "[algebra][matrix][dim4][operator]", In
                        mat_20 =  78, mat_21 =  23, mat_22 =  20, mat_23 =  55,
                        mat_30 =  12, mat_31 =  23, mat_32 =  70, mat_33 =  55;
 
-    constexpr Matrix<TestType, 4, 4> mat = { mat_00, mat_01, mat_02, mat_03, 
+    constexpr Matrix<TestType, 4, 4> mat = { mat_00, mat_01, mat_02, mat_03,
                                              mat_10, mat_11, mat_12, mat_13,
                                              mat_20, mat_21, mat_22, mat_23,
                                              mat_30, mat_31, mat_32, mat_33 };
+    // clang-format on
 
     constexpr auto copy1(mat);
 
-    static_assert(mat(0, 0) == copy1(0, 0)); static_assert(mat(0, 1) == copy1(0, 1)); static_assert(mat(0, 2) == copy1(0, 2)); static_assert(mat(0, 3) == copy1(0, 3));
-    static_assert(mat(1, 0) == copy1(1, 0)); static_assert(mat(1, 1) == copy1(1, 1)); static_assert(mat(1, 2) == copy1(1, 2)); static_assert(mat(1, 3) == copy1(1, 3));
-    static_assert(mat(2, 0) == copy1(2, 0)); static_assert(mat(2, 1) == copy1(2, 1)); static_assert(mat(2, 2) == copy1(2, 2)); static_assert(mat(2, 3) == copy1(2, 3));
-    static_assert(mat(3, 0) == copy1(3, 0)); static_assert(mat(3, 1) == copy1(3, 1)); static_assert(mat(3, 2) == copy1(3, 2)); static_assert(mat(3, 3) == copy1(3, 3));
+    static_assert(mat(0, 0) == copy1(0, 0));
+    static_assert(mat(1, 0) == copy1(1, 0));
+    static_assert(mat(2, 0) == copy1(2, 0));
+    static_assert(mat(3, 0) == copy1(3, 0));
 
-    CHECK(mat(0, 0) == copy1(0, 0)); CHECK(mat(0, 1) == copy1(0, 1)); CHECK(mat(0, 2) == copy1(0, 2)); CHECK(mat(0, 3) == copy1(0, 3));
-    CHECK(mat(1, 0) == copy1(1, 0)); CHECK(mat(1, 1) == copy1(1, 1)); CHECK(mat(1, 2) == copy1(1, 2)); CHECK(mat(1, 3) == copy1(1, 3));
-    CHECK(mat(2, 0) == copy1(2, 0)); CHECK(mat(2, 1) == copy1(2, 1)); CHECK(mat(2, 2) == copy1(2, 2)); CHECK(mat(2, 3) == copy1(2, 3));
-    CHECK(mat(3, 0) == copy1(3, 0)); CHECK(mat(3, 1) == copy1(3, 1)); CHECK(mat(3, 2) == copy1(3, 2)); CHECK(mat(3, 3) == copy1(3, 3));
+    static_assert(mat(0, 1) == copy1(0, 1));
+    static_assert(mat(1, 1) == copy1(1, 1));
+    static_assert(mat(2, 1) == copy1(2, 1));
+    static_assert(mat(3, 1) == copy1(3, 1));
+
+    static_assert(mat(0, 2) == copy1(0, 2));
+    static_assert(mat(1, 2) == copy1(1, 2));
+    static_assert(mat(2, 2) == copy1(2, 2));
+    static_assert(mat(3, 2) == copy1(3, 2));
+
+    static_assert(mat(0, 3) == copy1(0, 3));
+    static_assert(mat(1, 3) == copy1(1, 3));
+    static_assert(mat(2, 3) == copy1(2, 3));
+    static_assert(mat(3, 3) == copy1(3, 3));
+
+    CHECK(mat(0, 0) == copy1(0, 0));
+    CHECK(mat(1, 0) == copy1(1, 0));
+    CHECK(mat(2, 0) == copy1(2, 0));
+    CHECK(mat(3, 0) == copy1(3, 0));
+
+    CHECK(mat(0, 1) == copy1(0, 1));
+    CHECK(mat(1, 1) == copy1(1, 1));
+    CHECK(mat(2, 1) == copy1(2, 1));
+    CHECK(mat(3, 1) == copy1(3, 1));
+
+
+    CHECK(mat(0, 2) == copy1(0, 2));
+    CHECK(mat(1, 2) == copy1(1, 2));
+    CHECK(mat(2, 2) == copy1(2, 2));
+    CHECK(mat(3, 2) == copy1(3, 2));
+
+    CHECK(mat(0, 3) == copy1(0, 3));
+    CHECK(mat(1, 3) == copy1(1, 3));
+    CHECK(mat(2, 3) == copy1(2, 3));
+    CHECK(mat(3, 3) == copy1(3, 3));
 
     constexpr auto copy2 = mat;
 
-    static_assert(mat(0, 0) == copy2(0, 0)); static_assert(mat(0, 1) == copy2(0, 1)); static_assert(mat(0, 2) == copy2(0, 2)); static_assert(mat(0, 3) == copy2(0, 3));
-    static_assert(mat(1, 0) == copy2(1, 0)); static_assert(mat(1, 1) == copy2(1, 1)); static_assert(mat(1, 2) == copy2(1, 2)); static_assert(mat(1, 3) == copy2(1, 3));
-    static_assert(mat(2, 0) == copy2(2, 0)); static_assert(mat(2, 1) == copy2(2, 1)); static_assert(mat(2, 2) == copy2(2, 2)); static_assert(mat(2, 3) == copy2(2, 3));
-    static_assert(mat(3, 0) == copy2(3, 0)); static_assert(mat(3, 1) == copy2(3, 1)); static_assert(mat(3, 2) == copy2(3, 2)); static_assert(mat(3, 3) == copy2(3, 3));
+    static_assert(mat(0, 0) == copy2(0, 0));
+    static_assert(mat(1, 0) == copy2(1, 0));
+    static_assert(mat(2, 0) == copy2(2, 0));
+    static_assert(mat(3, 0) == copy2(3, 0));
 
-    CHECK(mat(0, 0) == copy2(0, 0)); CHECK(mat(0, 1) == copy2(0, 1)); CHECK(mat(0, 2) == copy2(0, 2)); CHECK(mat(0, 3) == copy2(0, 3));
-    CHECK(mat(1, 0) == copy2(1, 0)); CHECK(mat(1, 1) == copy2(1, 1)); CHECK(mat(1, 2) == copy2(1, 2)); CHECK(mat(1, 3) == copy2(1, 3));
-    CHECK(mat(2, 0) == copy2(2, 0)); CHECK(mat(2, 1) == copy2(2, 1)); CHECK(mat(2, 2) == copy2(2, 2)); CHECK(mat(2, 3) == copy2(2, 3));
-    CHECK(mat(3, 0) == copy2(3, 0)); CHECK(mat(3, 1) == copy2(3, 1)); CHECK(mat(3, 2) == copy2(3, 2)); CHECK(mat(3, 3) == copy2(3, 3));
-    // clang-format on
+    static_assert(mat(0, 1) == copy2(0, 1));
+    static_assert(mat(1, 1) == copy2(1, 1));
+    static_assert(mat(2, 1) == copy2(2, 1));
+    static_assert(mat(3, 1) == copy2(3, 1));
+
+    static_assert(mat(0, 2) == copy2(0, 2));
+    static_assert(mat(1, 2) == copy2(1, 2));
+    static_assert(mat(2, 2) == copy2(2, 2));
+    static_assert(mat(3, 2) == copy2(3, 2));
+
+    static_assert(mat(0, 3) == copy2(0, 3));
+    static_assert(mat(1, 3) == copy2(1, 3));
+    static_assert(mat(2, 3) == copy2(2, 3));
+    static_assert(mat(3, 3) == copy2(3, 3));
+
+    CHECK(mat(0, 0) == copy2(0, 0));
+    CHECK(mat(1, 0) == copy2(1, 0));
+    CHECK(mat(2, 0) == copy2(2, 0));
+    CHECK(mat(3, 0) == copy2(3, 0));
+
+    CHECK(mat(0, 1) == copy2(0, 1));
+    CHECK(mat(1, 1) == copy2(1, 1));
+    CHECK(mat(2, 1) == copy2(2, 1));
+    CHECK(mat(3, 1) == copy2(3, 1));
+
+    CHECK(mat(0, 2) == copy2(0, 2));
+    CHECK(mat(1, 2) == copy2(1, 2));
+    CHECK(mat(2, 2) == copy2(2, 2));
+    CHECK(mat(3, 2) == copy2(3, 2));
+
+    CHECK(mat(0, 3) == copy2(0, 3));
+    CHECK(mat(1, 3) == copy2(1, 3));
+    CHECK(mat(2, 3) == copy2(2, 3));
+    CHECK(mat(3, 3) == copy2(3, 3));
 }
 
 TEMPLATE_LIST_TEST_CASE("Copy operator", "[algebra][matrix][dim4][operator]", FloatingTypes)
@@ -286,35 +617,95 @@ TEMPLATE_LIST_TEST_CASE("Copy operator", "[algebra][matrix][dim4][operator]", Fl
                        mat_20 =  78.23, mat_21 = -23.78, mat_22 =  20.55, mat_23 =  55.20,
                        mat_30 = -12.23, mat_31 =  23.12, mat_32 =  70.55, mat_33 =  55.70;
 
-    constexpr Matrix<TestType, 4, 4> mat = { mat_00, mat_01, mat_02, mat_03, 
+    constexpr Matrix<TestType, 4, 4> mat = { mat_00, mat_01, mat_02, mat_03,
                                              mat_10, mat_11, mat_12, mat_13,
                                              mat_20, mat_21, mat_22, mat_23,
                                              mat_30, mat_31, mat_32, mat_33 };
+    // clang-format on
 
     constexpr auto copy1(mat);
 
-    static_assert(mat(0, 0) == copy1(0, 0)); static_assert(mat(0, 1) == copy1(0, 1)); static_assert(mat(0, 2) == copy1(0, 2)); static_assert(mat(0, 3) == copy1(0, 3));
-    static_assert(mat(1, 0) == copy1(1, 0)); static_assert(mat(1, 1) == copy1(1, 1)); static_assert(mat(1, 2) == copy1(1, 2)); static_assert(mat(1, 3) == copy1(1, 3));
-    static_assert(mat(2, 0) == copy1(2, 0)); static_assert(mat(2, 1) == copy1(2, 1)); static_assert(mat(2, 2) == copy1(2, 2)); static_assert(mat(2, 3) == copy1(2, 3));
-    static_assert(mat(3, 0) == copy1(3, 0)); static_assert(mat(3, 1) == copy1(3, 1)); static_assert(mat(3, 2) == copy1(3, 2)); static_assert(mat(3, 3) == copy1(3, 3));
+    static_assert(mat(0, 0) == copy1(0, 0));
+    static_assert(mat(1, 0) == copy1(1, 0));
+    static_assert(mat(2, 0) == copy1(2, 0));
+    static_assert(mat(3, 0) == copy1(3, 0));
 
-    CHECK(mat(0, 0) == copy1(0, 0)); CHECK(mat(0, 1) == copy1(0, 1)); CHECK(mat(0, 2) == copy1(0, 2)); CHECK(mat(0, 3) == copy1(0, 3));
-    CHECK(mat(1, 0) == copy1(1, 0)); CHECK(mat(1, 1) == copy1(1, 1)); CHECK(mat(1, 2) == copy1(1, 2)); CHECK(mat(1, 3) == copy1(1, 3));
-    CHECK(mat(2, 0) == copy1(2, 0)); CHECK(mat(2, 1) == copy1(2, 1)); CHECK(mat(2, 2) == copy1(2, 2)); CHECK(mat(2, 3) == copy1(2, 3));
-    CHECK(mat(3, 0) == copy1(3, 0)); CHECK(mat(3, 1) == copy1(3, 1)); CHECK(mat(3, 2) == copy1(3, 2)); CHECK(mat(3, 3) == copy1(3, 3));
+    static_assert(mat(0, 1) == copy1(0, 1));
+    static_assert(mat(1, 1) == copy1(1, 1));
+    static_assert(mat(2, 1) == copy1(2, 1));
+    static_assert(mat(3, 1) == copy1(3, 1));
+
+    static_assert(mat(0, 2) == copy1(0, 2));
+    static_assert(mat(1, 2) == copy1(1, 2));
+    static_assert(mat(2, 2) == copy1(2, 2));
+    static_assert(mat(3, 2) == copy1(3, 2));
+
+    static_assert(mat(0, 3) == copy1(0, 3));
+    static_assert(mat(1, 3) == copy1(1, 3));
+    static_assert(mat(2, 3) == copy1(2, 3));
+    static_assert(mat(3, 3) == copy1(3, 3));
+
+    CHECK(mat(0, 0) == copy1(0, 0));
+    CHECK(mat(1, 0) == copy1(1, 0));
+    CHECK(mat(2, 0) == copy1(2, 0));
+    CHECK(mat(3, 0) == copy1(3, 0));
+
+    CHECK(mat(0, 1) == copy1(0, 1));
+    CHECK(mat(1, 1) == copy1(1, 1));
+    CHECK(mat(2, 1) == copy1(2, 1));
+    CHECK(mat(3, 1) == copy1(3, 1));
+
+    CHECK(mat(0, 2) == copy1(0, 2));
+    CHECK(mat(1, 2) == copy1(1, 2));
+    CHECK(mat(2, 2) == copy1(2, 2));
+    CHECK(mat(3, 2) == copy1(3, 2));
+
+    CHECK(mat(0, 3) == copy1(0, 3));
+    CHECK(mat(1, 3) == copy1(1, 3));
+    CHECK(mat(2, 3) == copy1(2, 3));
+    CHECK(mat(3, 3) == copy1(3, 3));
 
     constexpr auto copy2 = mat;
 
-    static_assert(mat(0, 0) == copy2(0, 0)); static_assert(mat(0, 1) == copy2(0, 1)); static_assert(mat(0, 2) == copy2(0, 2)); static_assert(mat(0, 3) == copy2(0, 3));
-    static_assert(mat(1, 0) == copy2(1, 0)); static_assert(mat(1, 1) == copy2(1, 1)); static_assert(mat(1, 2) == copy2(1, 2)); static_assert(mat(1, 3) == copy2(1, 3));
-    static_assert(mat(2, 0) == copy2(2, 0)); static_assert(mat(2, 1) == copy2(2, 1)); static_assert(mat(2, 2) == copy2(2, 2)); static_assert(mat(2, 3) == copy2(2, 3));
-    static_assert(mat(3, 0) == copy2(3, 0)); static_assert(mat(3, 1) == copy2(3, 1)); static_assert(mat(3, 2) == copy2(3, 2)); static_assert(mat(3, 3) == copy2(3, 3));
+    static_assert(mat(0, 0) == copy2(0, 0));
+    static_assert(mat(1, 0) == copy2(1, 0));
+    static_assert(mat(2, 0) == copy2(2, 0));
+    static_assert(mat(3, 0) == copy2(3, 0));
 
-    CHECK(mat(0, 0) == copy2(0, 0)); CHECK(mat(0, 1) == copy2(0, 1)); CHECK(mat(0, 2) == copy2(0, 2)); CHECK(mat(0, 3) == copy2(0, 3));
-    CHECK(mat(1, 0) == copy2(1, 0)); CHECK(mat(1, 1) == copy2(1, 1)); CHECK(mat(1, 2) == copy2(1, 2)); CHECK(mat(1, 3) == copy2(1, 3));
-    CHECK(mat(2, 0) == copy2(2, 0)); CHECK(mat(2, 1) == copy2(2, 1)); CHECK(mat(2, 2) == copy2(2, 2)); CHECK(mat(2, 3) == copy2(2, 3));
-    CHECK(mat(3, 0) == copy2(3, 0)); CHECK(mat(3, 1) == copy2(3, 1)); CHECK(mat(3, 2) == copy2(3, 2)); CHECK(mat(3, 3) == copy2(3, 3));
-    // clang-format on
+    static_assert(mat(0, 1) == copy2(0, 1));
+    static_assert(mat(1, 1) == copy2(1, 1));
+    static_assert(mat(2, 1) == copy2(2, 1));
+    static_assert(mat(3, 1) == copy2(3, 1));
+
+    static_assert(mat(0, 2) == copy2(0, 2));
+    static_assert(mat(1, 2) == copy2(1, 2));
+    static_assert(mat(2, 2) == copy2(2, 2));
+    static_assert(mat(3, 2) == copy2(3, 2));
+
+    static_assert(mat(0, 3) == copy2(0, 3));
+    static_assert(mat(1, 3) == copy2(1, 3));
+    static_assert(mat(2, 3) == copy2(2, 3));
+    static_assert(mat(3, 3) == copy2(3, 3));
+
+    CHECK(mat(0, 0) == copy2(0, 0));
+    CHECK(mat(1, 0) == copy2(1, 0));
+    CHECK(mat(2, 0) == copy2(2, 0));
+    CHECK(mat(3, 0) == copy2(3, 0));
+
+    CHECK(mat(0, 1) == copy2(0, 1));
+    CHECK(mat(1, 1) == copy2(1, 1));
+    CHECK(mat(2, 1) == copy2(2, 1));
+    CHECK(mat(3, 1) == copy2(3, 1));
+
+    CHECK(mat(0, 2) == copy2(0, 2));
+    CHECK(mat(1, 2) == copy2(1, 2));
+    CHECK(mat(2, 2) == copy2(2, 2));
+    CHECK(mat(3, 2) == copy2(3, 2));
+
+    CHECK(mat(0, 3) == copy2(0, 3));
+    CHECK(mat(1, 3) == copy2(1, 3));
+    CHECK(mat(2, 3) == copy2(2, 3));
+    CHECK(mat(3, 3) == copy2(3, 3));
 }
 
 TEMPLATE_LIST_TEST_CASE("Move operator", "[algebra][matrix][dim4][operator]", IntegerTypes)
@@ -327,36 +718,96 @@ TEMPLATE_LIST_TEST_CASE("Move operator", "[algebra][matrix][dim4][operator]", In
 
     constexpr auto getMatrix = [=]()
     {
-        return Matrix<TestType, 4, 4>({ mat_00, mat_01, mat_02, mat_03, 
+        return Matrix<TestType, 4, 4>({ mat_00, mat_01, mat_02, mat_03,
                                         mat_10, mat_11, mat_12, mat_13,
                                         mat_20, mat_21, mat_22, mat_23,
                                         mat_30, mat_31, mat_32, mat_33 });
     };
+    // clang-format on
 
     constexpr auto copy1(getMatrix());
 
-    static_assert(copy1(0, 0) == mat_00); static_assert(copy1(0, 1) == mat_01); static_assert(copy1(0, 2) == mat_02); static_assert(copy1(0, 3) == mat_03);
-    static_assert(copy1(1, 0) == mat_10); static_assert(copy1(1, 1) == mat_11); static_assert(copy1(1, 2) == mat_12); static_assert(copy1(1, 3) == mat_13);
-    static_assert(copy1(2, 0) == mat_20); static_assert(copy1(2, 1) == mat_21); static_assert(copy1(2, 2) == mat_22); static_assert(copy1(2, 3) == mat_23);
-    static_assert(copy1(3, 0) == mat_30); static_assert(copy1(3, 1) == mat_31); static_assert(copy1(3, 2) == mat_32); static_assert(copy1(3, 3) == mat_33);
+    static_assert(copy1(0, 0) == mat_00);
+    static_assert(copy1(1, 0) == mat_10);
+    static_assert(copy1(2, 0) == mat_20);
+    static_assert(copy1(3, 0) == mat_30);
 
-    CHECK(copy1(0, 0) == mat_00); CHECK(copy1(0, 1) == mat_01); CHECK(copy1(0, 2) == mat_02); CHECK(copy1(0, 3) == mat_03);
-    CHECK(copy1(1, 0) == mat_10); CHECK(copy1(1, 1) == mat_11); CHECK(copy1(1, 2) == mat_12); CHECK(copy1(1, 3) == mat_13);
-    CHECK(copy1(2, 0) == mat_20); CHECK(copy1(2, 1) == mat_21); CHECK(copy1(2, 2) == mat_22); CHECK(copy1(2, 3) == mat_23);
-    CHECK(copy1(3, 0) == mat_30); CHECK(copy1(3, 1) == mat_31); CHECK(copy1(3, 2) == mat_32); CHECK(copy1(3, 3) == mat_33);
+    static_assert(copy1(0, 1) == mat_01);
+    static_assert(copy1(1, 1) == mat_11);
+    static_assert(copy1(2, 1) == mat_21);
+    static_assert(copy1(3, 1) == mat_31);
+
+    static_assert(copy1(0, 2) == mat_02);
+    static_assert(copy1(1, 2) == mat_12);
+    static_assert(copy1(2, 2) == mat_22);
+    static_assert(copy1(3, 2) == mat_32);
+
+    static_assert(copy1(0, 3) == mat_03);
+    static_assert(copy1(1, 3) == mat_13);
+    static_assert(copy1(2, 3) == mat_23);
+    static_assert(copy1(3, 3) == mat_33);
+
+    CHECK(copy1(0, 0) == mat_00);
+    CHECK(copy1(1, 0) == mat_10);
+    CHECK(copy1(2, 0) == mat_20);
+    CHECK(copy1(3, 0) == mat_30);
+
+    CHECK(copy1(0, 1) == mat_01);
+    CHECK(copy1(1, 1) == mat_11);
+    CHECK(copy1(2, 1) == mat_21);
+    CHECK(copy1(3, 1) == mat_31);
+
+    CHECK(copy1(0, 2) == mat_02);
+    CHECK(copy1(1, 2) == mat_12);
+    CHECK(copy1(2, 2) == mat_22);
+    CHECK(copy1(3, 2) == mat_32);
+
+    CHECK(copy1(0, 3) == mat_03);
+    CHECK(copy1(1, 3) == mat_13);
+    CHECK(copy1(2, 3) == mat_23);
+    CHECK(copy1(3, 3) == mat_33);
 
     constexpr auto copy2 = getMatrix();
 
-    static_assert(copy2(0, 0) == mat_00); static_assert(copy2(0, 1) == mat_01); static_assert(copy2(0, 2) == mat_02); static_assert(copy2(0, 3) == mat_03);
-    static_assert(copy2(1, 0) == mat_10); static_assert(copy2(1, 1) == mat_11); static_assert(copy2(1, 2) == mat_12); static_assert(copy2(1, 3) == mat_13);
-    static_assert(copy2(2, 0) == mat_20); static_assert(copy2(2, 1) == mat_21); static_assert(copy2(2, 2) == mat_22); static_assert(copy2(2, 3) == mat_23);
-    static_assert(copy2(3, 0) == mat_30); static_assert(copy2(3, 1) == mat_31); static_assert(copy2(3, 2) == mat_32); static_assert(copy2(3, 3) == mat_33);
+    static_assert(copy2(0, 0) == mat_00);
+    static_assert(copy2(1, 0) == mat_10);
+    static_assert(copy2(2, 0) == mat_20);
+    static_assert(copy2(3, 0) == mat_30);
 
-    CHECK(copy2(0, 0) == mat_00); CHECK(copy2(0, 1) == mat_01); CHECK(copy2(0, 2) == mat_02); CHECK(copy2(0, 3) == mat_03);
-    CHECK(copy2(1, 0) == mat_10); CHECK(copy2(1, 1) == mat_11); CHECK(copy2(1, 2) == mat_12); CHECK(copy2(1, 3) == mat_13);
-    CHECK(copy2(2, 0) == mat_20); CHECK(copy2(2, 1) == mat_21); CHECK(copy2(2, 2) == mat_22); CHECK(copy2(2, 3) == mat_23);
-    CHECK(copy2(3, 0) == mat_30); CHECK(copy2(3, 1) == mat_31); CHECK(copy2(3, 2) == mat_32); CHECK(copy2(3, 3) == mat_33);
-    // clang-format on
+    static_assert(copy2(0, 1) == mat_01);
+    static_assert(copy2(1, 1) == mat_11);
+    static_assert(copy2(2, 1) == mat_21);
+    static_assert(copy2(3, 1) == mat_31);
+
+    static_assert(copy2(0, 2) == mat_02);
+    static_assert(copy2(1, 2) == mat_12);
+    static_assert(copy2(2, 2) == mat_22);
+    static_assert(copy2(3, 2) == mat_32);
+
+    static_assert(copy2(0, 3) == mat_03);
+    static_assert(copy2(1, 3) == mat_13);
+    static_assert(copy2(2, 3) == mat_23);
+    static_assert(copy2(3, 3) == mat_33);
+
+    CHECK(copy2(0, 0) == mat_00);
+    CHECK(copy2(1, 0) == mat_10);
+    CHECK(copy2(2, 0) == mat_20);
+    CHECK(copy2(3, 0) == mat_30);
+
+    CHECK(copy2(0, 1) == mat_01);
+    CHECK(copy2(1, 1) == mat_11);
+    CHECK(copy2(2, 1) == mat_21);
+    CHECK(copy2(3, 1) == mat_31);
+
+    CHECK(copy2(0, 2) == mat_02);
+    CHECK(copy2(1, 2) == mat_12);
+    CHECK(copy2(2, 2) == mat_22);
+    CHECK(copy2(3, 2) == mat_32);
+
+    CHECK(copy2(0, 3) == mat_03);
+    CHECK(copy2(1, 3) == mat_13);
+    CHECK(copy2(2, 3) == mat_23);
+    CHECK(copy2(3, 3) == mat_33);
 }
 
 TEMPLATE_LIST_TEST_CASE("Move operator", "[algebra][matrix][dim4][operator]", FloatingTypes)
@@ -374,52 +825,112 @@ TEMPLATE_LIST_TEST_CASE("Move operator", "[algebra][matrix][dim4][operator]", Fl
                                         mat_20, mat_21, mat_22, mat_23,
                                         mat_30, mat_31, mat_32, mat_33 });
     };
+    // clang-format on
 
     constexpr auto copy1(getMatrix());
 
-    static_assert(copy1(0, 0) == mat_00); static_assert(copy1(0, 1) == mat_01); static_assert(copy1(0, 2) == mat_02); static_assert(copy1(0, 3) == mat_03);
-    static_assert(copy1(1, 0) == mat_10); static_assert(copy1(1, 1) == mat_11); static_assert(copy1(1, 2) == mat_12); static_assert(copy1(1, 3) == mat_13);
-    static_assert(copy1(2, 0) == mat_20); static_assert(copy1(2, 1) == mat_21); static_assert(copy1(2, 2) == mat_22); static_assert(copy1(2, 3) == mat_23);
-    static_assert(copy1(3, 0) == mat_30); static_assert(copy1(3, 1) == mat_31); static_assert(copy1(3, 2) == mat_32); static_assert(copy1(3, 3) == mat_33);
+    static_assert(copy1(0, 0) == mat_00);
+    static_assert(copy1(1, 0) == mat_10);
+    static_assert(copy1(2, 0) == mat_20);
+    static_assert(copy1(3, 0) == mat_30);
 
-    CHECK(copy1(0, 0) == mat_00); CHECK(copy1(0, 1) == mat_01); CHECK(copy1(0, 2) == mat_02); CHECK(copy1(0, 3) == mat_03);
-    CHECK(copy1(1, 0) == mat_10); CHECK(copy1(1, 1) == mat_11); CHECK(copy1(1, 2) == mat_12); CHECK(copy1(1, 3) == mat_13);
-    CHECK(copy1(2, 0) == mat_20); CHECK(copy1(2, 1) == mat_21); CHECK(copy1(2, 2) == mat_22); CHECK(copy1(2, 3) == mat_23);
-    CHECK(copy1(3, 0) == mat_30); CHECK(copy1(3, 1) == mat_31); CHECK(copy1(3, 2) == mat_32); CHECK(copy1(3, 3) == mat_33);
+    static_assert(copy1(0, 1) == mat_01);
+    static_assert(copy1(1, 1) == mat_11);
+    static_assert(copy1(2, 1) == mat_21);
+    static_assert(copy1(3, 1) == mat_31);
+
+    static_assert(copy1(0, 2) == mat_02);
+    static_assert(copy1(1, 2) == mat_12);
+    static_assert(copy1(2, 2) == mat_22);
+    static_assert(copy1(3, 2) == mat_32);
+
+    static_assert(copy1(0, 3) == mat_03);
+    static_assert(copy1(1, 3) == mat_13);
+    static_assert(copy1(2, 3) == mat_23);
+    static_assert(copy1(3, 3) == mat_33);
+
+    CHECK(copy1(0, 0) == mat_00);
+    CHECK(copy1(1, 0) == mat_10);
+    CHECK(copy1(2, 0) == mat_20);
+    CHECK(copy1(3, 0) == mat_30);
+
+    CHECK(copy1(0, 1) == mat_01);
+    CHECK(copy1(1, 1) == mat_11);
+    CHECK(copy1(2, 1) == mat_21);
+    CHECK(copy1(3, 1) == mat_31);
+
+    CHECK(copy1(0, 2) == mat_02);
+    CHECK(copy1(1, 2) == mat_12);
+    CHECK(copy1(2, 2) == mat_22);
+    CHECK(copy1(3, 2) == mat_32);
+
+    CHECK(copy1(0, 3) == mat_03);
+    CHECK(copy1(1, 3) == mat_13);
+    CHECK(copy1(2, 3) == mat_23);
+    CHECK(copy1(3, 3) == mat_33);
 
     constexpr auto copy2 = getMatrix();
 
-    static_assert(copy2(0, 0) == mat_00); static_assert(copy2(0, 1) == mat_01); static_assert(copy2(0, 2) == mat_02); static_assert(copy2(0, 3) == mat_03);
-    static_assert(copy2(1, 0) == mat_10); static_assert(copy2(1, 1) == mat_11); static_assert(copy2(1, 2) == mat_12); static_assert(copy2(1, 3) == mat_13);
-    static_assert(copy2(2, 0) == mat_20); static_assert(copy2(2, 1) == mat_21); static_assert(copy2(2, 2) == mat_22); static_assert(copy2(2, 3) == mat_23);
-    static_assert(copy2(3, 0) == mat_30); static_assert(copy2(3, 1) == mat_31); static_assert(copy2(3, 2) == mat_32); static_assert(copy2(3, 3) == mat_33);
+    static_assert(copy2(0, 0) == mat_00);
+    static_assert(copy2(1, 0) == mat_10);
+    static_assert(copy2(2, 0) == mat_20);
+    static_assert(copy2(3, 0) == mat_30);
 
-    CHECK(copy2(0, 0) == mat_00); CHECK(copy2(0, 1) == mat_01); CHECK(copy2(0, 2) == mat_02); CHECK(copy2(0, 3) == mat_03);
-    CHECK(copy2(1, 0) == mat_10); CHECK(copy2(1, 1) == mat_11); CHECK(copy2(1, 2) == mat_12); CHECK(copy2(1, 3) == mat_13);
-    CHECK(copy2(2, 0) == mat_20); CHECK(copy2(2, 1) == mat_21); CHECK(copy2(2, 2) == mat_22); CHECK(copy2(2, 3) == mat_23);
-    CHECK(copy2(3, 0) == mat_30); CHECK(copy2(3, 1) == mat_31); CHECK(copy2(3, 2) == mat_32); CHECK(copy2(3, 3) == mat_33);
-    // clang-format on
+    static_assert(copy2(0, 1) == mat_01);
+    static_assert(copy2(1, 1) == mat_11);
+    static_assert(copy2(2, 1) == mat_21);
+    static_assert(copy2(3, 1) == mat_31);
+
+    static_assert(copy2(0, 2) == mat_02);
+    static_assert(copy2(1, 2) == mat_12);
+    static_assert(copy2(2, 2) == mat_22);
+    static_assert(copy2(3, 2) == mat_32);
+
+    static_assert(copy2(0, 3) == mat_03);
+    static_assert(copy2(1, 3) == mat_13);
+    static_assert(copy2(2, 3) == mat_23);
+    static_assert(copy2(3, 3) == mat_33);
+
+    CHECK(copy2(0, 0) == mat_00);
+    CHECK(copy2(1, 0) == mat_10);
+    CHECK(copy2(2, 0) == mat_20);
+    CHECK(copy2(3, 0) == mat_30);
+
+    CHECK(copy2(0, 1) == mat_01);
+    CHECK(copy2(1, 1) == mat_11);
+    CHECK(copy2(2, 1) == mat_21);
+    CHECK(copy2(3, 1) == mat_31);
+
+    CHECK(copy2(0, 2) == mat_02);
+    CHECK(copy2(1, 2) == mat_12);
+    CHECK(copy2(2, 2) == mat_22);
+    CHECK(copy2(3, 2) == mat_32);
+
+    CHECK(copy2(0, 3) == mat_03);
+    CHECK(copy2(1, 3) == mat_13);
+    CHECK(copy2(2, 3) == mat_23);
+    CHECK(copy2(3, 3) == mat_33);
 }
 
 TEMPLATE_LIST_TEST_CASE("Comparision operator", "[algebra][matrix][dim4][operator]", IntegerTypes)
 {
     // clang-format off
     constexpr TestType mat_00 =  19, mat_01 = -56, mat_02 = -97, mat_03 = -95,
-                       mat_10 = -56, mat_11 =  23, mat_12 = -45, mat_13 = -88,
-                       mat_20 =  78, mat_21 =  98, mat_22 = 456, mat_23 =  55,
-                       mat_30 =  23, mat_31 = 687, mat_32 =  70, mat_33 = 222;
+              mat_10 = -56, mat_11 =  23, mat_12 = -45, mat_13 = -88,
+              mat_20 =  78, mat_21 =  98, mat_22 = 456, mat_23 =  55,
+              mat_30 =  23, mat_31 = 687, mat_32 =  70, mat_33 = 222;
 
-    constexpr Matrix<TestType, 4, 4> mat = { mat_00, mat_01, mat_02, mat_03, 
+    constexpr Matrix<TestType, 4, 4> mat = { mat_00, mat_01, mat_02, mat_03,
                                              mat_10, mat_11, mat_12, mat_13,
                                              mat_20, mat_21, mat_22, mat_23,
                                              mat_30, mat_31, mat_32, mat_33 };
 
-    constexpr Matrix<TestType, 4, 4> identical = { mat_00, mat_01, mat_02, mat_03, 
+    constexpr Matrix<TestType, 4, 4> identical = { mat_00, mat_01, mat_02, mat_03,
                                                    mat_10, mat_11, mat_12, mat_13,
                                                    mat_20, mat_21, mat_22, mat_23,
                                                    mat_30, mat_31, mat_32, mat_33 };
 
-    constexpr Matrix<TestType, 4, 4> different = {      0, mat_01, mat_02, mat_03, 
+    constexpr Matrix<TestType, 4, 4> different = {      0, mat_01, mat_02, mat_03,
                                                    mat_10, mat_11, mat_12, mat_13,
                                                    mat_20, mat_21, mat_22, mat_23,
                                                    mat_30, mat_31, mat_32, mat_33 };
@@ -450,17 +961,17 @@ TEMPLATE_LIST_TEST_CASE("Comparision operator", "[algebra][matrix][dim4][operato
                        mat_20 = 789.99, mat_21 = -98.22, mat_22 = 4563.3, mat_23 = -57.14,
                        mat_30 = 223.80, mat_31 = 687.25, mat_32 = -70.05, mat_33 = 222.20;
 
-    constexpr Matrix<TestType, 4, 4> mat = { mat_00, mat_01, mat_02, mat_03, 
+    constexpr Matrix<TestType, 4, 4> mat = { mat_00, mat_01, mat_02, mat_03,
                                              mat_10, mat_11, mat_12, mat_13,
                                              mat_20, mat_21, mat_22, mat_23,
                                              mat_30, mat_31, mat_32, mat_33 };
 
-    constexpr Matrix<TestType, 4, 4> identical = { mat_00, mat_01, mat_02, mat_03, 
+    constexpr Matrix<TestType, 4, 4> identical = { mat_00, mat_01, mat_02, mat_03,
                                                    mat_10, mat_11, mat_12, mat_13,
                                                    mat_20, mat_21, mat_22, mat_23,
                                                    mat_30, mat_31, mat_32, mat_33 };
 
-    constexpr Matrix<TestType, 4, 4> different = {      0, mat_01, mat_02, mat_03, 
+    constexpr Matrix<TestType, 4, 4> different = {      0, mat_01, mat_02, mat_03,
                                                    mat_10, mat_11, mat_12, mat_13,
                                                    mat_20, mat_21, mat_22, mat_23,
                                                    mat_30, mat_31, mat_32, mat_33 };
