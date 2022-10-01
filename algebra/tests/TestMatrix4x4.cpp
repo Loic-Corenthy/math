@@ -1435,6 +1435,322 @@ TEMPLATE_LIST_TEST_CASE("Divide equal", "[algebra][matrix][dim4][operator]", Flo
     CHECK_THROWS(mat /= zero);
 }
 
+TEMPLATE_LIST_TEST_CASE("Dimensions", "[algebra][matrix][dim4][method]", IntegerTypes)
+{
+    constexpr Matrix<TestType, 4, 4> mat;
+
+    constexpr auto dims = mat.dimensions();
+
+    static_assert(std::get<0>(dims) == 4);
+    static_assert(std::get<1>(dims) == 4);
+
+    const auto [rows, cols] = mat.dimensions();
+
+    CHECK(rows == 4);
+    CHECK(cols == 4);
+}
+
+TEMPLATE_LIST_TEST_CASE("Dimensions", "[algebra][matrix][dim4][method]", FloatingTypes)
+{
+    constexpr Matrix<TestType, 4, 4> mat;
+
+    constexpr auto dims = mat.dimensions();
+
+    static_assert(std::get<0>(dims) == 4);
+    static_assert(std::get<1>(dims) == 4);
+
+    const auto [rows, cols] = mat.dimensions();
+
+    CHECK(rows == 4);
+    CHECK(cols == 4);
+}
+
+TEMPLATE_LIST_TEST_CASE("Internal data access", "[algebra][matrix][dim4][method]", IntegerTypes)
+{
+    // clang-format off
+    TestType mat_00 = 1, mat_01 = 5, mat_02 =  9, mat_03 = 13,
+             mat_10 = 2, mat_11 = 6, mat_12 = 10, mat_13 = 14,
+             mat_20 = 3, mat_21 = 7, mat_22 = 11, mat_23 = 15,
+             mat_30 = 4, mat_31 = 8, mat_32 = 12, mat_33 = 16;
+
+    Matrix<TestType, 4, 4> mat1 = { mat_00, mat_01, mat_02, mat_03, 
+                                    mat_10, mat_11, mat_12, mat_13,
+                                    mat_20, mat_21, mat_22, mat_23,
+                                    mat_30, mat_31, mat_32, mat_33 };
+
+    const Matrix<TestType, 4, 4> mat2 = { mat_00, mat_01, mat_02, mat_03, 
+                                          mat_10, mat_11, mat_12, mat_13,
+                                          mat_20, mat_21, mat_22, mat_23,
+                                          mat_30, mat_31, mat_32, mat_33 };
+    // clang-format on
+
+    auto*       data1 = mat1.data();
+    const auto* data2 = mat2.data();
+
+    CHECK(data1[0] == 1);
+    CHECK(data1[1] == 5);
+    CHECK(data1[2] == 9);
+    CHECK(data1[3] == 13);
+
+    CHECK(data1[4] == 2);
+    CHECK(data1[5] == 6);
+    CHECK(data1[6] == 10);
+    CHECK(data1[7] == 14);
+
+    CHECK(data1[8] == 3);
+    CHECK(data1[9] == 7);
+    CHECK(data1[10] == 11);
+    CHECK(data1[11] == 15);
+
+    CHECK(data1[12] == 4);
+    CHECK(data1[13] == 8);
+    CHECK(data1[14] == 12);
+    CHECK(data1[15] == 16);
+
+    CHECK(data2[0] == 1);
+    CHECK(data2[1] == 5);
+    CHECK(data2[2] == 9);
+    CHECK(data2[3] == 13);
+
+    CHECK(data2[4] == 2);
+    CHECK(data2[5] == 6);
+    CHECK(data2[6] == 10);
+    CHECK(data2[7] == 14);
+
+    CHECK(data2[8] == 3);
+    CHECK(data2[9] == 7);
+    CHECK(data2[10] == 11);
+    CHECK(data2[11] == 15);
+
+    CHECK(data2[12] == 4);
+    CHECK(data2[13] == 8);
+    CHECK(data2[14] == 12);
+    CHECK(data2[15] == 16);
+}
+
+TEMPLATE_LIST_TEST_CASE("Internal data access", "[algebra][matrix][dim4][method]", FloatingTypes)
+{
+    // clang-format off
+    TestType mat_00 = 1.0, mat_01 = 5.0, mat_02 =  9.0, mat_03 = 13.0,
+             mat_10 = 2.0, mat_11 = 6.0, mat_12 = 10.0, mat_13 = 14.0,
+             mat_20 = 3.0, mat_21 = 7.0, mat_22 = 11.0, mat_23 = 15.0,
+             mat_30 = 4.0, mat_31 = 8.0, mat_32 = 12.0, mat_33 = 16.0;
+
+    Matrix<TestType, 4, 4> mat1 = { mat_00, mat_01, mat_02, mat_03, 
+                                    mat_10, mat_11, mat_12, mat_13,
+                                    mat_20, mat_21, mat_22, mat_23,
+                                    mat_30, mat_31, mat_32, mat_33 };
+
+    const Matrix<TestType, 4, 4> mat2 = { mat_00, mat_01, mat_02, mat_03, 
+                                          mat_10, mat_11, mat_12, mat_13,
+                                          mat_20, mat_21, mat_22, mat_23,
+                                          mat_30, mat_31, mat_32, mat_33 };
+    // clang-format on
+
+    auto*       data1 = mat1.data();
+    const auto* data2 = mat2.data();
+
+    CHECK(data1[0] == 1.0);
+    CHECK(data1[1] == 5.0);
+    CHECK(data1[2] == 9.0);
+    CHECK(data1[3] == 13.0);
+
+    CHECK(data1[4] == 2.0);
+    CHECK(data1[5] == 6.0);
+    CHECK(data1[6] == 10.0);
+    CHECK(data1[7] == 14.0);
+
+    CHECK(data1[8] == 3.0);
+    CHECK(data1[9] == 7.0);
+    CHECK(data1[10] == 11.0);
+    CHECK(data1[11] == 15.0);
+
+    CHECK(data1[12] == 4.0);
+    CHECK(data1[13] == 8.0);
+    CHECK(data1[14] == 12.0);
+    CHECK(data1[15] == 16.0);
+
+    CHECK(data2[0] == 1.0);
+    CHECK(data2[1] == 5.0);
+    CHECK(data2[2] == 9.0);
+    CHECK(data2[3] == 13.0);
+
+    CHECK(data2[4] == 2.0);
+    CHECK(data2[5] == 6.0);
+    CHECK(data2[6] == 10.0);
+    CHECK(data2[7] == 14.0);
+
+    CHECK(data2[8] == 3.0);
+    CHECK(data2[9] == 7.0);
+    CHECK(data2[10] == 11.0);
+    CHECK(data2[11] == 15.0);
+
+    CHECK(data2[12] == 4.0);
+    CHECK(data2[13] == 8.0);
+    CHECK(data2[14] == 12.0);
+    CHECK(data2[15] == 16.0);
+}
+
+TEMPLATE_LIST_TEST_CASE("Transpose", "[algebra][matrix][dim4][method]", IntegerTypes)
+{
+    // clang-format off
+    constexpr TestType mat_00 =  1, mat_01 =  2, mat_02 =  3, mat_03 =  4,
+                       mat_10 =  5, mat_11 =  6, mat_12 =  7, mat_13 =  8,
+                       mat_20 =  9, mat_21 = 10, mat_22 = 11, mat_23 = 12,
+                       mat_30 = 13, mat_31 = 14, mat_32 = 15, mat_33 = 16;
+
+    constexpr Matrix<TestType, 4, 4> mat = { mat_00, mat_01, mat_02, mat_03, 
+                                             mat_10, mat_11, mat_12, mat_13,
+                                             mat_20, mat_21, mat_22, mat_23,
+                                             mat_30, mat_31, mat_32, mat_33 };
+    // clang-format on
+
+    constexpr Matrix<TestType, 4, 4> transposed = mat.transposed();
+
+    static_assert(transposed(0, 0) == mat(0, 0));
+    static_assert(transposed(1, 0) == mat(0, 1));
+    static_assert(transposed(2, 0) == mat(0, 2));
+    static_assert(transposed(3, 0) == mat(0, 3));
+
+    static_assert(transposed(0, 1) == mat(1, 0));
+    static_assert(transposed(1, 1) == mat(1, 1));
+    static_assert(transposed(2, 1) == mat(1, 2));
+    static_assert(transposed(3, 1) == mat(1, 3));
+
+    static_assert(transposed(0, 2) == mat(2, 0));
+    static_assert(transposed(1, 2) == mat(2, 1));
+    static_assert(transposed(2, 2) == mat(2, 2));
+    static_assert(transposed(3, 2) == mat(2, 3));
+
+    static_assert(transposed(0, 3) == mat(3, 0));
+    static_assert(transposed(1, 3) == mat(3, 1));
+    static_assert(transposed(2, 3) == mat(3, 2));
+    static_assert(transposed(3, 3) == mat(3, 3));
+
+    CHECK(transposed(0, 0) == mat(0, 0));
+    CHECK(transposed(1, 0) == mat(0, 1));
+    CHECK(transposed(2, 0) == mat(0, 2));
+    CHECK(transposed(3, 0) == mat(0, 3));
+
+    CHECK(transposed(0, 1) == mat(1, 0));
+    CHECK(transposed(1, 1) == mat(1, 1));
+    CHECK(transposed(2, 1) == mat(1, 2));
+    CHECK(transposed(3, 1) == mat(1, 3));
+
+    CHECK(transposed(0, 2) == mat(2, 0));
+    CHECK(transposed(1, 2) == mat(2, 1));
+    CHECK(transposed(2, 2) == mat(2, 2));
+    CHECK(transposed(3, 2) == mat(2, 3));
+
+    CHECK(transposed(0, 3) == mat(3, 0));
+    CHECK(transposed(1, 3) == mat(3, 1));
+    CHECK(transposed(2, 3) == mat(3, 2));
+    CHECK(transposed(3, 3) == mat(3, 3));
+
+    Matrix<TestType, 4, 4> mat2 = mat;
+    mat2.transpose();
+
+    CHECK(mat2(0, 0) == mat_00);
+    CHECK(mat2(1, 0) == mat_01);
+    CHECK(mat2(2, 0) == mat_02);
+    CHECK(mat2(3, 0) == mat_03);
+
+    CHECK(mat2(0, 1) == mat_10);
+    CHECK(mat2(1, 1) == mat_11);
+    CHECK(mat2(2, 1) == mat_12);
+    CHECK(mat2(3, 1) == mat_13);
+
+    CHECK(mat2(0, 2) == mat_20);
+    CHECK(mat2(1, 2) == mat_21);
+    CHECK(mat2(2, 2) == mat_22);
+    CHECK(mat2(3, 2) == mat_23);
+
+    CHECK(mat2(0, 3) == mat_30);
+    CHECK(mat2(1, 3) == mat_31);
+    CHECK(mat2(2, 3) == mat_32);
+    CHECK(mat2(3, 3) == mat_33);
+}
+
+TEMPLATE_LIST_TEST_CASE("Transpose", "[algebra][matrix][dim4][method]", FloatingTypes)
+{
+    // clang-format off
+    constexpr TestType mat_00 =  -1.0, mat_01 =  -2.0, mat_02 =  -3.0, mat_03 =  -4.0,
+                       mat_10 =  -5.0, mat_11 =  -6.0, mat_12 =  -7.0, mat_13 =  -8.0,
+                       mat_20 =  -9.0, mat_21 = -10.0, mat_22 = -11.0, mat_23 = -12.0,
+                       mat_30 = -13.0, mat_31 = -14.0, mat_32 = -15.0, mat_33 = -16.0;
+
+    constexpr Matrix<TestType, 4, 4> mat = { mat_00, mat_01, mat_02, mat_03, 
+                                             mat_10, mat_11, mat_12, mat_13,
+                                             mat_20, mat_21, mat_22, mat_23,
+                                             mat_30, mat_31, mat_32, mat_33 };
+    // clang-format on
+
+    constexpr Matrix<TestType, 4, 4> transposed = mat.transposed();
+
+    static_assert(transposed(0, 0) == mat(0, 0));
+    static_assert(transposed(1, 0) == mat(0, 1));
+    static_assert(transposed(2, 0) == mat(0, 2));
+    static_assert(transposed(3, 0) == mat(0, 3));
+
+    static_assert(transposed(0, 1) == mat(1, 0));
+    static_assert(transposed(1, 1) == mat(1, 1));
+    static_assert(transposed(2, 1) == mat(1, 2));
+    static_assert(transposed(3, 1) == mat(1, 3));
+
+    static_assert(transposed(0, 2) == mat(2, 0));
+    static_assert(transposed(1, 2) == mat(2, 1));
+    static_assert(transposed(2, 2) == mat(2, 2));
+    static_assert(transposed(3, 2) == mat(2, 3));
+
+    static_assert(transposed(0, 3) == mat(3, 0));
+    static_assert(transposed(1, 3) == mat(3, 1));
+    static_assert(transposed(2, 3) == mat(3, 2));
+    static_assert(transposed(3, 3) == mat(3, 3));
+
+    CHECK(transposed(0, 0) == mat(0, 0));
+    CHECK(transposed(1, 0) == mat(0, 1));
+    CHECK(transposed(2, 0) == mat(0, 2));
+    CHECK(transposed(3, 0) == mat(0, 3));
+
+    CHECK(transposed(0, 1) == mat(1, 0));
+    CHECK(transposed(1, 1) == mat(1, 1));
+    CHECK(transposed(2, 1) == mat(1, 2));
+    CHECK(transposed(3, 1) == mat(1, 3));
+
+    CHECK(transposed(0, 2) == mat(2, 0));
+    CHECK(transposed(1, 2) == mat(2, 1));
+    CHECK(transposed(2, 2) == mat(2, 2));
+    CHECK(transposed(3, 2) == mat(2, 3));
+
+    CHECK(transposed(0, 3) == mat(3, 0));
+    CHECK(transposed(1, 3) == mat(3, 1));
+    CHECK(transposed(2, 3) == mat(3, 2));
+    CHECK(transposed(3, 3) == mat(3, 3));
+
+    Matrix<TestType, 4, 4> mat2 = mat;
+    mat2.transpose();
+
+    CHECK(mat2(0, 0) == mat_00);
+    CHECK(mat2(1, 0) == mat_01);
+    CHECK(mat2(2, 0) == mat_02);
+    CHECK(mat2(3, 0) == mat_03);
+
+    CHECK(mat2(0, 1) == mat_10);
+    CHECK(mat2(1, 1) == mat_11);
+    CHECK(mat2(2, 1) == mat_12);
+    CHECK(mat2(3, 1) == mat_13);
+
+    CHECK(mat2(0, 2) == mat_20);
+    CHECK(mat2(1, 2) == mat_21);
+    CHECK(mat2(2, 2) == mat_22);
+    CHECK(mat2(3, 2) == mat_23);
+
+    CHECK(mat2(0, 3) == mat_30);
+    CHECK(mat2(1, 3) == mat_31);
+    CHECK(mat2(2, 3) == mat_32);
+    CHECK(mat2(3, 3) == mat_33);
+}
+
 TEMPLATE_LIST_TEST_CASE("Determinant", "[algebra][matrix][dim4][method]", FloatingTypes)
 {
     // clang-format off
@@ -1458,30 +1774,6 @@ TEMPLATE_LIST_TEST_CASE("Determinant", "[algebra][matrix][dim4][method]", Floati
     // clang-format on
 }
 
-TEMPLATE_LIST_TEST_CASE("Transpose", "[algebra][matrix][dim4][method]", FloatingTypes)
-{
-    // clang-format off
-    constexpr TestType mat1_00 = 1.0, mat1_01 = 2.0, mat1_02 = 3.0, mat1_03 = 4.0,
-                       mat1_10 = 5.0, mat1_11 = 6.0, mat1_12 = 7.0, mat1_13 = 8.0,
-                       mat1_20 = 9.0, mat1_21 = 10., mat1_22 = 11., mat1_23 = 12.,
-                       mat1_30 = 13., mat1_31 = 14., mat1_32 = 15., mat1_33 = 16.;
-
-    Matrix<TestType, 4, 4> mat1 = { mat1_00, mat1_01, mat1_02, mat1_03, 
-                                    mat1_10, mat1_11, mat1_12, mat1_13,
-                                    mat1_20, mat1_21, mat1_22, mat1_23,
-                                    mat1_30, mat1_31, mat1_32, mat1_33 };
-
-    std::cout << "mat is \n" << mat1 << '\n';
-    mat1.transpose();
-    std::cout << "mat transpose is \n" << mat1 << '\n';
-    // clang-format on
-
-    Matrix<TestType, 3, 4> test = { mat1_00, mat1_01, mat1_02, mat1_03, mat1_10, mat1_11, mat1_12, mat1_13, mat1_20, mat1_21, mat1_22, mat1_23 };
-
-    std::cout << "Rectangular matrix  is \n" << test << '\n';
-
-    std::cout << "mat transpose is \n" << test.transposed() << '\n';
-}
 
 TEMPLATE_LIST_TEST_CASE("Inverse", "[algebra][matrix][dim4][method]", FloatingTypes)
 {
