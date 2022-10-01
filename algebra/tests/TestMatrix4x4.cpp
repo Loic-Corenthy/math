@@ -1781,9 +1781,9 @@ TEMPLATE_LIST_TEST_CASE("Determinant", "[algebra][matrix][dim4][method]", Floati
                        mat_30 = -9.1, mat_31 =  7.2, mat_32 =  8.7, mat_33 =  5.5;
 
     constexpr Matrix<TestType, 4, 4> mat = { mat_00, mat_01, mat_02, mat_03, 
-                                              mat_10, mat_11, mat_12, mat_13,
-                                              mat_20, mat_21, mat_22, mat_23,
-                                              mat_30, mat_31, mat_32, mat_33 };
+                                             mat_10, mat_11, mat_12, mat_13,
+                                             mat_20, mat_21, mat_22, mat_23,
+                                             mat_30, mat_31, mat_32, mat_33 };
     // clang-format on
 
     constexpr TestType det = mat.determinant();
@@ -1793,6 +1793,34 @@ TEMPLATE_LIST_TEST_CASE("Determinant", "[algebra][matrix][dim4][method]", Floati
     const auto ehp = epsilonHighPrecision<TestType>();
 
     CHECK(det == Catch::Approx(6810.0026).epsilon(ehp));
+}
+
+TEMPLATE_LIST_TEST_CASE("Trace", "[algebra][matrix][dim4][method]", IntegerTypes)
+{
+    constexpr TestType diagonalValue = 28;
+
+    constexpr Matrix<TestType, 4, 4> mat(diagonalValue);
+
+    constexpr TestType trace = mat.trace();
+
+    static_assert(trace == 112);
+
+    CHECK(trace == 112);
+}
+
+TEMPLATE_LIST_TEST_CASE("Trace", "[algebra][matrix][dim4][method]", FloatingTypes)
+{
+    constexpr TestType diagonalValue = -2.66;
+
+    constexpr Matrix<TestType, 4, 4> mat(diagonalValue);
+
+    constexpr TestType trace = mat.trace();
+
+    constexpr auto elp = epsilonLowPrecision<TestType>();
+    static_assert(std::abs(trace - -10.64) < elp);
+
+    const auto ehp = epsilonHighPrecision<TestType>();
+    CHECK(trace == Catch::Approx(-10.64).epsilon(ehp));
 }
 
 TEMPLATE_LIST_TEST_CASE("Inverse", "[algebra][matrix][dim4][method]", FloatingTypes)
