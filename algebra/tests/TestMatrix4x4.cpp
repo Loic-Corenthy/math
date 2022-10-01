@@ -1751,29 +1751,49 @@ TEMPLATE_LIST_TEST_CASE("Transpose", "[algebra][matrix][dim4][method]", Floating
     CHECK(mat2(3, 3) == mat_33);
 }
 
+TEMPLATE_LIST_TEST_CASE("Determinant", "[algebra][matrix][dim4][method]", IntegerTypes)
+{
+    // clang-format off
+    constexpr TestType mat_00 = 0, mat_01 = 1, mat_02 =  9, mat_03 =  5,
+                       mat_10 = 3, mat_11 = 2, mat_12 =  1, mat_13 =  8,
+                       mat_20 = 4, mat_21 = 2, mat_22 = 10, mat_23 =  5,
+                       mat_30 = 1, mat_31 = 2, mat_32 =  7, mat_33 = 35;
+
+    constexpr Matrix<TestType, 4, 4> mat = { mat_00, mat_01, mat_02, mat_03,
+                                             mat_10, mat_11, mat_12, mat_13,
+                                             mat_20, mat_21, mat_22, mat_23,
+                                             mat_30, mat_31, mat_32, mat_33 };
+    // clang-format on
+
+    constexpr TestType det = mat.determinant();
+
+    static_assert(det == -1092);
+
+    CHECK(det == -1092);
+}
+
 TEMPLATE_LIST_TEST_CASE("Determinant", "[algebra][matrix][dim4][method]", FloatingTypes)
 {
     // clang-format off
-    constexpr TestType mat1_00 =  4.0, mat1_01 = -5.1, mat1_02 = -9.9, mat1_03 =  5.5,
-                       mat1_10 = -8.3, mat1_11 =  4.2, mat1_12 = -1.1, mat1_13 = -9.8,
-                       mat1_20 =  6.4, mat1_21 =  3.2, mat1_22 =  7.0, mat1_23 =  7.5,
-                       mat1_30 = -9.1, mat1_31 =  7.2, mat1_32 =  8.7, mat1_33 =  5.5;
+    constexpr TestType mat_00 =  4.0, mat_01 = -5.1, mat_02 = -9.9, mat_03 =  5.5,
+                       mat_10 = -8.3, mat_11 =  4.2, mat_12 = -1.1, mat_13 = -9.8,
+                       mat_20 =  6.4, mat_21 =  3.2, mat_22 =  7.0, mat_23 =  7.5,
+                       mat_30 = -9.1, mat_31 =  7.2, mat_32 =  8.7, mat_33 =  5.5;
 
-    constexpr Matrix<TestType, 4, 4> mat1 = { mat1_00, mat1_01, mat1_02, mat1_03, 
-                                              mat1_10, mat1_11, mat1_12, mat1_13,
-                                              mat1_20, mat1_21, mat1_22, mat1_23,
-                                              mat1_30, mat1_31, mat1_32, mat1_33 };
+    constexpr Matrix<TestType, 4, 4> mat = { mat_00, mat_01, mat_02, mat_03, 
+                                              mat_10, mat_11, mat_12, mat_13,
+                                              mat_20, mat_21, mat_22, mat_23,
+                                              mat_30, mat_31, mat_32, mat_33 };
+    // clang-format on
 
-    constexpr TestType det1 = mat1.determinant();
+    constexpr TestType det = mat.determinant();
 
-    static_assert(std::abs(det1 - 6810.0026) < 0.002); // Can't get a better precision than 0.002 with float
+    static_assert(std::abs(det - 6810.0026) < 0.002);  // Can't get a better precision than 0.002 with float
 
     const auto ehp = epsilonHighPrecision<TestType>();
 
-    CHECK(det1 == Catch::Approx(6810.0026).epsilon(ehp));
-    // clang-format on
+    CHECK(det == Catch::Approx(6810.0026).epsilon(ehp));
 }
-
 
 TEMPLATE_LIST_TEST_CASE("Inverse", "[algebra][matrix][dim4][method]", FloatingTypes)
 {
