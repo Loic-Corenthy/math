@@ -670,160 +670,6 @@ TEMPLATE_LIST_TEST_CASE("Transpose", "[algebra][matrix][dim2][operator]", Floati
     CHECK(mat2 == mat1);
 }
 
-TEMPLATE_LIST_TEST_CASE("Matrix multiplication operator", "[algebra][matrix][dim2][operator]", IntegerTypes)
-{
-    constexpr TestType mat1_00 = 3, mat1_01 = 5, mat1_10 = -9, mat1_11 = 0;
-    constexpr TestType mat2_00 = 5, mat2_01 = 7, mat2_10 = 12, mat2_11 = 1;
-
-    constexpr Matrix<TestType, 2, 2> mat1 = { mat1_00, mat1_01, mat1_10, mat1_11 };
-    constexpr Matrix<TestType, 2, 2> mat2 = { mat2_00, mat2_01, mat2_10, mat2_11 };
-    constexpr Matrix<TestType, 2, 2> mul  = mat1 * mat2;
-
-    static_assert(mul(0, 0) == 75);
-    static_assert(mul(0, 1) == 26);
-    static_assert(mul(1, 0) == -45);
-    static_assert(mul(1, 1) == -63);
-
-    CHECK(mul(0, 0) == 75);
-    CHECK(mul(0, 1) == 26);
-    CHECK(mul(1, 0) == -45);
-    CHECK(mul(1, 1) == -63);
-}
-
-TEMPLATE_LIST_TEST_CASE("Matrix multiplication operator", "[algebra][matrix][dim2][operator]", FloatingTypes)
-{
-    constexpr TestType mat1_00 = 0.16, mat1_01 = 12.2, mat1_10 = 3.33, mat1_11 = 0.5;
-    constexpr TestType mat2_00 = -0.8, mat2_01 = -2.5, mat2_10 = -0.1, mat2_11 = 0.2;
-
-    constexpr Matrix<TestType, 2, 2> mat1 = { mat1_00, mat1_01, mat1_10, mat1_11 };
-    constexpr Matrix<TestType, 2, 2> mat2 = { mat2_00, mat2_01, mat2_10, mat2_11 };
-    constexpr Matrix<TestType, 2, 2> mul  = mat1 * mat2;
-
-    constexpr auto elp = epsilonLowPrecision<TestType>();
-
-    static_assert(std::abs(mul(0, 0) - -1.348) < elp);
-    static_assert(std::abs(mul(0, 1) - 2.04) < elp);
-    static_assert(std::abs(mul(1, 0) - -2.714) < elp);
-    static_assert(std::abs(mul(1, 1) - -8.225) < elp);
-
-    const auto ehp = epsilonHighPrecision<TestType>();
-
-    CHECK(mul(0, 0) == Catch::Approx(-1.348).epsilon(ehp));
-    CHECK(mul(0, 1) == Catch::Approx(2.04).epsilon(ehp));
-    CHECK(mul(1, 0) == Catch::Approx(-2.714).epsilon(ehp));
-    CHECK(mul(1, 1) == Catch::Approx(-8.225).epsilon(ehp));
-}
-
-TEMPLATE_LIST_TEST_CASE("Scalar multiplication operator", "[algebra][matrix][dim2][operator]", IntegerTypes)
-{
-    constexpr TestType mat_00 = 8, mat_01 = 9, mat_10 = 2022, mat_11 = 10;
-    constexpr TestType scalar = 2;
-
-    constexpr Matrix<TestType, 2, 2> mat = { mat_00, mat_01, mat_10, mat_11 };
-
-    constexpr Matrix<TestType, 2, 2> scaled1 = scalar * mat;
-    constexpr Matrix<TestType, 2, 2> scaled2 = mat * scalar;
-
-    static_assert(scaled1(0, 0) == 16);
-    static_assert(scaled1(0, 1) == 18);
-    static_assert(scaled1(1, 0) == 4044);
-    static_assert(scaled1(1, 1) == 20);
-
-    static_assert(scaled2(0, 0) == 16);
-    static_assert(scaled2(0, 1) == 18);
-    static_assert(scaled2(1, 0) == 4044);
-    static_assert(scaled2(1, 1) == 20);
-
-    CHECK(scaled1(0, 0) == 16);
-    CHECK(scaled1(0, 1) == 18);
-    CHECK(scaled1(1, 0) == 4044);
-    CHECK(scaled1(1, 1) == 20);
-
-    CHECK(scaled2(0, 0) == 16);
-    CHECK(scaled2(0, 1) == 18);
-    CHECK(scaled2(1, 0) == 4044);
-    CHECK(scaled2(1, 1) == 20);
-}
-
-TEMPLATE_LIST_TEST_CASE("Scalar multiplication operator", "[algebra][matrix][dim2][operator]", FloatingTypes)
-{
-    constexpr TestType mat_00 = -77.3, mat_01 = 123.4, mat_10 = 10.01, mat_11 = -99.65;
-    constexpr TestType scalar = 17.2;
-
-    constexpr Matrix<TestType, 2, 2> mat = { mat_00, mat_01, mat_10, mat_11 };
-
-    constexpr Matrix<TestType, 2, 2> scaled1 = scalar * mat;
-    constexpr Matrix<TestType, 2, 2> scaled2 = mat * scalar;
-
-    constexpr auto elp = epsilonLowPrecision<TestType>();
-
-    static_assert(std::abs(scaled1(0, 0) - -1329.56) < elp);
-    static_assert(std::abs(scaled1(0, 1) - 2122.48) < elp);
-    static_assert(std::abs(scaled1(1, 0) - 172.172) < elp);
-    static_assert(std::abs(scaled1(1, 1) - -1713.98) < elp);
-
-    static_assert(std::abs(scaled2(0, 0) - -1329.56) < elp);
-    static_assert(std::abs(scaled2(0, 1) - 2122.48) < elp);
-    static_assert(std::abs(scaled2(1, 0) - 172.172) < elp);
-    static_assert(std::abs(scaled2(1, 1) - -1713.98) < elp);
-
-    const auto ehp = epsilonHighPrecision<TestType>();
-
-    CHECK(scaled1(0, 0) == Catch::Approx(-1329.56).epsilon(ehp));
-    CHECK(scaled1(0, 1) == Catch::Approx(2122.48).epsilon(ehp));
-    CHECK(scaled1(1, 0) == Catch::Approx(172.172).epsilon(ehp));
-    CHECK(scaled1(1, 1) == Catch::Approx(-1713.98).epsilon(ehp));
-
-    CHECK(scaled2(0, 0) == Catch::Approx(-1329.56).epsilon(ehp));
-    CHECK(scaled2(0, 1) == Catch::Approx(2122.48).epsilon(ehp));
-    CHECK(scaled2(1, 0) == Catch::Approx(172.172).epsilon(ehp));
-    CHECK(scaled2(1, 1) == Catch::Approx(-1713.98).epsilon(ehp));
-}
-
-TEMPLATE_LIST_TEST_CASE("Scalar division operator", "[algebra][matrix][dim2][operator]", IntegerTypes)
-{
-    constexpr TestType mat_00 = 7, mat_01 = 21, mat_10 = -49, mat_11 = 707;
-    constexpr TestType scalar = 7;
-
-    constexpr Matrix<TestType, 2, 2> mat = { mat_00, mat_01, mat_10, mat_11 };
-
-    constexpr Matrix<TestType, 2, 2> scaled = mat / scalar;
-
-    static_assert(scaled(0, 0) == 1);
-    static_assert(scaled(0, 1) == 3);
-    static_assert(scaled(1, 0) == -7);
-    static_assert(scaled(1, 1) == 101);
-
-    CHECK(scaled(0, 0) == 1);
-    CHECK(scaled(0, 1) == 3);
-    CHECK(scaled(1, 0) == -7);
-    CHECK(scaled(1, 1) == 101);
-}
-
-TEMPLATE_LIST_TEST_CASE("Scalar division operator", "[algebra][matrix][dim2][operator]", FloatingTypes)
-{
-    constexpr TestType mat_00 = -55.4, mat_01 = 369.25, mat_10 = 159.75, mat_11 = 268.42;
-    constexpr TestType scalar = -28.4;
-
-    constexpr Matrix<TestType, 2, 2> mat = { mat_00, mat_01, mat_10, mat_11 };
-
-    constexpr Matrix<TestType, 2, 2> scaled2 = mat / scalar;
-
-    constexpr auto elp = epsilonLowPrecision<TestType>();
-
-    static_assert(std::abs(scaled2(0, 0) - 1.950704225) < elp);
-    static_assert(std::abs(scaled2(0, 1) - -13.00176056) < elp);
-    static_assert(std::abs(scaled2(1, 0) - -5.625) < elp);
-    static_assert(std::abs(scaled2(1, 1) - -9.45140845) < elp);
-
-    const auto ehp = epsilonHighPrecision<TestType>();
-
-    CHECK(scaled2(0, 0) == Catch::Approx(1.950704225).epsilon(ehp));
-    CHECK(scaled2(0, 1) == Catch::Approx(-13.00176056).epsilon(ehp));
-    CHECK(scaled2(1, 0) == Catch::Approx(-5.625).epsilon(ehp));
-    CHECK(scaled2(1, 1) == Catch::Approx(-9.45140845).epsilon(ehp));
-}
-
 TEMPLATE_LIST_TEST_CASE("Determinant", "[algebra][matrix][dim2][method]", IntegerTypes)
 {
     constexpr TestType mat1_00 = 3, mat1_01 = 7, mat1_10 = -2, mat1_11 = 13;
@@ -949,6 +795,116 @@ TEMPLATE_LIST_TEST_CASE("Inverse", "[algebra][matrix][dim2][method]", FloatingTy
     CHECK(inv(1, 1) == Catch::Approx(1.1002234829).epsilon(ehp));
 }
 
+TEMPLATE_LIST_TEST_CASE("Scalar multiplication operator", "[algebra][matrix][dim2][operator]", IntegerTypes)
+{
+    constexpr TestType mat_00 = 8, mat_01 = 9, mat_10 = 2022, mat_11 = 10;
+    constexpr TestType scalar = 2;
+
+    constexpr Matrix<TestType, 2, 2> mat = { mat_00, mat_01, mat_10, mat_11 };
+
+    constexpr Matrix<TestType, 2, 2> scaled1 = scalar * mat;
+    constexpr Matrix<TestType, 2, 2> scaled2 = mat * scalar;
+
+    static_assert(scaled1(0, 0) == 16);
+    static_assert(scaled1(0, 1) == 18);
+    static_assert(scaled1(1, 0) == 4044);
+    static_assert(scaled1(1, 1) == 20);
+
+    static_assert(scaled2(0, 0) == 16);
+    static_assert(scaled2(0, 1) == 18);
+    static_assert(scaled2(1, 0) == 4044);
+    static_assert(scaled2(1, 1) == 20);
+
+    CHECK(scaled1(0, 0) == 16);
+    CHECK(scaled1(0, 1) == 18);
+    CHECK(scaled1(1, 0) == 4044);
+    CHECK(scaled1(1, 1) == 20);
+
+    CHECK(scaled2(0, 0) == 16);
+    CHECK(scaled2(0, 1) == 18);
+    CHECK(scaled2(1, 0) == 4044);
+    CHECK(scaled2(1, 1) == 20);
+}
+
+TEMPLATE_LIST_TEST_CASE("Scalar multiplication operator", "[algebra][matrix][dim2][operator]", FloatingTypes)
+{
+    constexpr TestType mat_00 = -77.3, mat_01 = 123.4, mat_10 = 10.01, mat_11 = -99.65;
+    constexpr TestType scalar = 17.2;
+
+    constexpr Matrix<TestType, 2, 2> mat = { mat_00, mat_01, mat_10, mat_11 };
+
+    constexpr Matrix<TestType, 2, 2> scaled1 = scalar * mat;
+    constexpr Matrix<TestType, 2, 2> scaled2 = mat * scalar;
+
+    constexpr auto elp = epsilonLowPrecision<TestType>();
+
+    static_assert(std::abs(scaled1(0, 0) - -1329.56) < elp);
+    static_assert(std::abs(scaled1(0, 1) - 2122.48) < elp);
+    static_assert(std::abs(scaled1(1, 0) - 172.172) < elp);
+    static_assert(std::abs(scaled1(1, 1) - -1713.98) < elp);
+
+    static_assert(std::abs(scaled2(0, 0) - -1329.56) < elp);
+    static_assert(std::abs(scaled2(0, 1) - 2122.48) < elp);
+    static_assert(std::abs(scaled2(1, 0) - 172.172) < elp);
+    static_assert(std::abs(scaled2(1, 1) - -1713.98) < elp);
+
+    const auto ehp = epsilonHighPrecision<TestType>();
+
+    CHECK(scaled1(0, 0) == Catch::Approx(-1329.56).epsilon(ehp));
+    CHECK(scaled1(0, 1) == Catch::Approx(2122.48).epsilon(ehp));
+    CHECK(scaled1(1, 0) == Catch::Approx(172.172).epsilon(ehp));
+    CHECK(scaled1(1, 1) == Catch::Approx(-1713.98).epsilon(ehp));
+
+    CHECK(scaled2(0, 0) == Catch::Approx(-1329.56).epsilon(ehp));
+    CHECK(scaled2(0, 1) == Catch::Approx(2122.48).epsilon(ehp));
+    CHECK(scaled2(1, 0) == Catch::Approx(172.172).epsilon(ehp));
+    CHECK(scaled2(1, 1) == Catch::Approx(-1713.98).epsilon(ehp));
+}
+
+TEMPLATE_LIST_TEST_CASE("Matrix multiplication operator", "[algebra][matrix][dim2][operator]", IntegerTypes)
+{
+    constexpr TestType mat1_00 = 3, mat1_01 = 5, mat1_10 = -9, mat1_11 = 0;
+    constexpr TestType mat2_00 = 5, mat2_01 = 7, mat2_10 = 12, mat2_11 = 1;
+
+    constexpr Matrix<TestType, 2, 2> mat1 = { mat1_00, mat1_01, mat1_10, mat1_11 };
+    constexpr Matrix<TestType, 2, 2> mat2 = { mat2_00, mat2_01, mat2_10, mat2_11 };
+    constexpr Matrix<TestType, 2, 2> mul  = mat1 * mat2;
+
+    static_assert(mul(0, 0) == 75);
+    static_assert(mul(0, 1) == 26);
+    static_assert(mul(1, 0) == -45);
+    static_assert(mul(1, 1) == -63);
+
+    CHECK(mul(0, 0) == 75);
+    CHECK(mul(0, 1) == 26);
+    CHECK(mul(1, 0) == -45);
+    CHECK(mul(1, 1) == -63);
+}
+
+TEMPLATE_LIST_TEST_CASE("Matrix multiplication operator", "[algebra][matrix][dim2][operator]", FloatingTypes)
+{
+    constexpr TestType mat1_00 = 0.16, mat1_01 = 12.2, mat1_10 = 3.33, mat1_11 = 0.5;
+    constexpr TestType mat2_00 = -0.8, mat2_01 = -2.5, mat2_10 = -0.1, mat2_11 = 0.2;
+
+    constexpr Matrix<TestType, 2, 2> mat1 = { mat1_00, mat1_01, mat1_10, mat1_11 };
+    constexpr Matrix<TestType, 2, 2> mat2 = { mat2_00, mat2_01, mat2_10, mat2_11 };
+    constexpr Matrix<TestType, 2, 2> mul  = mat1 * mat2;
+
+    constexpr auto elp = epsilonLowPrecision<TestType>();
+
+    static_assert(std::abs(mul(0, 0) - -1.348) < elp);
+    static_assert(std::abs(mul(0, 1) - 2.04) < elp);
+    static_assert(std::abs(mul(1, 0) - -2.714) < elp);
+    static_assert(std::abs(mul(1, 1) - -8.225) < elp);
+
+    const auto ehp = epsilonHighPrecision<TestType>();
+
+    CHECK(mul(0, 0) == Catch::Approx(-1.348).epsilon(ehp));
+    CHECK(mul(0, 1) == Catch::Approx(2.04).epsilon(ehp));
+    CHECK(mul(1, 0) == Catch::Approx(-2.714).epsilon(ehp));
+    CHECK(mul(1, 1) == Catch::Approx(-8.225).epsilon(ehp));
+}
+
 TEMPLATE_LIST_TEST_CASE("Matrix vector multiplication", "[algebra][matrix][dim2][method]", IntegerTypes)
 {
     constexpr TestType mat_00 = 8, mat_01 = 9, mat_10 = -42, mat_11 = -17;
@@ -985,4 +941,48 @@ TEMPLATE_LIST_TEST_CASE("Matrix vector multiplication", "[algebra][matrix][dim2]
 
     CHECK(mul[0] == Catch::Approx(106.63).epsilon(ehp));
     CHECK(mul[1] == Catch::Approx(49.622).epsilon(ehp));
+}
+
+TEMPLATE_LIST_TEST_CASE("Scalar division operator", "[algebra][matrix][dim2][operator]", IntegerTypes)
+{
+    constexpr TestType mat_00 = 7, mat_01 = 21, mat_10 = -49, mat_11 = 707;
+    constexpr TestType scalar = 7;
+
+    constexpr Matrix<TestType, 2, 2> mat = { mat_00, mat_01, mat_10, mat_11 };
+
+    constexpr Matrix<TestType, 2, 2> scaled = mat / scalar;
+
+    static_assert(scaled(0, 0) == 1);
+    static_assert(scaled(0, 1) == 3);
+    static_assert(scaled(1, 0) == -7);
+    static_assert(scaled(1, 1) == 101);
+
+    CHECK(scaled(0, 0) == 1);
+    CHECK(scaled(0, 1) == 3);
+    CHECK(scaled(1, 0) == -7);
+    CHECK(scaled(1, 1) == 101);
+}
+
+TEMPLATE_LIST_TEST_CASE("Scalar division operator", "[algebra][matrix][dim2][operator]", FloatingTypes)
+{
+    constexpr TestType mat_00 = -55.4, mat_01 = 369.25, mat_10 = 159.75, mat_11 = 268.42;
+    constexpr TestType scalar = -28.4;
+
+    constexpr Matrix<TestType, 2, 2> mat = { mat_00, mat_01, mat_10, mat_11 };
+
+    constexpr Matrix<TestType, 2, 2> scaled2 = mat / scalar;
+
+    constexpr auto elp = epsilonLowPrecision<TestType>();
+
+    static_assert(std::abs(scaled2(0, 0) - 1.950704225) < elp);
+    static_assert(std::abs(scaled2(0, 1) - -13.00176056) < elp);
+    static_assert(std::abs(scaled2(1, 0) - -5.625) < elp);
+    static_assert(std::abs(scaled2(1, 1) - -9.45140845) < elp);
+
+    const auto ehp = epsilonHighPrecision<TestType>();
+
+    CHECK(scaled2(0, 0) == Catch::Approx(1.950704225).epsilon(ehp));
+    CHECK(scaled2(0, 1) == Catch::Approx(-13.00176056).epsilon(ehp));
+    CHECK(scaled2(1, 0) == Catch::Approx(-5.625).epsilon(ehp));
+    CHECK(scaled2(1, 1) == Catch::Approx(-9.45140845).epsilon(ehp));
 }
