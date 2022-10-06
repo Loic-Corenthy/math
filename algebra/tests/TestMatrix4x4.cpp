@@ -918,9 +918,9 @@ TEMPLATE_LIST_TEST_CASE("Comparision operator", "[algebra][matrix][dim4][operato
 {
     // clang-format off
     constexpr TestType mat_00 =  19, mat_01 = -56, mat_02 = -97, mat_03 = -95,
-              mat_10 = -56, mat_11 =  23, mat_12 = -45, mat_13 = -88,
-              mat_20 =  78, mat_21 =  98, mat_22 = 456, mat_23 =  55,
-              mat_30 =  23, mat_31 = 687, mat_32 =  70, mat_33 = 222;
+                       mat_10 = -56, mat_11 =  23, mat_12 = -45, mat_13 = -88,
+                       mat_20 =  78, mat_21 =  98, mat_22 = 456, mat_23 =  55,
+                       mat_30 =  23, mat_31 = 687, mat_32 =  70, mat_33 = 222;
 
     constexpr Matrix<TestType, 4, 4> mat = { mat_00, mat_01, mat_02, mat_03,
                                              mat_10, mat_11, mat_12, mat_13,
@@ -973,7 +973,7 @@ TEMPLATE_LIST_TEST_CASE("Comparision operator", "[algebra][matrix][dim4][operato
                                                    mat_20, mat_21, mat_22, mat_23,
                                                    mat_30, mat_31, mat_32, mat_33 };
 
-    constexpr Matrix<TestType, 4, 4> different = {      0, mat_01, mat_02, mat_03,
+    constexpr Matrix<TestType, 4, 4> different = {    0.0, mat_01, mat_02, mat_03,
                                                    mat_10, mat_11, mat_12, mat_13,
                                                    mat_20, mat_21, mat_22, mat_23,
                                                    mat_30, mat_31, mat_32, mat_33 };

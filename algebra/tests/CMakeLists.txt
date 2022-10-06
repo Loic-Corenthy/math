@@ -15,7 +15,7 @@ target_sources(testMatrix
                PRIVATE
                "Helper.hpp"
                "TestMatrix2x2.cpp"
-            #    "TestVector3.cpp"
+               "TestMatrix3x3.cpp"
                "TestMatrix4x4.cpp"
 )
 
