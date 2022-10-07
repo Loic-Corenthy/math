@@ -760,8 +760,8 @@ TEMPLATE_LIST_TEST_CASE("Addition operator", "[algebra][matrix][dim3][operator]"
     constexpr Matrix<TestType, 3, 3> mat2 = { mat2_00, mat2_01, mat2_02,
                                               mat2_10, mat2_11, mat2_12,
                                               mat2_20, mat2_21, mat2_22 };
-
     // clang-format on
+
     constexpr Matrix<TestType, 3, 3> sum = mat1 + mat2;
 
     constexpr auto elp = epsilonLowPrecision<TestType>();
@@ -793,625 +793,492 @@ TEMPLATE_LIST_TEST_CASE("Addition operator", "[algebra][matrix][dim3][operator]"
     CHECK(sum(2, 2) == Catch::Approx(40.3).epsilon(ehp));
 }
 
-// TEMPLATE_LIST_TEST_CASE("Substraction operator", "[algebra][matrix][dim3][operator]", IntegerTypes)
-// {
-//     // clang-format off
-//     constexpr TestType mat1_00 = 854, mat1_01 =    7, mat1_02 = 9449,
-//                        mat1_10 = 333, mat1_11 = -274, mat1_12 = 4528,
-//                        mat1_20 = -98, mat1_21 = -982, mat1_22 = -563,
-//
+TEMPLATE_LIST_TEST_CASE("Substraction operator", "[algebra][matrix][dim3][operator]", IntegerTypes)
+{
+    // clang-format off
+    constexpr TestType mat1_00 = 854, mat1_01 =    7, mat1_02 = 9449,
+                       mat1_10 = 333, mat1_11 = -274, mat1_12 = 4528,
+                       mat1_20 = -98, mat1_21 = -982, mat1_22 = -563;
 
-//     constexpr TestType mat2_00 =   -5, mat2_01 = -607, mat2_02 = -979,
-//                        mat2_10 = -563, mat2_11 = -274, mat2_12 = 4028,
-//                        mat2_20 = 1178, mat2_21 =  974, mat2_22 = 4563,
-//
 
-//     constexpr Matrix<TestType, 3, 3> mat1 = { mat1_00, mat1_01, mat1_02,
-//                                               mat1_10, mat1_11, mat1_12,
-//                                               mat1_20, mat1_21, mat1_22,
-//
+    constexpr TestType mat2_00 =   -5, mat2_01 = -607, mat2_02 = -979,
+                       mat2_10 = -563, mat2_11 = -274, mat2_12 = 4028,
+                       mat2_20 = 1178, mat2_21 =  974, mat2_22 = 4563;
 
-//     constexpr Matrix<TestType, 3, 3> mat2 = { mat2_00, mat2_01, mat2_02,
-//                                               mat2_10, mat2_11, mat2_12,
-//                                               mat2_20, mat2_21, mat2_22,
-//
-//     // clang-format on
 
-//     constexpr Matrix<TestType, 3, 3> diff = mat1 - mat2;
+    constexpr Matrix<TestType, 3, 3> mat1 = { mat1_00, mat1_01, mat1_02,
+                                              mat1_10, mat1_11, mat1_12,
+                                              mat1_20, mat1_21, mat1_22 };
 
-//     static_assert(diff(0, 0) == 859);
-//     static_assert(diff(1, 0) == 896);
-//     static_assert(diff(2, 0) == -1276);
 
+    constexpr Matrix<TestType, 3, 3> mat2 = { mat2_00, mat2_01, mat2_02,
+                                              mat2_10, mat2_11, mat2_12,
+                                              mat2_20, mat2_21, mat2_22 };
+    // clang-format on
 
-//     static_assert(diff(0, 1) == 614);
-//     static_assert(diff(1, 1) == 0);
-//     static_assert(diff(2, 1) == -1956);
+    constexpr Matrix<TestType, 3, 3> diff = mat1 - mat2;
 
+    static_assert(diff(0, 0) == 859);
+    static_assert(diff(1, 0) == 896);
+    static_assert(diff(2, 0) == -1276);
 
-//     static_assert(diff(0, 2) == 10428);
-//     static_assert(diff(1, 2) == 500);
-//     static_assert(diff(2, 2) == -5126);
+    static_assert(diff(0, 1) == 614);
+    static_assert(diff(1, 1) == 0);
+    static_assert(diff(2, 1) == -1956);
 
+    static_assert(diff(0, 2) == 10428);
+    static_assert(diff(1, 2) == 500);
+    static_assert(diff(2, 2) == -5126);
 
-//     static_assert(diff(0, 3) == 649);
-//     static_assert(diff(1, 3) == 275);
-//     static_assert(diff(2, 3) == 5228);
+    CHECK(diff(0, 0) == 859);
+    CHECK(diff(1, 0) == 896);
+    CHECK(diff(2, 0) == -1276);
 
+    CHECK(diff(0, 1) == 614);
+    CHECK(diff(1, 1) == 0);
+    CHECK(diff(2, 1) == -1956);
 
-//     CHECK(diff(0, 0) == 859);
-//     CHECK(diff(1, 0) == 896);
-//     CHECK(diff(2, 0) == -1276);
+    CHECK(diff(0, 2) == 10428);
+    CHECK(diff(1, 2) == 500);
+    CHECK(diff(2, 2) == -5126);
+}
 
+TEMPLATE_LIST_TEST_CASE("Substraction operator", "[algebra][matrix][dim3][operator]", FloatingTypes)
+{
+    // clang-format off
+    constexpr TestType mat1_00 = 85.4, mat1_01 =   7.1, mat1_02 = 9.49,
+                       mat1_10 = 33.3, mat1_11 = -27.4, mat1_12 = 4.78,
+                       mat1_20 = -9.8, mat1_21 = -82.7, mat1_22 = -5.3;
 
-//     CHECK(diff(0, 1) == 614);
-//     CHECK(diff(1, 1) == 0);
-//     CHECK(diff(2, 1) == -1956);
 
+    constexpr TestType mat2_00 =  -5.1, mat2_01 = -60.7, mat2_02 = -9.7,
+                       mat2_10 = -63.3, mat2_11 = -27.4, mat2_12 = 40.2,
+                       mat2_20 = 178.7, mat2_21 =  97.4, mat2_22 = 45.6;
 
-//     CHECK(diff(0, 2) == 10428);
-//     CHECK(diff(1, 2) == 500);
-//     CHECK(diff(2, 2) == -5126);
 
+    constexpr Matrix<TestType, 3, 3> mat1 = { mat1_00, mat1_01, mat1_02,
+                                              mat1_10, mat1_11, mat1_12,
+                                              mat1_20, mat1_21, mat1_22 };
 
-//     CHECK(diff(0, 3) == 649);
-//     CHECK(diff(1, 3) == 275);
-//     CHECK(diff(2, 3) == 5228);
 
-// }
+    constexpr Matrix<TestType, 3, 3> mat2 = { mat2_00, mat2_01, mat2_02,
+                                              mat2_10, mat2_11, mat2_12,
+                                              mat2_20, mat2_21, mat2_22 };
+    // clang-format on
 
-// TEMPLATE_LIST_TEST_CASE("Substraction operator", "[algebra][matrix][dim3][operator]", FloatingTypes)
-// {
-//     // clang-format off
-//     constexpr TestType mat1_00 = 85.4, mat1_01 =   7.1, mat1_02 = 9.49,
-//                        mat1_10 = 33.3, mat1_11 = -27.4, mat1_12 = 4.78,
-//                        mat1_20 = -9.8, mat1_21 = -82.7, mat1_22 = -5.3,
-//
+    constexpr Matrix<TestType, 3, 3> diff = mat1 - mat2;
 
-//     constexpr TestType mat2_00 =  -5.1, mat2_01 = -60.7, mat2_02 = -9.7,
-//                        mat2_10 = -63.3, mat2_11 = -27.4, mat2_12 = 40.2,
-//                        mat2_20 = 178.7, mat2_21 =  97.4, mat2_22 = 45.6,
-//
+    constexpr auto elp = epsilonLowPrecision<TestType>();
 
-//     constexpr Matrix<TestType, 3, 3> mat1 = { mat1_00, mat1_01, mat1_02,
-//                                               mat1_10, mat1_11, mat1_12,
-//                                               mat1_20, mat1_21, mat1_22,
-//
+    static_assert(std::abs(diff(0, 0) - 90.5) < elp);
+    static_assert(std::abs(diff(1, 0) - 96.6) < elp);
+    static_assert(std::abs(diff(2, 0) - -188.5) < elp);
 
-//     constexpr Matrix<TestType, 3, 3> mat2 = { mat2_00, mat2_01, mat2_02,
-//                                               mat2_10, mat2_11, mat2_12,
-//                                               mat2_20, mat2_21, mat2_22,
-//
-//     // clang-format on
-//     constexpr Matrix<TestType, 3, 3> diff = mat1 - mat2;
+    static_assert(std::abs(diff(0, 1) - 67.8) < elp);
+    static_assert(std::abs(diff(1, 1) - 0.0) < elp);
+    static_assert(std::abs(diff(2, 1) - -180.1) < elp);
 
-//     constexpr auto elp = epsilonLowPrecision<TestType>();
+    static_assert(std::abs(diff(0, 2) - 19.19) < elp);
+    static_assert(std::abs(diff(1, 2) - -35.42) < elp);
+    static_assert(std::abs(diff(2, 2) - -50.9) < elp);
 
-//     static_assert(std::abs(diff(0, 0) - 90.5) < elp);
-//     static_assert(std::abs(diff(1, 0) - 96.6) < elp);
-//     static_assert(std::abs(diff(2, 0) - -188.5) < elp);
+    const auto ehp = epsilonHighPrecision<TestType>();
 
+    CHECK(diff(0, 0) == Catch::Approx(90.5).epsilon(ehp));
+    CHECK(diff(1, 0) == Catch::Approx(96.6).epsilon(ehp));
+    CHECK(diff(2, 0) == Catch::Approx(-188.5).epsilon(ehp));
 
-//     static_assert(std::abs(diff(0, 1) - 67.8) < elp);
-//     static_assert(std::abs(diff(1, 1) - 0.0) < elp);
-//     static_assert(std::abs(diff(2, 1) - -180.1) < elp);
+    CHECK(diff(0, 1) == Catch::Approx(67.8).epsilon(ehp));
+    CHECK(diff(1, 1) == Catch::Approx(0.0).epsilon(ehp));
+    CHECK(diff(2, 1) == Catch::Approx(-180.1).epsilon(ehp));
 
+    CHECK(diff(0, 2) == Catch::Approx(19.19).epsilon(ehp));
+    CHECK(diff(1, 2) == Catch::Approx(-35.42).epsilon(ehp));
+    CHECK(diff(2, 2) == Catch::Approx(-50.9).epsilon(ehp));
+}
 
-//     static_assert(std::abs(diff(0, 2) - 19.19) < elp);
-//     static_assert(std::abs(diff(1, 2) - -35.42) < elp);
-//     static_assert(std::abs(diff(2, 2) - -50.9) < elp);
+TEMPLATE_LIST_TEST_CASE("Times equal", "[algebra][matrix][dim3][operator]", IntegerTypes)
+{
+    // clang-format off
+    TestType mat_00 =  1, mat_01 =  5, mat_02 =   9,
+             mat_10 = -2, mat_11 = -6, mat_12 = -10,
+             mat_20 =  3, mat_21 =  7, mat_22 =  11;
 
 
-//     static_assert(std::abs(diff(0, 3) - -99.9) < elp);
-//     static_assert(std::abs(diff(1, 3) - 61.6) < elp);
-//     static_assert(std::abs(diff(2, 3) - 55.8) < elp);
+    TestType scalar = 5;
 
+    Matrix<TestType, 3, 3> mat = { mat_00, mat_01, mat_02,
+                                   mat_10, mat_11, mat_12,
+                                   mat_20, mat_21, mat_22 };
+    // clang-format on
 
-//     const auto ehp = epsilonHighPrecision<TestType>();
+    mat *= scalar;
 
-//     CHECK(diff(0, 0) == Catch::Approx(90.5).epsilon(ehp));
-//     CHECK(diff(1, 0) == Catch::Approx(96.6).epsilon(ehp));
-//     CHECK(diff(2, 0) == Catch::Approx(-188.5).epsilon(ehp));
+    CHECK(mat(0, 0) == 5);
+    CHECK(mat(1, 0) == -10);
+    CHECK(mat(2, 0) == 15);
 
+    CHECK(mat(0, 1) == 25);
+    CHECK(mat(1, 1) == -30);
+    CHECK(mat(2, 1) == 35);
 
-//     CHECK(diff(0, 1) == Catch::Approx(67.8).epsilon(ehp));
-//     CHECK(diff(1, 1) == Catch::Approx(0.0).epsilon(ehp));
-//     CHECK(diff(2, 1) == Catch::Approx(-180.1).epsilon(ehp));
+    CHECK(mat(0, 2) == 45);
+    CHECK(mat(1, 2) == -50);
+    CHECK(mat(2, 2) == 55);
+}
 
+TEMPLATE_LIST_TEST_CASE("Times equal", "[algebra][matrix][dim3][operator]", FloatingTypes)
+{
+    // clang-format off
+    TestType mat_00 = 9.49, mat_01 =  1.1, mat_02 = 85.4,
+             mat_10 = 4.78, mat_11 = -3.8, mat_12 = 33.3,
+             mat_20 = -5.3, mat_21 =  4.4, mat_22 = -9.8;
 
-//     CHECK(diff(0, 2) == Catch::Approx(19.19).epsilon(ehp));
-//     CHECK(diff(1, 2) == Catch::Approx(-35.42).epsilon(ehp));
-//     CHECK(diff(2, 2) == Catch::Approx(-50.9).epsilon(ehp));
 
+    TestType scalar = 8.6;
 
-//     CHECK(diff(0, 3) == Catch::Approx(-99.9).epsilon(ehp));
-//     CHECK(diff(1, 3) == Catch::Approx(61.6).epsilon(ehp));
-//     CHECK(diff(2, 3) == Catch::Approx(55.8).epsilon(ehp));
+    Matrix<TestType, 3, 3> mat = { mat_00, mat_01, mat_02,
+                                   mat_10, mat_11, mat_12,
+                                   mat_20, mat_21, mat_22 };
+    // clang-format on
 
-// }
+    mat *= scalar;
 
-// TEMPLATE_LIST_TEST_CASE("Times equal", "[algebra][matrix][dim3][operator]", IntegerTypes)
-// {
-//     // clang-format off
-//     TestType mat_00 =  1, mat_01 =  5, mat_02 =   9,
-//              mat_10 = -2, mat_11 = -6, mat_12 = -10,
-//              mat_20 =  3, mat_21 =  7, mat_22 =  11,
-//
+    const auto ehp = epsilonHighPrecision<TestType>();
 
-//     TestType scalar = 5;
+    CHECK(mat(0, 0) == Catch::Approx(81.614).epsilon(ehp));
+    CHECK(mat(1, 0) == Catch::Approx(41.108).epsilon(ehp));
+    CHECK(mat(2, 0) == Catch::Approx(-45.58).epsilon(ehp));
 
-//     Matrix<TestType, 3, 3> mat = { mat_00, mat_01, mat_02,
-//                                    mat_10, mat_11, mat_12,
-//                                    mat_20, mat_21, mat_22,
-//
-//     // clang-format on
+    CHECK(mat(0, 1) == Catch::Approx(9.46).epsilon(ehp));
+    CHECK(mat(1, 1) == Catch::Approx(-32.68).epsilon(ehp));
+    CHECK(mat(2, 1) == Catch::Approx(37.84).epsilon(ehp));
 
-//     mat *= scalar;
+    CHECK(mat(0, 2) == Catch::Approx(734.44).epsilon(ehp));
+    CHECK(mat(1, 2) == Catch::Approx(286.38).epsilon(ehp));
+    CHECK(mat(2, 2) == Catch::Approx(-84.28).epsilon(ehp));
+}
 
-//     CHECK(mat(0, 0) == 5);
-//     CHECK(mat(1, 0) == -10);
-//     CHECK(mat(2, 0) == 15);
+TEMPLATE_LIST_TEST_CASE("Divide equal", "[algebra][matrix][dim3][operator]", IntegerTypes)
+{
+    // clang-format off
+    TestType mat_00 =  10, mat_01 =  50, mat_02 =   90,
+             mat_10 = -20, mat_11 = -60, mat_12 = -100,
+             mat_20 =  30, mat_21 =  70, mat_22 =  110;
 
 
-//     CHECK(mat(0, 1) == 25);
-//     CHECK(mat(1, 1) == -30);
-//     CHECK(mat(2, 1) == 35);
+    TestType scalar = -2;
 
+    Matrix<TestType, 3, 3> mat = { mat_00, mat_01, mat_02,
+                                   mat_10, mat_11, mat_12,
+                                   mat_20, mat_21, mat_22 };
+    // clang-format on
 
-//     CHECK(mat(0, 2) == 45);
-//     CHECK(mat(1, 2) == -50);
-//     CHECK(mat(2, 2) == 55);
+    mat /= scalar;
 
+    CHECK(mat(0, 0) == -5);
+    CHECK(mat(1, 0) == 10);
+    CHECK(mat(2, 0) == -15);
 
-//     CHECK(mat(0, 3) == 65);
-//     CHECK(mat(1, 3) == -70);
-//     CHECK(mat(2, 3) == 75);
+    CHECK(mat(0, 1) == -25);
+    CHECK(mat(1, 1) == 30);
+    CHECK(mat(2, 1) == -35);
 
-// }
+    CHECK(mat(0, 2) == -45);
+    CHECK(mat(1, 2) == 50);
+    CHECK(mat(2, 2) == -55);
 
-// TEMPLATE_LIST_TEST_CASE("Times equal", "[algebra][matrix][dim3][operator]", FloatingTypes)
-// {
-//     // clang-format off
-//     TestType mat_00 = 9.49, mat_01 =  1.1, mat_02 = 85.4,
-//              mat_10 = 4.78, mat_11 = -3.8, mat_12 = 33.3,
-//              mat_20 = -5.3, mat_21 =  4.4, mat_22 = -9.8,
-//
+    TestType zero = 0;
+    CHECK_THROWS(mat /= zero);
+}
 
-//     TestType scalar = 8.6;
+TEMPLATE_LIST_TEST_CASE("Divide equal", "[algebra][matrix][dim3][operator]", FloatingTypes)
+{
+    // clang-format off
+    TestType mat_00 = 9.49, mat_01 =  1.1, mat_02 = 85.4,
+             mat_10 = 4.78, mat_11 = -3.8, mat_12 = 33.3,
+             mat_20 = -5.3, mat_21 =  4.4, mat_22 = -9.8;
 
-//     Matrix<TestType, 3, 3> mat = { mat_00, mat_01, mat_02,
-//                                    mat_10, mat_11, mat_12,
-//                                    mat_20, mat_21, mat_22,
-//
-//     // clang-format on
 
-//     mat *= scalar;
+    TestType scalar = 8.6;
 
-//     const auto ehp = epsilonHighPrecision<TestType>();
+    Matrix<TestType, 3, 3> mat = { mat_00, mat_01, mat_02,
+                                   mat_10, mat_11, mat_12,
+                                   mat_20, mat_21, mat_22 };
+    // clang-format on
 
-//     CHECK(mat(0, 0) == Catch::Approx(81.614).epsilon(ehp));
-//     CHECK(mat(1, 0) == Catch::Approx(41.108).epsilon(ehp));
-//     CHECK(mat(2, 0) == Catch::Approx(-45.58).epsilon(ehp));
+    mat /= scalar;
 
+    const auto ehp = epsilonHighPrecision<TestType>();
 
-//     CHECK(mat(0, 1) == Catch::Approx(9.46).epsilon(ehp));
-//     CHECK(mat(1, 1) == Catch::Approx(-32.68).epsilon(ehp));
-//     CHECK(mat(2, 1) == Catch::Approx(37.84).epsilon(ehp));
+    CHECK(mat(0, 0) == Catch::Approx(1.10348837209302).epsilon(ehp));
+    CHECK(mat(1, 0) == Catch::Approx(0.555813953488372).epsilon(ehp));
+    CHECK(mat(2, 0) == Catch::Approx(-0.616279069767442).epsilon(ehp));
 
+    CHECK(mat(0, 1) == Catch::Approx(0.127906976744186).epsilon(ehp));
+    CHECK(mat(1, 1) == Catch::Approx(-0.441860465116279).epsilon(ehp));
+    CHECK(mat(2, 1) == Catch::Approx(0.511627906976744).epsilon(ehp));
 
-//     CHECK(mat(0, 2) == Catch::Approx(734.44).epsilon(ehp));
-//     CHECK(mat(1, 2) == Catch::Approx(286.38).epsilon(ehp));
-//     CHECK(mat(2, 2) == Catch::Approx(-84.28).epsilon(ehp));
+    CHECK(mat(0, 2) == Catch::Approx(9.93023255813954).epsilon(ehp));
+    CHECK(mat(1, 2) == Catch::Approx(3.87209302325581).epsilon(ehp));
+    CHECK(mat(2, 2) == Catch::Approx(-1.13953488372093).epsilon(ehp));
 
+    TestType zero = 0.0;
+    CHECK_THROWS(mat /= zero);
+}
 
-//     CHECK(mat(0, 3) == Catch::Approx(-60.2).epsilon(ehp));
-//     CHECK(mat(1, 3) == Catch::Approx(-235.64).epsilon(ehp));
-//     CHECK(mat(2, 3) == Catch::Approx(-711.22).epsilon(ehp));
+TEMPLATE_LIST_TEST_CASE("Dimensions", "[algebra][matrix][dim3][method]", IntegerTypes)
+{
+    constexpr Matrix<TestType, 3, 3> mat;
 
-// }
+    constexpr auto dims = mat.dimensions();
 
-// TEMPLATE_LIST_TEST_CASE("Divide equal", "[algebra][matrix][dim3][operator]", IntegerTypes)
-// {
-//     // clang-format off
-//     TestType mat_00 =  10, mat_01 =  50, mat_02 =   90,
-//              mat_10 = -20, mat_11 = -60, mat_12 = -100,
-//              mat_20 =  30, mat_21 =  70, mat_22 =  110,
-//
+    static_assert(std::get<0>(dims) == 3);
+    static_assert(std::get<1>(dims) == 3);
 
-//     TestType scalar = -2;
+    const auto [rows, cols] = mat.dimensions();
 
-//     Matrix<TestType, 3, 3> mat = { mat_00, mat_01, mat_02,
-//                                    mat_10, mat_11, mat_12,
-//                                    mat_20, mat_21, mat_22,
-//
-//     // clang-format on
+    CHECK(rows == 3);
+    CHECK(cols == 3);
+}
 
-//     mat /= scalar;
+TEMPLATE_LIST_TEST_CASE("Dimensions", "[algebra][matrix][dim3][method]", FloatingTypes)
+{
+    constexpr Matrix<TestType, 3, 3> mat;
 
-//     CHECK(mat(0, 0) == -5);
-//     CHECK(mat(1, 0) == 10);
-//     CHECK(mat(2, 0) == -15);
+    constexpr auto dims = mat.dimensions();
 
+    static_assert(std::get<0>(dims) == 3);
+    static_assert(std::get<1>(dims) == 3);
 
-//     CHECK(mat(0, 1) == -25);
-//     CHECK(mat(1, 1) == 30);
-//     CHECK(mat(2, 1) == -35);
+    const auto [rows, cols] = mat.dimensions();
 
+    CHECK(rows == 3);
+    CHECK(cols == 3);
+}
 
-//     CHECK(mat(0, 2) == -45);
-//     CHECK(mat(1, 2) == 50);
-//     CHECK(mat(2, 2) == -55);
+TEMPLATE_LIST_TEST_CASE("Internal data access", "[algebra][matrix][dim3][method]", IntegerTypes)
+{
+    // clang-format off
+    TestType mat_00 = 1, mat_01 = 5, mat_02 =  9,
+             mat_10 = 2, mat_11 = 6, mat_12 = 10,
+             mat_20 = 3, mat_21 = 7, mat_22 = 11;
 
 
-//     CHECK(mat(0, 3) == -65);
-//     CHECK(mat(1, 3) == 70);
-//     CHECK(mat(2, 3) == -75);
+    Matrix<TestType, 3, 3> mat1 = { mat_00, mat_01, mat_02,
+                                    mat_10, mat_11, mat_12,
+                                    mat_20, mat_21, mat_22 };
 
 
-//     TestType zero = 0;
-//     CHECK_THROWS(mat /= zero);
-// }
+    const Matrix<TestType, 3, 3> mat2 = { mat_00, mat_01, mat_02,
+                                          mat_10, mat_11, mat_12,
+                                          mat_20, mat_21, mat_22 };
+    // clang-format on
 
-// TEMPLATE_LIST_TEST_CASE("Divide equal", "[algebra][matrix][dim3][operator]", FloatingTypes)
-// {
-//     // clang-format off
-//     TestType mat_00 = 9.49, mat_01 =  1.1, mat_02 = 85.4,
-//              mat_10 = 4.78, mat_11 = -3.8, mat_12 = 33.3,
-//              mat_20 = -5.3, mat_21 =  4.4, mat_22 = -9.8,
-//
+    auto*       data1 = mat1.data();
+    const auto* data2 = mat2.data();
 
-//     TestType scalar = 8.6;
+    CHECK(data1[0] == 1);
+    CHECK(data1[1] == 5);
+    CHECK(data1[2] == 9);
 
-//     Matrix<TestType, 3, 3> mat = { mat_00, mat_01, mat_02,
-//                                    mat_10, mat_11, mat_12,
-//                                    mat_20, mat_21, mat_22,
-//
-//     // clang-format on
+    CHECK(data1[3] == 2);
+    CHECK(data1[4] == 6);
+    CHECK(data1[5] == 10);
 
-//     mat /= scalar;
+    CHECK(data1[6] == 3);
+    CHECK(data1[7] == 7);
+    CHECK(data1[8] == 11);
 
-//     const auto ehp = epsilonHighPrecision<TestType>();
+    CHECK(data2[0] == 1);
+    CHECK(data2[1] == 5);
+    CHECK(data2[2] == 9);
 
-//     CHECK(mat(0, 0) == Catch::Approx(1.10348837209302).epsilon(ehp));
-//     CHECK(mat(1, 0) == Catch::Approx(0.555813953488372).epsilon(ehp));
-//     CHECK(mat(2, 0) == Catch::Approx(-0.616279069767442).epsilon(ehp));
+    CHECK(data2[3] == 2);
+    CHECK(data2[4] == 6);
+    CHECK(data2[5] == 10);
 
+    CHECK(data2[6] == 3);
+    CHECK(data2[7] == 7);
+    CHECK(data2[8] == 11);
+}
 
-//     CHECK(mat(0, 1) == Catch::Approx(0.127906976744186).epsilon(ehp));
-//     CHECK(mat(1, 1) == Catch::Approx(-0.441860465116279).epsilon(ehp));
-//     CHECK(mat(2, 1) == Catch::Approx(0.511627906976744).epsilon(ehp));
+TEMPLATE_LIST_TEST_CASE("Internal data access", "[algebra][matrix][dim3][method]", FloatingTypes)
+{
+    // clang-format off
+    TestType mat_00 = 1.0, mat_01 = 5.0, mat_02 =  9.0,
+             mat_10 = 2.0, mat_11 = 6.0, mat_12 = 10.0,
+             mat_20 = 3.0, mat_21 = 7.0, mat_22 = 11.0;
 
 
-//     CHECK(mat(0, 2) == Catch::Approx(9.93023255813954).epsilon(ehp));
-//     CHECK(mat(1, 2) == Catch::Approx(3.87209302325581).epsilon(ehp));
-//     CHECK(mat(2, 2) == Catch::Approx(-1.13953488372093).epsilon(ehp));
+    Matrix<TestType, 3, 3> mat1 = { mat_00, mat_01, mat_02,
+                                    mat_10, mat_11, mat_12,
+                                    mat_20, mat_21, mat_22 };
 
 
-//     CHECK(mat(0, 3) == Catch::Approx(-0.813953488372093).epsilon(ehp));
-//     CHECK(mat(1, 3) == Catch::Approx(-3.18604651162791).epsilon(ehp));
-//     CHECK(mat(2, 3) == Catch::Approx(-9.61627906976744).epsilon(ehp));
+    const Matrix<TestType, 3, 3> mat2 = { mat_00, mat_01, mat_02,
+                                          mat_10, mat_11, mat_12,
+                                          mat_20, mat_21, mat_22 };
+    // clang-format on
 
+    auto*       data1 = mat1.data();
+    const auto* data2 = mat2.data();
 
-//     TestType zero = 0.0;
-//     CHECK_THROWS(mat /= zero);
-// }
+    CHECK(data1[0] == 1.0);
+    CHECK(data1[1] == 5.0);
+    CHECK(data1[2] == 9.0);
 
-// TEMPLATE_LIST_TEST_CASE("Dimensions", "[algebra][matrix][dim3][method]", IntegerTypes)
-// {
-//     constexpr Matrix<TestType, 3, 3> mat;
+    CHECK(data1[3] == 2.0);
+    CHECK(data1[4] == 6.0);
+    CHECK(data1[5] == 10.0);
 
-//     constexpr auto dims = mat.dimensions();
+    CHECK(data1[6] == 3.0);
+    CHECK(data1[7] == 7.0);
+    CHECK(data1[8] == 11.0);
 
-//     static_assert(std::get<0>(dims) == 4);
-//     static_assert(std::get<1>(dims) == 4);
+    CHECK(data2[0] == 1.0);
+    CHECK(data2[1] == 5.0);
+    CHECK(data2[2] == 9.0);
 
-//     const auto [rows, cols] = mat.dimensions();
+    CHECK(data2[3] == 2.0);
+    CHECK(data2[4] == 6.0);
+    CHECK(data2[5] == 10.0);
 
-//     CHECK(rows == 4);
-//     CHECK(cols == 4);
-// }
+    CHECK(data2[6] == 3.0);
+    CHECK(data2[7] == 7.0);
+    CHECK(data2[8] == 11.0);
+}
 
-// TEMPLATE_LIST_TEST_CASE("Dimensions", "[algebra][matrix][dim3][method]", FloatingTypes)
-// {
-//     constexpr Matrix<TestType, 3, 3> mat;
+TEMPLATE_LIST_TEST_CASE("Transpose", "[algebra][matrix][dim3][method]", IntegerTypes)
+{
+    // clang-format off
+    constexpr TestType mat_00 =  1, mat_01 =  2, mat_02 =  3,
+                       mat_10 =  5, mat_11 =  6, mat_12 =  7,
+                       mat_20 =  9, mat_21 = 10, mat_22 = 11;
 
-//     constexpr auto dims = mat.dimensions();
 
-//     static_assert(std::get<0>(dims) == 4);
-//     static_assert(std::get<1>(dims) == 4);
+    constexpr Matrix<TestType, 3, 3> mat = { mat_00, mat_01, mat_02,
+                                             mat_10, mat_11, mat_12,
+                                             mat_20, mat_21, mat_22 };
+    // clang-format on
 
-//     const auto [rows, cols] = mat.dimensions();
+    constexpr Matrix<TestType, 3, 3> transposed = mat.transposed();
 
-//     CHECK(rows == 4);
-//     CHECK(cols == 4);
-// }
+    static_assert(transposed(0, 0) == mat(0, 0));
+    static_assert(transposed(1, 0) == mat(0, 1));
+    static_assert(transposed(2, 0) == mat(0, 2));
 
-// TEMPLATE_LIST_TEST_CASE("Internal data access", "[algebra][matrix][dim3][method]", IntegerTypes)
-// {
-//     // clang-format off
-//     TestType mat_00 = 1, mat_01 = 5, mat_02 =  9,
-//              mat_10 = 2, mat_11 = 6, mat_12 = 10,
-//              mat_20 = 3, mat_21 = 7, mat_22 = 11,
-//
+    static_assert(transposed(0, 1) == mat(1, 0));
+    static_assert(transposed(1, 1) == mat(1, 1));
+    static_assert(transposed(2, 1) == mat(1, 2));
 
-//     Matrix<TestType, 3, 3> mat1 = { mat_00, mat_01, mat_02,
-//                                     mat_10, mat_11, mat_12,
-//                                     mat_20, mat_21, mat_22,
-//
+    static_assert(transposed(0, 2) == mat(2, 0));
+    static_assert(transposed(1, 2) == mat(2, 1));
+    static_assert(transposed(2, 2) == mat(2, 2));
 
-//     const Matrix<TestType, 3, 3> mat2 = { mat_00, mat_01, mat_02,
-//                                           mat_10, mat_11, mat_12,
-//                                           mat_20, mat_21, mat_22,
-//
-//     // clang-format on
+    CHECK(transposed(0, 0) == mat(0, 0));
+    CHECK(transposed(1, 0) == mat(0, 1));
+    CHECK(transposed(2, 0) == mat(0, 2));
 
-//     auto*       data1 = mat1.data();
-//     const auto* data2 = mat2.data();
+    CHECK(transposed(0, 1) == mat(1, 0));
+    CHECK(transposed(1, 1) == mat(1, 1));
+    CHECK(transposed(2, 1) == mat(1, 2));
 
-//     CHECK(data1[0] == 1);
-//     CHECK(data1[1] == 5);
-//     CHECK(data1[2] == 9);
-//     CHECK(data1[3] == 13);
+    CHECK(transposed(0, 2) == mat(2, 0));
+    CHECK(transposed(1, 2) == mat(2, 1));
+    CHECK(transposed(2, 2) == mat(2, 2));
 
-//     CHECK(data1[4] == 2);
-//     CHECK(data1[5] == 6);
-//     CHECK(data1[6] == 10);
-//     CHECK(data1[7] == 14);
+    Matrix<TestType, 3, 3> mat2 = mat;
+    mat2.transpose();
 
-//     CHECK(data1[8] == 3);
-//     CHECK(data1[9] == 7);
-//     CHECK(data1[10] == 11);
-//     CHECK(data1[11] == 15);
+    CHECK(mat2(0, 0) == mat_00);
+    CHECK(mat2(1, 0) == mat_01);
+    CHECK(mat2(2, 0) == mat_02);
 
-//     CHECK(data1[12] == 4);
-//     CHECK(data1[13] == 8);
-//     CHECK(data1[14] == 12);
-//     CHECK(data1[15] == 16);
+    CHECK(mat2(0, 1) == mat_10);
+    CHECK(mat2(1, 1) == mat_11);
+    CHECK(mat2(2, 1) == mat_12);
 
-//     CHECK(data2[0] == 1);
-//     CHECK(data2[1] == 5);
-//     CHECK(data2[2] == 9);
-//     CHECK(data2[3] == 13);
+    CHECK(mat2(0, 2) == mat_20);
+    CHECK(mat2(1, 2) == mat_21);
+    CHECK(mat2(2, 2) == mat_22);
+}
 
-//     CHECK(data2[4] == 2);
-//     CHECK(data2[5] == 6);
-//     CHECK(data2[6] == 10);
-//     CHECK(data2[7] == 14);
+TEMPLATE_LIST_TEST_CASE("Transpose", "[algebra][matrix][dim3][method]", FloatingTypes)
+{
+    // clang-format off
+    constexpr TestType mat_00 =  -1.0, mat_01 =  -2.0, mat_02 =  -3.0,
+                       mat_10 =  -5.0, mat_11 =  -6.0, mat_12 =  -7.0,
+                       mat_20 =  -9.0, mat_21 = -10.0, mat_22 = -11.0;
 
-//     CHECK(data2[8] == 3);
-//     CHECK(data2[9] == 7);
-//     CHECK(data2[10] == 11);
-//     CHECK(data2[11] == 15);
 
-//     CHECK(data2[12] == 4);
-//     CHECK(data2[13] == 8);
-//     CHECK(data2[14] == 12);
-//     CHECK(data2[15] == 16);
-// }
+    constexpr Matrix<TestType, 3, 3> mat = { mat_00, mat_01, mat_02,
+                                             mat_10, mat_11, mat_12,
+                                             mat_20, mat_21, mat_22 };
+    // clang-format on
 
-// TEMPLATE_LIST_TEST_CASE("Internal data access", "[algebra][matrix][dim3][method]", FloatingTypes)
-// {
-//     // clang-format off
-//     TestType mat_00 = 1.0, mat_01 = 5.0, mat_02 =  9.0,
-//              mat_10 = 2.0, mat_11 = 6.0, mat_12 = 10.0,
-//              mat_20 = 3.0, mat_21 = 7.0, mat_22 = 11.0,
-//
+    constexpr Matrix<TestType, 3, 3> transposed = mat.transposed();
 
-//     Matrix<TestType, 3, 3> mat1 = { mat_00, mat_01, mat_02,
-//                                     mat_10, mat_11, mat_12,
-//                                     mat_20, mat_21, mat_22,
-//
+    static_assert(transposed(0, 0) == mat(0, 0));
+    static_assert(transposed(1, 0) == mat(0, 1));
+    static_assert(transposed(2, 0) == mat(0, 2));
 
-//     const Matrix<TestType, 3, 3> mat2 = { mat_00, mat_01, mat_02,
-//                                           mat_10, mat_11, mat_12,
-//                                           mat_20, mat_21, mat_22,
-//
-//     // clang-format on
+    static_assert(transposed(0, 1) == mat(1, 0));
+    static_assert(transposed(1, 1) == mat(1, 1));
+    static_assert(transposed(2, 1) == mat(1, 2));
 
-//     auto*       data1 = mat1.data();
-//     const auto* data2 = mat2.data();
+    static_assert(transposed(0, 2) == mat(2, 0));
+    static_assert(transposed(1, 2) == mat(2, 1));
+    static_assert(transposed(2, 2) == mat(2, 2));
 
-//     CHECK(data1[0] == 1.0);
-//     CHECK(data1[1] == 5.0);
-//     CHECK(data1[2] == 9.0);
-//     CHECK(data1[3] == 13.0);
+    CHECK(transposed(0, 0) == mat(0, 0));
+    CHECK(transposed(1, 0) == mat(0, 1));
+    CHECK(transposed(2, 0) == mat(0, 2));
 
-//     CHECK(data1[4] == 2.0);
-//     CHECK(data1[5] == 6.0);
-//     CHECK(data1[6] == 10.0);
-//     CHECK(data1[7] == 14.0);
+    CHECK(transposed(0, 1) == mat(1, 0));
+    CHECK(transposed(1, 1) == mat(1, 1));
+    CHECK(transposed(2, 1) == mat(1, 2));
 
-//     CHECK(data1[8] == 3.0);
-//     CHECK(data1[9] == 7.0);
-//     CHECK(data1[10] == 11.0);
-//     CHECK(data1[11] == 15.0);
+    CHECK(transposed(0, 2) == mat(2, 0));
+    CHECK(transposed(1, 2) == mat(2, 1));
+    CHECK(transposed(2, 2) == mat(2, 2));
 
-//     CHECK(data1[12] == 4.0);
-//     CHECK(data1[13] == 8.0);
-//     CHECK(data1[14] == 12.0);
-//     CHECK(data1[15] == 16.0);
+    Matrix<TestType, 3, 3> mat2 = mat;
+    mat2.transpose();
 
-//     CHECK(data2[0] == 1.0);
-//     CHECK(data2[1] == 5.0);
-//     CHECK(data2[2] == 9.0);
-//     CHECK(data2[3] == 13.0);
+    CHECK(mat2(0, 0) == mat_00);
+    CHECK(mat2(1, 0) == mat_01);
+    CHECK(mat2(2, 0) == mat_02);
 
-//     CHECK(data2[4] == 2.0);
-//     CHECK(data2[5] == 6.0);
-//     CHECK(data2[6] == 10.0);
-//     CHECK(data2[7] == 14.0);
+    CHECK(mat2(0, 1) == mat_10);
+    CHECK(mat2(1, 1) == mat_11);
+    CHECK(mat2(2, 1) == mat_12);
 
-//     CHECK(data2[8] == 3.0);
-//     CHECK(data2[9] == 7.0);
-//     CHECK(data2[10] == 11.0);
-//     CHECK(data2[11] == 15.0);
+    CHECK(mat2(0, 2) == mat_20);
+    CHECK(mat2(1, 2) == mat_21);
+    CHECK(mat2(2, 2) == mat_22);
+}
 
-//     CHECK(data2[12] == 4.0);
-//     CHECK(data2[13] == 8.0);
-//     CHECK(data2[14] == 12.0);
-//     CHECK(data2[15] == 16.0);
-// }
+TEMPLATE_LIST_TEST_CASE("Determinant", "[algebra][matrix][dim3][method]", IntegerTypes)
+{
+    // clang-format off
+    constexpr TestType mat_00 = 0, mat_01 = 1, mat_02 =  9,
+                       mat_10 = 3, mat_11 = 2, mat_12 =  1,
+                       mat_20 = 4, mat_21 = 2, mat_22 = 10;
 
-// TEMPLATE_LIST_TEST_CASE("Transpose", "[algebra][matrix][dim3][method]", IntegerTypes)
-// {
-//     // clang-format off
-//     constexpr TestType mat_00 =  1, mat_01 =  2, mat_02 =  3,
-//                        mat_10 =  5, mat_11 =  6, mat_12 =  7,
-//                        mat_20 =  9, mat_21 = 10, mat_22 = 11,
-//
 
-//     constexpr Matrix<TestType, 3, 3> mat = { mat_00, mat_01, mat_02,
-//                                              mat_10, mat_11, mat_12,
-//                                              mat_20, mat_21, mat_22,
-//
-//     // clang-format on
+    constexpr Matrix<TestType, 3, 3> mat = { mat_00, mat_01, mat_02,
+                                             mat_10, mat_11, mat_12,
+                                             mat_20, mat_21, mat_22 };
 
-//     constexpr Matrix<TestType, 3, 3> transposed = mat.transposed();
+    // clang-format on
 
-//     static_assert(transposed(0, 0) == mat(0, 0));
-//     static_assert(transposed(1, 0) == mat(0, 1));
-//     static_assert(transposed(2, 0) == mat(0, 2));
+    constexpr TestType det = mat.determinant();
 
+    static_assert(det == -44);
 
-//     static_assert(transposed(0, 1) == mat(1, 0));
-//     static_assert(transposed(1, 1) == mat(1, 1));
-//     static_assert(transposed(2, 1) == mat(1, 2));
-
-
-//     static_assert(transposed(0, 2) == mat(2, 0));
-//     static_assert(transposed(1, 2) == mat(2, 1));
-//     static_assert(transposed(2, 2) == mat(2, 2));
-
-
-//     CHECK(transposed(0, 0) == mat(0, 0));
-//     CHECK(transposed(1, 0) == mat(0, 1));
-//     CHECK(transposed(2, 0) == mat(0, 2));
-
-
-//     CHECK(transposed(0, 1) == mat(1, 0));
-//     CHECK(transposed(1, 1) == mat(1, 1));
-//     CHECK(transposed(2, 1) == mat(1, 2));
-
-
-//     CHECK(transposed(0, 2) == mat(2, 0));
-//     CHECK(transposed(1, 2) == mat(2, 1));
-//     CHECK(transposed(2, 2) == mat(2, 2));
-
-
-//     Matrix<TestType, 3, 3> mat2 = mat;
-//     mat2.transpose();
-
-//     CHECK(mat2(0, 0) == mat_00);
-//     CHECK(mat2(1, 0) == mat_01);
-//     CHECK(mat2(2, 0) == mat_02);
-
-
-//     CHECK(mat2(0, 1) == mat_10);
-//     CHECK(mat2(1, 1) == mat_11);
-//     CHECK(mat2(2, 1) == mat_12);
-
-
-//     CHECK(mat2(0, 2) == mat_20);
-//     CHECK(mat2(1, 2) == mat_21);
-//     CHECK(mat2(2, 2) == mat_22);
-
-
-//     CHECK(mat2(0, 3) ==
-//     CHECK(mat2(1, 3) ==
-//     CHECK(mat2(2, 3) ==
-
-// }
-
-// TEMPLATE_LIST_TEST_CASE("Transpose", "[algebra][matrix][dim3][method]", FloatingTypes)
-// {
-//     // clang-format off
-//     constexpr TestType mat_00 =  -1.0, mat_01 =  -2.0, mat_02 =  -3.0,
-//                        mat_10 =  -5.0, mat_11 =  -6.0, mat_12 =  -7.0,
-//                        mat_20 =  -9.0, mat_21 = -10.0, mat_22 = -11.0,
-//
-
-//     constexpr Matrix<TestType, 3, 3> mat = { mat_00, mat_01, mat_02,
-//                                              mat_10, mat_11, mat_12,
-//                                              mat_20, mat_21, mat_22,
-//
-//     // clang-format on
-
-//     constexpr Matrix<TestType, 3, 3> transposed = mat.transposed();
-
-//     static_assert(transposed(0, 0) == mat(0, 0));
-//     static_assert(transposed(1, 0) == mat(0, 1));
-//     static_assert(transposed(2, 0) == mat(0, 2));
-
-
-//     static_assert(transposed(0, 1) == mat(1, 0));
-//     static_assert(transposed(1, 1) == mat(1, 1));
-//     static_assert(transposed(2, 1) == mat(1, 2));
-
-
-//     static_assert(transposed(0, 2) == mat(2, 0));
-//     static_assert(transposed(1, 2) == mat(2, 1));
-//     static_assert(transposed(2, 2) == mat(2, 2));
-
-
-//     CHECK(transposed(0, 0) == mat(0, 0));
-//     CHECK(transposed(1, 0) == mat(0, 1));
-//     CHECK(transposed(2, 0) == mat(0, 2));
-
-
-//     CHECK(transposed(0, 1) == mat(1, 0));
-//     CHECK(transposed(1, 1) == mat(1, 1));
-//     CHECK(transposed(2, 1) == mat(1, 2));
-
-
-//     CHECK(transposed(0, 2) == mat(2, 0));
-//     CHECK(transposed(1, 2) == mat(2, 1));
-//     CHECK(transposed(2, 2) == mat(2, 2));
-
-
-//     Matrix<TestType, 3, 3> mat2 = mat;
-//     mat2.transpose();
-
-//     CHECK(mat2(0, 0) == mat_00);
-//     CHECK(mat2(1, 0) == mat_01);
-//     CHECK(mat2(2, 0) == mat_02);
-
-
-//     CHECK(mat2(0, 1) == mat_10);
-//     CHECK(mat2(1, 1) == mat_11);
-//     CHECK(mat2(2, 1) == mat_12);
-
-
-//     CHECK(mat2(0, 2) == mat_20);
-//     CHECK(mat2(1, 2) == mat_21);
-//     CHECK(mat2(2, 2) == mat_22);
-
-
-//     CHECK(mat2(0, 3) ==
-//     CHECK(mat2(1, 3) ==
-//     CHECK(mat2(2, 3) ==
-
-// }
-
-// TEMPLATE_LIST_TEST_CASE("Determinant", "[algebra][matrix][dim3][method]", IntegerTypes)
-// {
-//     // clang-format off
-//     constexpr TestType mat_00 = 0, mat_01 = 1, mat_02 =  9,
-//                        mat_10 = 3, mat_11 = 2, mat_12 =  1,
-//                        mat_20 = 4, mat_21 = 2, mat_22 = 10,
-//
-
-//     constexpr Matrix<TestType, 3, 3> mat = { mat_00, mat_01, mat_02,
-//                                              mat_10, mat_11, mat_12,
-//                                              mat_20, mat_21, mat_22,
-//
-//     // clang-format on
-
-//     constexpr TestType det = mat.determinant();
-
-//     static_assert(det == -1092);
-
-//     CHECK(det == -1092);
-// }
+    CHECK(det == -44);
+}
 
 // TEMPLATE_LIST_TEST_CASE("Determinant", "[algebra][matrix][dim3][method]", FloatingTypes)
 // {
