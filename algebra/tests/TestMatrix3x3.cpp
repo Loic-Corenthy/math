@@ -1280,439 +1280,330 @@ TEMPLATE_LIST_TEST_CASE("Determinant", "[algebra][matrix][dim3][method]", Intege
     CHECK(det == -44);
 }
 
-// TEMPLATE_LIST_TEST_CASE("Determinant", "[algebra][matrix][dim3][method]", FloatingTypes)
-// {
-//     // clang-format off
-//     constexpr TestType mat_00 =  4.0, mat_01 = -5.1, mat_02 = -9.9,
-//                        mat_10 = -8.3, mat_11 =  4.2, mat_12 = -1.1,
-//                        mat_20 =  6.4, mat_21 =  3.2, mat_22 =  7.0,
-//
+TEMPLATE_LIST_TEST_CASE("Determinant", "[algebra][matrix][dim3][method]", FloatingTypes)
+{
+    // clang-format off
+    constexpr TestType mat_00 =  4.0, mat_01 = -5.1, mat_02 = -9.9,
+                       mat_10 = -8.3, mat_11 =  4.2, mat_12 = -1.1,
+                       mat_20 =  6.4, mat_21 =  3.2, mat_22 =  7.0;
 
-//     constexpr Matrix<TestType, 3, 3> mat = { mat_00, mat_01, mat_02,
-//                                              mat_10, mat_11, mat_12,
-//                                              mat_20, mat_21, mat_22,
-//
-//     // clang-format on
 
-//     constexpr TestType det = mat.determinant();
+    constexpr Matrix<TestType, 3, 3> mat = { mat_00, mat_01, mat_02,
+                                             mat_10, mat_11, mat_12,
+                                             mat_20, mat_21, mat_22 };
+    // clang-format on
 
-//     static_assert(std::abs(det - 6810.0026) < 0.002);  // Can't get a better precision than 0.002 with float
+    constexpr TestType det = mat.determinant();
 
-//     const auto ehp = epsilonHighPrecision<TestType>();
+    constexpr auto elp = epsilonLowPrecision<TestType>();
+    static_assert(std::abs(det - 400.33) < elp);  // Can't get a better precision than 0.002 with float
 
-//     CHECK(det == Catch::Approx(6810.0026).epsilon(ehp));
-// }
+    const auto ehp = epsilonHighPrecision<TestType>();
+    CHECK(det == Catch::Approx(400.33).epsilon(ehp));
+}
 
-// TEMPLATE_LIST_TEST_CASE("Trace", "[algebra][matrix][dim3][method]", IntegerTypes)
-// {
-//     constexpr TestType diagonalValue = 28;
+TEMPLATE_LIST_TEST_CASE("Trace", "[algebra][matrix][dim3][method]", IntegerTypes)
+{
+    constexpr TestType diagonalValue = 13;
 
-//     constexpr Matrix<TestType, 3, 3> mat(diagonalValue);
+    constexpr Matrix<TestType, 3, 3> mat(diagonalValue);
 
-//     constexpr TestType trace = mat.trace();
+    constexpr TestType trace = mat.trace();
 
-//     static_assert(trace == 112);
+    static_assert(trace == 39);
 
-//     CHECK(trace == 112);
-// }
+    CHECK(trace == 39);
+}
 
-// TEMPLATE_LIST_TEST_CASE("Trace", "[algebra][matrix][dim3][method]", FloatingTypes)
-// {
-//     constexpr TestType diagonalValue = -2.66;
+TEMPLATE_LIST_TEST_CASE("Trace", "[algebra][matrix][dim3][method]", FloatingTypes)
+{
+    constexpr TestType diagonalValue = -0.48;
 
-//     constexpr Matrix<TestType, 3, 3> mat(diagonalValue);
+    constexpr Matrix<TestType, 3, 3> mat(diagonalValue);
 
-//     constexpr TestType trace = mat.trace();
+    constexpr TestType trace = mat.trace();
 
-//     constexpr auto elp = epsilonLowPrecision<TestType>();
-//     static_assert(std::abs(trace - -10.64) < elp);
+    constexpr auto elp = epsilonLowPrecision<TestType>();
+    static_assert(std::abs(trace - -1.44) < elp);
 
-//     const auto ehp = epsilonHighPrecision<TestType>();
-//     CHECK(trace == Catch::Approx(-10.64).epsilon(ehp));
-// }
+    const auto ehp = epsilonHighPrecision<TestType>();
+    CHECK(trace == Catch::Approx(-1.44).epsilon(ehp));
+}
 
-// TEMPLATE_LIST_TEST_CASE("Inverse", "[algebra][matrix][dim3][method]", FloatingTypes)
-// {
-//     // clang-format off
-//     constexpr TestType mat_00 =  4.0, mat_01 = -5.1, mat_02 = -9.9,
-//                        mat_10 = -8.3, mat_11 =  4.2, mat_12 = -1.1,
-//                        mat_20 =  6.4, mat_21 =  3.2, mat_22 =  7.0,
-//
+TEMPLATE_LIST_TEST_CASE("Inverse", "[algebra][matrix][dim3][method]", FloatingTypes)
+{
+    // clang-format off
+    constexpr TestType mat_00 =  4.0, mat_01 = -5.1, mat_02 = -9.9,
+                       mat_10 = -8.3, mat_11 =  4.2, mat_12 = -1.1,
+                       mat_20 =  6.4, mat_21 =  3.2, mat_22 =  7.0;
 
-//     Matrix<TestType, 3, 3> mat = { mat_00, mat_01, mat_02,
-//                                    mat_10, mat_11, mat_12,
-//                                    mat_20, mat_21, mat_22,
-//
-//     // clang-format on
 
-//     mat.inverse();
+    Matrix<TestType, 3, 3> mat = { mat_00, mat_01, mat_02,
+                                   mat_10, mat_11, mat_12,
+                                   mat_20, mat_21, mat_22 };
+    // clang-format on
 
-//     const auto     ehp = epsilonHighPrecision<TestType>();
-//     constexpr auto elp = epsilonLowPrecision<TestType>();
+    mat.inverse();
 
-//     CHECK(mat(0, 0) == Catch::Approx(0.0100878081896768).epsilon(ehp));
-//     CHECK(mat(1, 0) == Catch::Approx(0.122482185249092).epsilon(ehp));
-//     CHECK(mat(2, 0) == Catch::Approx(-0.127654870498875).epsilon(ehp));
+    const auto     ehp = epsilonHighPrecision<TestType>();
+    constexpr auto elp = epsilonLowPrecision<TestType>();
 
+    CHECK(mat(0, 0) == Catch::Approx(0.0822321584692628).epsilon(ehp));
+    CHECK(mat(1, 0) == Catch::Approx(0.127544775560163).epsilon(ehp));
+    CHECK(mat(2, 0) == Catch::Approx(-0.133489870856543).epsilon(ehp));
 
-//     CHECK(mat(0, 1) == Catch::Approx(0.051103504718192).epsilon(ehp));
-//     CHECK(mat(1, 1) == Catch::Approx(0.231093156998207).epsilon(ehp));
-//     CHECK(mat(2, 1) == Catch::Approx(-0.116827415014496).epsilon(ehp));
+    CHECK(mat(0, 1) == Catch::Approx(0.0100417155846426).epsilon(ehp));
+    CHECK(mat(1, 1) == Catch::Approx(0.228211725326605).epsilon(ehp));
+    CHECK(mat(2, 1) == Catch::Approx(-0.113506357255264).epsilon(ehp));
 
+    CHECK(mat(0, 2) == Catch::Approx(0.117877750855544).epsilon(ehp));
+    CHECK(mat(1, 2) == Catch::Approx(0.21624659655784).epsilon(ehp));
+    CHECK(mat(2, 2) == Catch::Approx(-0.0637723877800814).epsilon(ehp));
 
-//     CHECK(mat(0, 2) == Catch::Approx(0.112744890875666).epsilon(ehp));
-//     CHECK(mat(1, 2) == Catch::Approx(0.215886408031621).epsilon(ehp));
-//     CHECK(mat(2, 2) == Catch::Approx(-0.0633572445332106).epsilon(ehp));
+    // clang-format off
+    constexpr Matrix<TestType, 3, 3> mat2 = { mat_00, mat_01, mat_02,
+                                              mat_10, mat_11, mat_12,
+                                              mat_20, mat_21, mat_22 };
+    // clang-format on
 
+    constexpr auto inv = mat2.inversed();
 
-//     CHECK(mat(0, 3) == Catch::Approx(-0.0727736873404424).epsilon(ehp));
-//     CHECK(mat(1, 3) == Catch::Approx(-0.00510675282267879).epsilon(elp));  // Cannot achieve high precision with float
-//     CHECK(mat(2, 3) == Catch::Approx(0.00588590083651362).epsilon(ehp));
+    static_assert(std::abs(inv(0, 0) - 0.0822321584692628) < elp);
+    static_assert(std::abs(inv(1, 0) - 0.127544775560163) < elp);
+    static_assert(std::abs(inv(2, 0) - -0.133489870856543) < elp);
 
+    static_assert(std::abs(inv(0, 1) - 0.0100417155846426) < elp);
+    static_assert(std::abs(inv(1, 1) - 0.228211725326605) < elp);
+    static_assert(std::abs(inv(2, 1) - -0.113506357255264) < elp);
 
-//     // clang-format off
-//     constexpr Matrix<TestType, 3, 3> mat2 = { mat_00, mat_01, mat_02,
-//                                               mat_10, mat_11, mat_12,
-//                                               mat_20, mat_21, mat_22,
-//
-//     // clang-format on
+    static_assert(std::abs(inv(0, 2) - 0.117877750855544) < elp);
+    static_assert(std::abs(inv(1, 2) - 0.21624659655784) < elp);
+    static_assert(std::abs(inv(2, 2) - -0.0637723877800814) < elp);
 
-//     constexpr auto inv = mat2.inversed();
+    CHECK(inv(0, 0) == Catch::Approx(0.0822321584692628).epsilon(ehp));
+    CHECK(inv(1, 0) == Catch::Approx(0.127544775560163).epsilon(ehp));
+    CHECK(inv(2, 0) == Catch::Approx(-0.133489870856543).epsilon(ehp));
 
-//     static_assert(std::abs(inv(0, 0) - 0.0100878) < elp);
-//     static_assert(std::abs(inv(1, 0) - 0.122482) < elp);
-//     static_assert(std::abs(inv(2, 0) - -0.127655) < elp);
+    CHECK(inv(0, 1) == Catch::Approx(0.0100417155846426).epsilon(ehp));
+    CHECK(inv(1, 1) == Catch::Approx(0.228211725326605).epsilon(ehp));
+    CHECK(inv(2, 1) == Catch::Approx(-0.113506357255264).epsilon(ehp));
 
+    CHECK(inv(0, 2) == Catch::Approx(0.117877750855544).epsilon(ehp));
+    CHECK(inv(1, 2) == Catch::Approx(0.21624659655784).epsilon(ehp));
+    CHECK(inv(2, 2) == Catch::Approx(-0.0637723877800814).epsilon(ehp));
+}
 
-//     static_assert(std::abs(inv(0, 1) - 0.0511035) < elp);
-//     static_assert(std::abs(inv(1, 1) - 0.231093) < elp);
-//     static_assert(std::abs(inv(2, 1) - -0.116827) < elp);
+TEMPLATE_LIST_TEST_CASE("Scalar multiplication operator", "[algebra][matrix][dim3][operator]", IntegerTypes)
+{
+    // clang-format off
+    constexpr TestType mat_00 = 163, mat_01 = -57, mat_02 = 694,
+                       mat_10 = -28, mat_11 = -61, mat_12 = 107,
+                       mat_20 = 355, mat_21 = 271, mat_22 = 311;
 
 
-//     static_assert(std::abs(inv(0, 2) - 0.112745) < elp);
-//     static_assert(std::abs(inv(1, 2) - 0.215886) < elp);
-//     static_assert(std::abs(inv(2, 2) - -0.0633572) < elp);
+    constexpr TestType scalar = 19;
 
+    constexpr Matrix<TestType, 3, 3> mat = { mat_00, mat_01, mat_02,
+                                             mat_10, mat_11, mat_12,
+                                             mat_20, mat_21, mat_22 };
+    // clang-format on
 
-//     static_assert(std::abs(inv(0, 3) - -0.0727737) < elp);
-//     static_assert(std::abs(inv(1, 3) - -0.00510675) < elp);
-//     static_assert(std::abs(inv(2, 3) - 0.0058859) < elp);
+    constexpr Matrix<TestType, 3, 3> scaled1 = scalar * mat;
+    constexpr Matrix<TestType, 3, 3> scaled2 = mat * scalar;
 
+    static_assert(scaled1(0, 0) == 3097);
+    static_assert(scaled1(1, 0) == -532);
+    static_assert(scaled1(2, 0) == 6745);
 
-//     CHECK(inv(0, 0) == Catch::Approx(0.0100878081896768).epsilon(ehp));
-//     CHECK(inv(1, 0) == Catch::Approx(0.122482185249092).epsilon(ehp));
-//     CHECK(inv(2, 0) == Catch::Approx(-0.127654870498875).epsilon(ehp));
+    static_assert(scaled1(0, 1) == -1083);
+    static_assert(scaled1(1, 1) == -1159);
+    static_assert(scaled1(2, 1) == 5149);
 
+    static_assert(scaled1(0, 2) == 13186);
+    static_assert(scaled1(1, 2) == 2033);
+    static_assert(scaled1(2, 2) == 5909);
 
-//     CHECK(inv(0, 1) == Catch::Approx(0.051103504718192).epsilon(ehp));
-//     CHECK(inv(1, 1) == Catch::Approx(0.231093156998207).epsilon(ehp));
-//     CHECK(inv(2, 1) == Catch::Approx(-0.116827415014496).epsilon(ehp));
+    static_assert(scaled2(0, 0) == 3097);
+    static_assert(scaled2(1, 0) == -532);
+    static_assert(scaled2(2, 0) == 6745);
 
+    static_assert(scaled2(0, 1) == -1083);
+    static_assert(scaled2(1, 1) == -1159);
+    static_assert(scaled2(2, 1) == 5149);
 
-//     CHECK(inv(0, 2) == Catch::Approx(0.112744890875666).epsilon(ehp));
-//     CHECK(inv(1, 2) == Catch::Approx(0.215886408031621).epsilon(ehp));
-//     CHECK(inv(2, 2) == Catch::Approx(-0.0633572445332106).epsilon(ehp));
+    static_assert(scaled2(0, 2) == 13186);
+    static_assert(scaled2(1, 2) == 2033);
+    static_assert(scaled2(2, 2) == 5909);
 
+    CHECK(scaled1(0, 0) == 3097);
+    CHECK(scaled1(1, 0) == -532);
+    CHECK(scaled1(2, 0) == 6745);
 
-//     CHECK(inv(0, 3) == Catch::Approx(-0.0727736873404424).epsilon(ehp));
-//     CHECK(inv(1, 3) == Catch::Approx(-0.00510675282267879).epsilon(elp));  // Cannot achieve high precision with float
-//     CHECK(inv(2, 3) == Catch::Approx(0.00588590083651362).epsilon(ehp));
+    CHECK(scaled1(0, 1) == -1083);
+    CHECK(scaled1(1, 1) == -1159);
+    CHECK(scaled1(2, 1) == 5149);
 
-// }
+    CHECK(scaled1(0, 2) == 13186);
+    CHECK(scaled1(1, 2) == 2033);
+    CHECK(scaled1(2, 2) == 5909);
 
-// TEMPLATE_LIST_TEST_CASE("Scalar multiplication operator", "[algebra][matrix][dim3][operator]", IntegerTypes)
-// {
-//     // clang-format off
-//     constexpr TestType mat_00 = 163, mat_01 = -57, mat_02 = 694,
-//                        mat_10 = -28, mat_11 = -61, mat_12 = 107,
-//                        mat_20 = 355, mat_21 = 271, mat_22 = 311,
-//
+    CHECK(scaled2(0, 0) == 3097);
+    CHECK(scaled2(1, 0) == -532);
+    CHECK(scaled2(2, 0) == 6745);
 
-//     constexpr TestType scalar = 19;
+    CHECK(scaled2(0, 1) == -1083);
+    CHECK(scaled2(1, 1) == -1159);
+    CHECK(scaled2(2, 1) == 5149);
 
-//     constexpr Matrix<TestType, 3, 3> mat = { mat_00, mat_01, mat_02,
-//                                              mat_10, mat_11, mat_12,
-//                                              mat_20, mat_21, mat_22,
-//
-//     // clang-format on
+    CHECK(scaled2(0, 2) == 13186);
+    CHECK(scaled2(1, 2) == 2033);
+    CHECK(scaled2(2, 2) == 5909);
+}
 
-//     constexpr Matrix<TestType, 3, 3> scaled1 = scalar * mat;
-//     constexpr Matrix<TestType, 3, 3> scaled2 = mat * scalar;
+TEMPLATE_LIST_TEST_CASE("Scalar multiplication", "[algebra][matrix][dim3][operator]", FloatingTypes)
+{
+    // clang-format off
+    constexpr TestType mat_00 = 9.49, mat_01 = 1.18, mat_02 = 85.42,
+                       mat_10 = 4.78, mat_11 = -3.8, mat_12 = 33.37,
+                       mat_20 = -5.3, mat_21 = 4.45, mat_22 = -9.89;
 
-//     static_assert(scaled1(0, 0) == 3097);
-//     static_assert(scaled1(1, 0) == -532);
-//     static_assert(scaled1(2, 0) == 6745);
 
+    constexpr TestType scalar = -3.45;
 
-//     static_assert(scaled1(0, 1) == -1083);
-//     static_assert(scaled1(1, 1) == -1159);
-//     static_assert(scaled1(2, 1) == 5149);
+    constexpr Matrix<TestType, 3, 3> mat = { mat_00, mat_01, mat_02,
+                                             mat_10, mat_11, mat_12,
+                                             mat_20, mat_21, mat_22 };
+    // clang-format on
 
+    constexpr Matrix<TestType, 3, 3> scaled1 = scalar * mat;
+    constexpr Matrix<TestType, 3, 3> scaled2 = mat * scalar;
 
-//     static_assert(scaled1(0, 2) == 13186);
-//     static_assert(scaled1(1, 2) == 2033);
-//     static_assert(scaled1(2, 2) == 5909);
+    constexpr auto elp = epsilonLowPrecision<TestType>();
 
+    static_assert(std::abs(scaled1(0, 0) - -32.7405) < elp);
+    static_assert(std::abs(scaled1(1, 0) - -16.491) < elp);
+    static_assert(std::abs(scaled1(2, 0) - 18.285) < elp);
 
-//     static_assert(scaled1(0, 3) == -247);
-//     static_assert(scaled1(1, 3) == -266);
-//     static_assert(scaled1(2, 3) == -1805);
+    static_assert(std::abs(scaled1(0, 1) - -4.071) < elp);
+    static_assert(std::abs(scaled1(1, 1) - 13.11) < elp);
+    static_assert(std::abs(scaled1(2, 1) - -15.3525) < elp);
 
+    static_assert(std::abs(scaled1(0, 2) - -294.699) < elp);
+    static_assert(std::abs(scaled1(1, 2) - -115.1265) < elp);
+    static_assert(std::abs(scaled1(2, 2) - 34.1205) < elp);
 
-//     static_assert(scaled2(0, 0) == 3097);
-//     static_assert(scaled2(1, 0) == -532);
-//     static_assert(scaled2(2, 0) == 6745);
+    static_assert(std::abs(scaled2(0, 0) - -32.7405) < elp);
+    static_assert(std::abs(scaled2(1, 0) - -16.491) < elp);
+    static_assert(std::abs(scaled2(2, 0) - 18.285) < elp);
 
+    static_assert(std::abs(scaled2(0, 1) - -4.071) < elp);
+    static_assert(std::abs(scaled2(1, 1) - 13.11) < elp);
+    static_assert(std::abs(scaled2(2, 1) - -15.3525) < elp);
 
-//     static_assert(scaled2(0, 1) == -1083);
-//     static_assert(scaled2(1, 1) == -1159);
-//     static_assert(scaled2(2, 1) == 5149);
+    static_assert(std::abs(scaled2(0, 2) - -294.699) < elp);
+    static_assert(std::abs(scaled2(1, 2) - -115.1265) < elp);
+    static_assert(std::abs(scaled2(2, 2) - 34.1205) < elp);
 
+    const auto ehp = epsilonHighPrecision<TestType>();
 
-//     static_assert(scaled2(0, 2) == 13186);
-//     static_assert(scaled2(1, 2) == 2033);
-//     static_assert(scaled2(2, 2) == 5909);
+    CHECK(scaled1(0, 0) == Catch::Approx(-32.7405).epsilon(ehp));
+    CHECK(scaled1(1, 0) == Catch::Approx(-16.491).epsilon(ehp));
+    CHECK(scaled1(2, 0) == Catch::Approx(18.285).epsilon(ehp));
 
+    CHECK(scaled1(0, 1) == Catch::Approx(-4.071).epsilon(ehp));
+    CHECK(scaled1(1, 1) == Catch::Approx(13.11).epsilon(ehp));
+    CHECK(scaled1(2, 1) == Catch::Approx(-15.3525).epsilon(ehp));
 
-//     static_assert(scaled2(0, 3) == -247);
-//     static_assert(scaled2(1, 3) == -266);
-//     static_assert(scaled2(2, 3) == -1805);
+    CHECK(scaled1(0, 2) == Catch::Approx(-294.699).epsilon(ehp));
+    CHECK(scaled1(1, 2) == Catch::Approx(-115.1265).epsilon(ehp));
+    CHECK(scaled1(2, 2) == Catch::Approx(34.1205).epsilon(ehp));
 
+    CHECK(scaled2(0, 0) == Catch::Approx(-32.7405).epsilon(ehp));
+    CHECK(scaled2(1, 0) == Catch::Approx(-16.491).epsilon(ehp));
+    CHECK(scaled2(2, 0) == Catch::Approx(18.285).epsilon(ehp));
 
-//     CHECK(scaled1(0, 0) == 3097);
-//     CHECK(scaled1(1, 0) == -532);
-//     CHECK(scaled1(2, 0) == 6745);
+    CHECK(scaled2(0, 1) == Catch::Approx(-4.071).epsilon(ehp));
+    CHECK(scaled2(1, 1) == Catch::Approx(13.11).epsilon(ehp));
+    CHECK(scaled2(2, 1) == Catch::Approx(-15.3525).epsilon(ehp));
 
+    CHECK(scaled2(0, 2) == Catch::Approx(-294.699).epsilon(ehp));
+    CHECK(scaled2(1, 2) == Catch::Approx(-115.1265).epsilon(ehp));
+    CHECK(scaled2(2, 2) == Catch::Approx(34.1205).epsilon(ehp));
+}
 
-//     CHECK(scaled1(0, 1) == -1083);
-//     CHECK(scaled1(1, 1) == -1159);
-//     CHECK(scaled1(2, 1) == 5149);
+TEMPLATE_LIST_TEST_CASE("Matrix multiplication operator", "[algebra][matrix][dim3][operator]", IntegerTypes)
+{
+    // clang-format off
+    constexpr TestType mat1_00 = 14, mat1_01 =   1, mat1_02 =  19,
+                       mat1_10 = 13, mat1_11 = -27, mat1_12 =  18,
+                       mat1_20 = -8, mat1_21 = -18, mat1_22 = -23;
 
 
-//     CHECK(scaled1(0, 2) == 13186);
-//     CHECK(scaled1(1, 2) == 2033);
-//     CHECK(scaled1(2, 2) == 5909);
+    constexpr TestType mat2_00 = -5, mat2_01 = -6, mat2_02 = -9,
+                       mat2_10 = -5, mat2_11 = -2, mat2_12 = 21,
+                       mat2_20 = 11, mat2_21 =  4, mat2_22 = -3;
 
 
-//     CHECK(scaled1(0, 3) == -247);
-//     CHECK(scaled1(1, 3) == -266);
-//     CHECK(scaled1(2, 3) == -1805);
+    constexpr Matrix<TestType, 3, 3> mat1 = { mat1_00, mat1_01, mat1_02,
+                                              mat1_10, mat1_11, mat1_12,
+                                              mat1_20, mat1_21, mat1_22 };
 
 
-//     CHECK(scaled2(0, 0) == 3097);
-//     CHECK(scaled2(1, 0) == -532);
-//     CHECK(scaled2(2, 0) == 6745);
+    constexpr Matrix<TestType, 3, 3> mat2 = { mat2_00, mat2_01, mat2_02,
+                                              mat2_10, mat2_11, mat2_12,
+                                              mat2_20, mat2_21, mat2_22 };
 
+    // clang-format on
 
-//     CHECK(scaled2(0, 1) == -1083);
-//     CHECK(scaled2(1, 1) == -1159);
-//     CHECK(scaled2(2, 1) == 5149);
+    constexpr Matrix<TestType, 3, 3> mul = mat1 * mat2;
 
+    static_assert(mul(0, 0) == 134);
+    static_assert(mul(1, 0) == 268);
+    static_assert(mul(2, 0) == -123);
 
-//     CHECK(scaled2(0, 2) == 13186);
-//     CHECK(scaled2(1, 2) == 2033);
-//     CHECK(scaled2(2, 2) == 5909);
+    static_assert(mul(0, 1) == -10);
+    static_assert(mul(1, 1) == 48);
+    static_assert(mul(2, 1) == -8);
 
+    static_assert(mul(0, 2) == -162);
+    static_assert(mul(1, 2) == -738);
+    static_assert(mul(2, 2) == -237);
 
-//     CHECK(scaled2(0, 3) == -247);
-//     CHECK(scaled2(1, 3) == -266);
-//     CHECK(scaled2(2, 3) == -1805);
+    CHECK(mul(0, 0) == 134);
+    CHECK(mul(1, 0) == 268);
+    CHECK(mul(2, 0) == -123);
 
-// }
+    CHECK(mul(0, 1) == -10);
+    CHECK(mul(1, 1) == 48);
+    CHECK(mul(2, 1) == -8);
 
-// TEMPLATE_LIST_TEST_CASE("Scalar multiplication", "[algebra][matrix][dim3][operator]", FloatingTypes)
-// {
-//     // clang-format off
-//     constexpr TestType mat_00 = 9.49, mat_01 = 1.18, mat_02 = 85.42,
-//                        mat_10 = 4.78, mat_11 = -3.8, mat_12 = 33.37,
-//                        mat_20 = -5.3, mat_21 = 4.45, mat_22 = -9.89,
-//
-
-//     constexpr TestType scalar = -3.45;
-
-//     constexpr Matrix<TestType, 3, 3> mat = { mat_00, mat_01, mat_02,
-//                                              mat_10, mat_11, mat_12,
-//                                              mat_20, mat_21, mat_22,
-//
-//     // clang-format on
-
-//     constexpr Matrix<TestType, 3, 3> scaled1 = scalar * mat;
-//     constexpr Matrix<TestType, 3, 3> scaled2 = mat * scalar;
-
-//     constexpr auto elp = epsilonLowPrecision<TestType>();
-
-//     static_assert(std::abs(scaled1(0, 0) - -32.7405) < elp);
-//     static_assert(std::abs(scaled1(1, 0) - -16.491) < elp);
-//     static_assert(std::abs(scaled1(2, 0) - 18.285) < elp);
-
-
-//     static_assert(std::abs(scaled1(0, 1) - -4.071) < elp);
-//     static_assert(std::abs(scaled1(1, 1) - 13.11) < elp);
-//     static_assert(std::abs(scaled1(2, 1) - -15.3525) < elp);
-
-
-//     static_assert(std::abs(scaled1(0, 2) - -294.699) < elp);
-//     static_assert(std::abs(scaled1(1, 2) - -115.1265) < elp);
-//     static_assert(std::abs(scaled1(2, 2) - 34.1205) < elp);
-
-
-//     static_assert(std::abs(scaled1(0, 3) - 24.426) < elp);
-//     static_assert(std::abs(scaled1(1, 3) - 94.53) < elp);
-//     static_assert(std::abs(scaled1(2, 3) - 285.4185) < elp);
-
-
-//     static_assert(std::abs(scaled2(0, 0) - -32.7405) < elp);
-//     static_assert(std::abs(scaled2(1, 0) - -16.491) < elp);
-//     static_assert(std::abs(scaled2(2, 0) - 18.285) < elp);
-
-
-//     static_assert(std::abs(scaled2(0, 1) - -4.071) < elp);
-//     static_assert(std::abs(scaled2(1, 1) - 13.11) < elp);
-//     static_assert(std::abs(scaled2(2, 1) - -15.3525) < elp);
-
-
-//     static_assert(std::abs(scaled2(0, 2) - -294.699) < elp);
-//     static_assert(std::abs(scaled2(1, 2) - -115.1265) < elp);
-//     static_assert(std::abs(scaled2(2, 2) - 34.1205) < elp);
-
-
-//     static_assert(std::abs(scaled2(0, 3) - 24.426) < elp);
-//     static_assert(std::abs(scaled2(1, 3) - 94.53) < elp);
-//     static_assert(std::abs(scaled2(2, 3) - 285.4185) < elp);
-
-
-//     const auto ehp = epsilonHighPrecision<TestType>();
-
-//     CHECK(scaled1(0, 0) == Catch::Approx(-32.7405).epsilon(ehp));
-//     CHECK(scaled1(1, 0) == Catch::Approx(-16.491).epsilon(ehp));
-//     CHECK(scaled1(2, 0) == Catch::Approx(18.285).epsilon(ehp));
-
-
-//     CHECK(scaled1(0, 1) == Catch::Approx(-4.071).epsilon(ehp));
-//     CHECK(scaled1(1, 1) == Catch::Approx(13.11).epsilon(ehp));
-//     CHECK(scaled1(2, 1) == Catch::Approx(-15.3525).epsilon(ehp));
-
-
-//     CHECK(scaled1(0, 2) == Catch::Approx(-294.699).epsilon(ehp));
-//     CHECK(scaled1(1, 2) == Catch::Approx(-115.1265).epsilon(ehp));
-//     CHECK(scaled1(2, 2) == Catch::Approx(34.1205).epsilon(ehp));
-
-
-//     CHECK(scaled1(0, 3) == Catch::Approx(24.426).epsilon(ehp));
-//     CHECK(scaled1(1, 3) == Catch::Approx(94.53).epsilon(ehp));
-//     CHECK(scaled1(2, 3) == Catch::Approx(285.4185).epsilon(ehp));
-
-
-//     CHECK(scaled2(0, 0) == Catch::Approx(-32.7405).epsilon(ehp));
-//     CHECK(scaled2(1, 0) == Catch::Approx(-16.491).epsilon(ehp));
-//     CHECK(scaled2(2, 0) == Catch::Approx(18.285).epsilon(ehp));
-
-
-//     CHECK(scaled2(0, 1) == Catch::Approx(-4.071).epsilon(ehp));
-//     CHECK(scaled2(1, 1) == Catch::Approx(13.11).epsilon(ehp));
-//     CHECK(scaled2(2, 1) == Catch::Approx(-15.3525).epsilon(ehp));
-
-
-//     CHECK(scaled2(0, 2) == Catch::Approx(-294.699).epsilon(ehp));
-//     CHECK(scaled2(1, 2) == Catch::Approx(-115.1265).epsilon(ehp));
-//     CHECK(scaled2(2, 2) == Catch::Approx(34.1205).epsilon(ehp));
-
-
-//     CHECK(scaled2(0, 3) == Catch::Approx(24.426).epsilon(ehp));
-//     CHECK(scaled2(1, 3) == Catch::Approx(94.53).epsilon(ehp));
-//     CHECK(scaled2(2, 3) == Catch::Approx(285.4185).epsilon(ehp));
-
-// }
-
-// TEMPLATE_LIST_TEST_CASE("Matrix multiplication operator", "[algebra][matrix][dim3][operator]", IntegerTypes)
-// {
-//     // clang-format off
-//     constexpr TestType mat1_00 = 14, mat1_01 =   1, mat1_02 =  19,
-//                        mat1_10 = 13, mat1_11 = -27, mat1_12 =  18,
-//                        mat1_20 = -8, mat1_21 = -18, mat1_22 = -23,
-//
-
-//     constexpr TestType mat2_00 = -5, mat2_01 = -6, mat2_02 = -9,
-//                        mat2_10 = -5, mat2_11 = -2, mat2_12 = 21,
-//                        mat2_20 = 11, mat2_21 =  4, mat2_22 = -3,
-//
-
-//     constexpr Matrix<TestType, 3, 3> mat1 = { mat1_00, mat1_01, mat1_02,
-//                                               mat1_10, mat1_11, mat1_12,
-//                                               mat1_20, mat1_21, mat1_22,
-//
-
-//     constexpr Matrix<TestType, 3, 3> mat2 = { mat2_00, mat2_01, mat2_02,
-//                                               mat2_10, mat2_11, mat2_12,
-//                                               mat2_20, mat2_21, mat2_22,
-//
-//     // clang-format on
-
-//     constexpr Matrix<TestType, 3, 3> mul = mat1 * mat2;
-
-//     static_assert(mul(0, 0) == 479);
-//     static_assert(mul(1, 0) == 199);
-//     static_assert(mul(2, 0) == 360);
-
-
-//     static_assert(mul(0, 1) == -70);
-//     static_assert(mul(1, 1) == 60);
-//     static_assert(mul(2, 1) == -92);
-
-
-//     static_assert(mul(0, 2) == -237);
-//     static_assert(mul(1, 2) == -723);
-//     static_assert(mul(2, 2) == -342);
-
-
-//     static_assert(mul(0, 3) == 87);
-//     static_assert(mul(1, 3) == 226);
-//     static_assert(mul(2, 3) == -27);
-
-
-//     CHECK(mul(0, 0) == 479);
-//     CHECK(mul(1, 0) == 199);
-//     CHECK(mul(2, 0) == 360);
-
-
-//     CHECK(mul(0, 1) == -70);
-//     CHECK(mul(1, 1) == 60);
-//     CHECK(mul(2, 1) == -92);
-
-
-//     CHECK(mul(0, 2) == -237);
-//     CHECK(mul(1, 2) == -723);
-//     CHECK(mul(2, 2) == -342);
-
-
-//     CHECK(mul(0, 3) == 87);
-//     CHECK(mul(1, 3) == 226);
-//     CHECK(mul(2, 3) == -27);
-
-// }
+    CHECK(mul(0, 2) == -162);
+    CHECK(mul(1, 2) == -738);
+    CHECK(mul(2, 2) == -237);
+}
 
 // TEMPLATE_LIST_TEST_CASE("Matrix multiplication operator", "[algebra][matrix][dim3][operator]", FloatingTypes)
 // {
 //     // clang-format off
 //     constexpr TestType mat1_00 = 14.9, mat1_01 =   1.0, mat1_02 =  19.7,
 //                        mat1_10 = 13.8, mat1_11 = -27.1, mat1_12 =  18.3,
-//                        mat1_20 = -8.3, mat1_21 = -18.2, mat1_22 = -23.8,
-//
+//                        mat1_20 = -8.3, mat1_21 = -18.2, mat1_22 = -23.8;
+
 
 //     constexpr TestType mat2_00 = -5.0, mat2_01 = -6.9, mat2_02 = -9.5,
 //                        mat2_10 = -5.1, mat2_11 = -2.8, mat2_12 = 21.3,
-//                        mat2_20 = 11.2, mat2_21 =  4.3, mat2_22 = -3.1,
-//
+//                        mat2_20 = 11.2, mat2_21 =  4.3, mat2_22 = -3.1;
+
 
 //     constexpr Matrix<TestType, 3, 3> mat1 = { mat1_00, mat1_01, mat1_02,
 //                                               mat1_10, mat1_11, mat1_12,
-//                                               mat1_20, mat1_21, mat1_22,
-//
+//                                               mat1_20, mat1_21, mat1_22 };
+
 
 //     constexpr Matrix<TestType, 3, 3> mat2 = { mat2_00, mat2_01, mat2_02,
 //                                               mat2_10, mat2_11, mat2_12,
-//                                               mat2_20, mat2_21, mat2_22,
-//
+//                                               mat2_20, mat2_21, mat2_22 };
+
 //     // clang-format on
 
 //     constexpr Matrix<TestType, 3, 3> mul = mat1 * mat2;
@@ -1723,21 +1614,13 @@ TEMPLATE_LIST_TEST_CASE("Determinant", "[algebra][matrix][dim3][method]", Intege
 //     static_assert(std::abs(mul(1, 0) - 197.28) < elp);
 //     static_assert(std::abs(mul(2, 0) - 359.39) < elp);
 
-
 //     static_assert(std::abs(mul(0, 1) - -89.1) < elp);
 //     static_assert(std::abs(mul(1, 1) - 73.87) < elp);
 //     static_assert(std::abs(mul(2, 1) - -86.95) < elp);
 
-
 //     static_assert(std::abs(mul(0, 2) - -261.92) < elp);
 //     static_assert(std::abs(mul(1, 2) - -747.9) < elp);
 //     static_assert(std::abs(mul(2, 2) - -344.75) < elp);
-
-
-//     static_assert(std::abs(mul(0, 3) - 74.72) < elp);
-//     static_assert(std::abs(mul(1, 3) - 240.82) < elp);
-//     static_assert(std::abs(mul(2, 3) - -28.9) < elp);
-
 
 //     const auto ehp = epsilonHighPrecision<TestType>();
 
@@ -1745,21 +1628,13 @@ TEMPLATE_LIST_TEST_CASE("Determinant", "[algebra][matrix][dim3][method]", Intege
 //     CHECK(mul(1, 0) == Catch::Approx(197.28).epsilon(ehp));
 //     CHECK(mul(2, 0) == Catch::Approx(359.39).epsilon(ehp));
 
-
 //     CHECK(mul(0, 1) == Catch::Approx(-89.1).epsilon(ehp));
 //     CHECK(mul(1, 1) == Catch::Approx(73.87).epsilon(ehp));
 //     CHECK(mul(2, 1) == Catch::Approx(-86.95).epsilon(ehp));
 
-
 //     CHECK(mul(0, 2) == Catch::Approx(-261.92).epsilon(ehp));
 //     CHECK(mul(1, 2) == Catch::Approx(-747.9).epsilon(ehp));
 //     CHECK(mul(2, 2) == Catch::Approx(-344.75).epsilon(ehp));
-
-
-//     CHECK(mul(0, 3) == Catch::Approx(74.72).epsilon(ehp));
-//     CHECK(mul(1, 3) == Catch::Approx(240.82).epsilon(ehp));
-//     CHECK(mul(2, 3) == Catch::Approx(-28.9).epsilon(ehp));
-
 // }
 
 // TEMPLATE_LIST_TEST_CASE("Matrix vector multiplication", "[algebra][matrix][dim3][method]", IntegerTypes)
