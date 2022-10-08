@@ -961,6 +961,9 @@ TEMPLATE_LIST_TEST_CASE("Scalar division operator", "[algebra][matrix][dim2][ope
     CHECK(scaled(0, 1) == 3);
     CHECK(scaled(1, 0) == -7);
     CHECK(scaled(1, 1) == 101);
+
+    const TestType zero = 0;
+    CHECK_THROWS(mat / zero);
 }
 
 TEMPLATE_LIST_TEST_CASE("Scalar division operator", "[algebra][matrix][dim2][operator]", FloatingTypes)
@@ -985,4 +988,7 @@ TEMPLATE_LIST_TEST_CASE("Scalar division operator", "[algebra][matrix][dim2][ope
     CHECK(scaled2(0, 1) == Catch::Approx(-13.00176056).epsilon(ehp));
     CHECK(scaled2(1, 0) == Catch::Approx(-5.625).epsilon(ehp));
     CHECK(scaled2(1, 1) == Catch::Approx(-9.45140845).epsilon(ehp));
+
+    const TestType zero = 0.0;
+    CHECK_THROWS(mat / zero);
 }
