@@ -62,7 +62,7 @@ namespace LCNS::Algebra
          * @param index is the index of the coordinate to access
          * @return a reference to the corresponding coordinate
          */
-        coordinate& operator[](unsigned int index);
+        constexpr coordinate& operator[](unsigned int index);
 
         /*!
          * \brief Comparision operator
@@ -275,7 +275,7 @@ namespace LCNS::Algebra
     }
 
     template <Coordinate coordinate, unsigned int size>
-    coordinate& Vector<coordinate, size>::operator[](unsigned int index)
+    constexpr coordinate& Vector<coordinate, size>::operator[](unsigned int index)
     {
         return _coords[index];
     }

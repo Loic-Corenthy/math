@@ -7,7 +7,7 @@
 using LCNS::Algebra::Vector;
 
 using IntegerTypes  = std::tuple<short, int, long>;
-using FloatingTypes = std::tuple<float, double, long double>;
+using FloatingTypes = std::tuple<float, double>;
 
 TEMPLATE_LIST_TEST_CASE("Accessor operator", "[algebra][vector][dim4][operator]", IntegerTypes)
 {

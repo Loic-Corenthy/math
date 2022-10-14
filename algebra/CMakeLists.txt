@@ -5,6 +5,7 @@ target_sources(lcnsAlgebra
                "include/algebra/Internal.hpp"
                "include/algebra/Vector.hpp"
                "include/algebra/Algebra.hpp"
+               "include/algebra/Matrix.hpp"
 )
 
 target_include_directories(lcnsAlgebra PUBLIC "include")
