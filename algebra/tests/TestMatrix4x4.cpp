@@ -2327,7 +2327,7 @@ TEMPLATE_LIST_TEST_CASE("Scalar division operator", "[algebra][matrix][dim4][ope
     constexpr TestType mat_00 = 165, mat_01 = -57, mat_02 = 693, mat_03 = -33,
                        mat_10 = -27, mat_11 = -63, mat_12 = 117, mat_13 = -15,
                        mat_20 = 351, mat_21 = 270, mat_22 = 312, mat_23 = -96,
-                       mat_30 = -42, mat_31 = -80, mat_32 = 129, mat_33 =   0;
+                       mat_30 = -42, mat_31 = -81, mat_32 = 129, mat_33 =   0;
 
     constexpr TestType scalar = 3;
 
@@ -2347,7 +2347,7 @@ TEMPLATE_LIST_TEST_CASE("Scalar division operator", "[algebra][matrix][dim4][ope
     static_assert(scaled(0, 1) == -19);
     static_assert(scaled(1, 1) == -21);
     static_assert(scaled(2, 1) == 90);
-    static_assert(scaled(3, 1) == -26);
+    static_assert(scaled(3, 1) == -27);
 
     static_assert(scaled(0, 2) == 231);
     static_assert(scaled(1, 2) == 39);
@@ -2367,7 +2367,7 @@ TEMPLATE_LIST_TEST_CASE("Scalar division operator", "[algebra][matrix][dim4][ope
     CHECK(scaled(0, 1) == -19);
     CHECK(scaled(1, 1) == -21);
     CHECK(scaled(2, 1) == 90);
-    CHECK(scaled(3, 1) == -26);
+    CHECK(scaled(3, 1) == -27);
 
     CHECK(scaled(0, 2) == 231);
     CHECK(scaled(1, 2) == 39);
