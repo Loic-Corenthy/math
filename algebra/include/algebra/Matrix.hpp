@@ -513,7 +513,7 @@ namespace LCNS::Algebra
     }
 
     template <Coordinate coordinate, unsigned int rows_lhs, unsigned int cols_lhs, unsigned int rows_rhs, unsigned int cols_rhs>
-    constexpr Matrix<coordinate, rows_rhs, cols_lhs> operator*(const Matrix<coordinate, rows_lhs, cols_lhs>& lhs,
+    constexpr Matrix<coordinate, rows_lhs, cols_rhs> operator*(const Matrix<coordinate, rows_lhs, cols_lhs>& lhs,
                                                                const Matrix<coordinate, rows_rhs, cols_rhs>& rhs)
     {
         if (cols_lhs != rows_rhs)
@@ -521,10 +521,10 @@ namespace LCNS::Algebra
             throw std::runtime_error("Multiplication requires the number of column of this matrix to match the number of rows of rhs");
         }
 
-        Matrix<coordinate, rows_rhs, cols_lhs> result;
+        Matrix<coordinate, rows_lhs, cols_rhs> result;
 
-        for (size_t i = 0; i < rows_rhs; ++i)
-            for (size_t j = 0; j < cols_lhs; ++j)
+        for (size_t i = 0; i < rows_lhs; ++i)
+            for (size_t j = 0; j < cols_rhs; ++j)
                 for (size_t k = 0; k < cols_lhs; ++k)
                     result(i, j) += lhs(i, k) * rhs(k, j);
 
@@ -532,10 +532,10 @@ namespace LCNS::Algebra
     }
 
     template <Coordinate coordinate, unsigned int rows_lhs, unsigned int cols_lhs, unsigned int size_rhs>
-    constexpr Vector<coordinate, size_rhs> operator*(const Matrix<coordinate, rows_lhs, cols_lhs>& lhs,
+    constexpr Vector<coordinate, rows_lhs> operator*(const Matrix<coordinate, rows_lhs, cols_lhs>& lhs,
                                                      const Vector<coordinate, size_rhs>&           rhs) requires(cols_lhs == size_rhs)
     {
-        Vector<coordinate, size_rhs> result;
+        Vector<coordinate, rows_lhs> result;
 
         for (size_t i = 0; i < rows_lhs; ++i)
             for (size_t j = 0; j < cols_lhs; ++j)
