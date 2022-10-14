@@ -1,6 +1,7 @@
 #pragma once
 
 #include "algebra/Vector.hpp"
+#include "algebra/Matrix.hpp"
 
 using vec1i = LCNS::Algebra::Vector<int, 1>;
 using vec1u = LCNS::Algebra::Vector<unsigned int, 1>;
@@ -21,3 +22,18 @@ using vec4i = LCNS::Algebra::Vector<int, 4>;
 using vec4u = LCNS::Algebra::Vector<unsigned int, 4>;
 using vec4f = LCNS::Algebra::Vector<float, 4>;
 using vec4d = LCNS::Algebra::Vector<double, 4>;
+
+using mat2i = LCNS::Algebra::Matrix<int, 2, 2>;
+using mat2u = LCNS::Algebra::Matrix<unsigned int, 2, 2>;
+using mat2f = LCNS::Algebra::Matrix<float, 2, 2>;
+using mat2d = LCNS::Algebra::Matrix<double, 2, 2>;
+
+using mat3i = LCNS::Algebra::Matrix<int, 3, 3>;
+using mat3u = LCNS::Algebra::Matrix<unsigned int, 3, 3>;
+using mat3f = LCNS::Algebra::Matrix<float, 3, 3>;
+using mat3d = LCNS::Algebra::Matrix<double, 3, 3>;
+
+using mat4i = LCNS::Algebra::Matrix<int, 4, 4>;
+using mat4u = LCNS::Algebra::Matrix<unsigned int, 4, 4>;
+using mat4f = LCNS::Algebra::Matrix<float, 4, 4>;
+using mat4d = LCNS::Algebra::Matrix<double, 4, 4>;
