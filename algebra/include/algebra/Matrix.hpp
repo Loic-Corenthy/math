@@ -142,6 +142,12 @@ namespace LCNS::Algebra
         constexpr Matrix<coordinate, rows, cols> inversed() const
         requires(rows == cols && (0 < rows && rows < 5) && std::is_floating_point_v<coordinate>);
 
+        /*!
+         * @brief Check if this matrix is the null matrix
+         * @return true if all the coefficients are 0, false otherwise
+         */
+        [[nodiscard]] constexpr bool isNull() const noexcept;
+
     private:
         /*!
          * @brief Unnamed helper function to get the 1D equalent of i and j
@@ -419,6 +425,20 @@ namespace LCNS::Algebra
         }
 
         return result;
+    }
+
+    template <Coordinate coordinate, unsigned int rows, unsigned int cols>
+    constexpr bool Matrix<coordinate, rows, cols>::isNull() const noexcept
+    {
+        for (const auto& c : _coeff)
+        {
+            if (c != static_cast<coordinate>(0))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>
