@@ -1913,6 +1913,66 @@ TEMPLATE_LIST_TEST_CASE("Inverse", "[algebra][matrix][dim4][method]", FloatingTy
     CHECK(inv(3, 3) == Catch::Approx(0.0587855869541078).epsilon(ehp));
 }
 
+TEMPLATE_LIST_TEST_CASE("Is null?", "[algebra][matrix][dim4][method]", IntegerTypes)
+{
+    // clang-format off
+    constexpr TestType mat_00 = 0, mat_01 = 0, mat_02 =  0, mat_03 =  0,
+                       mat_10 = 0, mat_11 = 0, mat_12 =  0, mat_13 =  0,
+                       mat_20 = 4, mat_21 = 2, mat_22 = 10, mat_23 =  5,
+                       mat_30 = 1, mat_31 = 2, mat_32 =  7, mat_33 = 35;
+
+    constexpr Matrix<TestType, 4, 4> mat1 = { mat_00, mat_01, mat_02, mat_03,
+                                              mat_10, mat_11, mat_12, mat_13,
+                                              mat_20, mat_21, mat_22, mat_23,
+                                              mat_30, mat_31, mat_32, mat_33 };
+    // clang-format on
+
+    constexpr TestType               zero = 0;
+    constexpr Matrix<TestType, 4, 4> mat2;
+    constexpr Matrix<TestType, 4, 4> mat3 = mat1 * zero;
+    constexpr Matrix<TestType, 4, 4> mat4 = mat1 - mat1;
+
+    static_assert(!mat1.isNull());
+    static_assert(mat2.isNull());
+    static_assert(mat3.isNull());
+    static_assert(mat4.isNull());
+
+    CHECK_FALSE(mat1.isNull());
+    CHECK(mat2.isNull());
+    CHECK(mat3.isNull());
+    CHECK(mat4.isNull());
+}
+
+TEMPLATE_LIST_TEST_CASE("Is null?", "[algebra][matrix][dim4][method]", FloatingTypes)
+{
+    // clang-format off
+    constexpr TestType mat_00 =  0.0, mat_01 = -5.1, mat_02 = -9.9, mat_03 =  5.5,
+                       mat_10 = -0.0, mat_11 =  4.2, mat_12 = -1.1, mat_13 = -9.8,
+                       mat_20 =  0.0, mat_21 =  3.2, mat_22 =  0.0, mat_23 =  7.5,
+                       mat_30 = -0.0, mat_31 =  7.2, mat_32 =  8.7, mat_33 =  5.5;
+
+    constexpr Matrix<TestType, 4, 4> mat1 = { mat_00, mat_01, mat_02, mat_03, 
+                                              mat_10, mat_11, mat_12, mat_13,
+                                              mat_20, mat_21, mat_22, mat_23,
+                                              mat_30, mat_31, mat_32, mat_33 };
+    // clang-format on
+
+    constexpr TestType               zero = 0.0;
+    constexpr Matrix<TestType, 4, 4> mat2;
+    constexpr Matrix<TestType, 4, 4> mat3 = mat1 * zero;
+    constexpr Matrix<TestType, 4, 4> mat4 = mat1 - mat1;
+
+    static_assert(!mat1.isNull());
+    static_assert(mat2.isNull());
+    static_assert(mat3.isNull());
+    static_assert(mat4.isNull());
+
+    CHECK_FALSE(mat1.isNull());
+    CHECK(mat2.isNull());
+    CHECK(mat3.isNull());
+    CHECK(mat4.isNull());
+}
+
 TEMPLATE_LIST_TEST_CASE("Scalar multiplication operator", "[algebra][matrix][dim4][operator]", IntegerTypes)
 {
     // clang-format off
