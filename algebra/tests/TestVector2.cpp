@@ -677,8 +677,8 @@ TEMPLATE_LIST_TEST_CASE("Is null?", "[algebra][vector][dim2][method]", IntegerTy
 
 TEMPLATE_LIST_TEST_CASE("Is null?", "[algebra][vector][dim2][method]", FloatingTypes)
 {
-    const TestType     x    = 69.0;
-    const TestType     y    = 0.0;
+    constexpr TestType x    = 69.0;
+    constexpr TestType y    = 0.0;
     constexpr TestType zero = 0.0;
 
     constexpr Vector<TestType, 2> vec1(x, y);
