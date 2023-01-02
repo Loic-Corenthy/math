@@ -869,3 +869,51 @@ TEMPLATE_LIST_TEST_CASE("Normalized", "[algebra][vector][dim4][accessor]", Float
 
     CHECK(normalized.length() == one);
 }
+
+TEMPLATE_LIST_TEST_CASE("Is null?", "[algebra][vector][dim4][method]", IntegerTypes)
+{
+    constexpr TestType x    = 3;
+    constexpr TestType y    = 0;
+    constexpr TestType z    = 0;
+    constexpr TestType w    = 1;
+    constexpr TestType zero = 0;
+
+    constexpr Vector<TestType, 4> vec1(x, y, z, w);
+    constexpr Vector<TestType, 4> vec2;
+    constexpr Vector<TestType, 4> vec3 = vec1 * zero;
+    constexpr Vector<TestType, 4> vec4 = vec1 - vec1;
+
+    static_assert(!vec1.isNull());
+    static_assert(vec2.isNull());
+    static_assert(vec3.isNull());
+    static_assert(vec4.isNull());
+
+    CHECK_FALSE(vec1.isNull());
+    CHECK(vec2.isNull());
+    CHECK(vec3.isNull());
+    CHECK(vec4.isNull());
+}
+
+TEMPLATE_LIST_TEST_CASE("Is null?", "[algebra][vector][dim4][method]", FloatingTypes)
+{
+    constexpr TestType x    = -69.0;
+    constexpr TestType y    = -0.0;
+    constexpr TestType z    = 19.7;
+    constexpr TestType w    = -19.7;
+    constexpr TestType zero = 0.0;
+
+    constexpr Vector<TestType, 4> vec1(x, y, z, w);
+    constexpr Vector<TestType, 4> vec2;
+    constexpr Vector<TestType, 4> vec3 = vec1 * zero;
+    constexpr Vector<TestType, 4> vec4 = vec1 - vec1;
+
+    static_assert(!vec1.isNull());
+    static_assert(vec2.isNull());
+    static_assert(vec3.isNull());
+    static_assert(vec4.isNull());
+
+    CHECK_FALSE(vec1.isNull());
+    CHECK(vec2.isNull());
+    CHECK(vec3.isNull());
+    CHECK(vec4.isNull());
+}
