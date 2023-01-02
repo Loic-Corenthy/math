@@ -812,10 +812,13 @@ TEMPLATE_LIST_TEST_CASE("Is null?", "[algebra][matrix][dim2][method]", IntegerTy
 
     static_assert(!mat1.isNull());
     static_assert(mat2.isNull());
-
+    static_assert(mat3.isNull());
+    static_assert(mat4.isNull());
 
     CHECK_FALSE(mat1.isNull());
     CHECK(mat2.isNull());
+    CHECK(mat3.isNull());
+    CHECK(mat4.isNull());
 }
 
 TEMPLATE_LIST_TEST_CASE("Is null?", "[algebra][matrix][dim2][method]", FloatingTypes)
@@ -828,7 +831,7 @@ TEMPLATE_LIST_TEST_CASE("Is null?", "[algebra][matrix][dim2][method]", FloatingT
                                               mat1_10, mat1_11 };
     // clang-format on
 
-    constexpr TestType               zero = 0;
+    constexpr TestType               zero = 0.0;
     constexpr Matrix<TestType, 2, 2> mat2;
     constexpr Matrix<TestType, 2, 2> mat3 = mat1 * zero;
     constexpr Matrix<TestType, 2, 2> mat4 = mat1 - mat1;
