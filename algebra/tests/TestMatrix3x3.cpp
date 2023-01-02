@@ -1393,13 +1393,69 @@ TEMPLATE_LIST_TEST_CASE("Inverse", "[algebra][matrix][dim3][method]", FloatingTy
     CHECK(inv(2, 2) == Catch::Approx(-0.0637723877800814).epsilon(ehp));
 }
 
+TEMPLATE_LIST_TEST_CASE("Is null?", "[algebra][matrix][dim3][method]", IntegerTypes)
+{
+    // clang-format off
+    constexpr TestType mat_00 = 0, mat_01 = 0, mat_02 = 0,
+                       mat_10 = 0, mat_11 = 0, mat_12 = 1,
+                       mat_20 = 0, mat_21 = 0, mat_22 = 0;
+
+    constexpr Matrix<TestType, 3, 3> mat1 = { mat_00, mat_01, mat_02,
+                                              mat_10, mat_11, mat_12,
+                                              mat_20, mat_21, mat_22 };
+    // clang-format on
+
+    constexpr TestType               zero = 0;
+    constexpr Matrix<TestType, 3, 3> mat2;
+    constexpr Matrix<TestType, 3, 3> mat3 = mat1 * zero;
+    constexpr Matrix<TestType, 3, 3> mat4 = mat1 - mat1;
+
+    static_assert(!mat1.isNull());
+    static_assert(mat2.isNull());
+    static_assert(mat3.isNull());
+    static_assert(mat4.isNull());
+
+    CHECK_FALSE(mat1.isNull());
+    CHECK(mat2.isNull());
+    CHECK(mat3.isNull());
+    CHECK(mat4.isNull());
+}
+
+TEMPLATE_LIST_TEST_CASE("Is null?", "[algebra][matrix][dim3][method]", FloatingTypes)
+{
+    // clang-format off
+    constexpr TestType mat_00 =  4.0, mat_01 = -5.1, mat_02 = -9.9,
+                       mat_10 = -8.3, mat_11 =  4.2, mat_12 = -1.1,
+                       mat_20 =  6.4, mat_21 =  3.2, mat_22 =  7.0;
+
+
+    constexpr Matrix<TestType, 3, 3> mat1 = { mat_00, mat_01, mat_02,
+                                              mat_10, mat_11, mat_12,
+                                              mat_20, mat_21, mat_22 };
+    // clang-format on
+
+    constexpr TestType               zero = 0.0;
+    constexpr Matrix<TestType, 3, 3> mat2;
+    constexpr Matrix<TestType, 3, 3> mat3 = mat1 * zero;
+    constexpr Matrix<TestType, 3, 3> mat4 = mat1 - mat1;
+
+    static_assert(!mat1.isNull());
+    static_assert(mat2.isNull());
+    static_assert(mat3.isNull());
+    static_assert(mat4.isNull());
+
+    CHECK_FALSE(mat1.isNull());
+    CHECK(mat2.isNull());
+    CHECK(mat3.isNull());
+    CHECK(mat4.isNull());
+}
+
 TEMPLATE_LIST_TEST_CASE("Scalar multiplication operator", "[algebra][matrix][dim3][operator]", IntegerTypes)
 {
     // clang-format off
     constexpr TestType mat_00 = 163, mat_01 = -57, mat_02 = 694,
                        mat_10 = -28, mat_11 = -61, mat_12 = 107,
                        mat_20 = 355, mat_21 = 271, mat_22 = 311;
-
 
     constexpr TestType scalar = 19;
 
