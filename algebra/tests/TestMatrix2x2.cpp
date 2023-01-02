@@ -797,30 +797,51 @@ TEMPLATE_LIST_TEST_CASE("Inverse", "[algebra][matrix][dim2][method]", FloatingTy
 
 TEMPLATE_LIST_TEST_CASE("Is null?", "[algebra][matrix][dim2][method]", IntegerTypes)
 {
-    constexpr TestType mat1_00 = 8, mat1_01 = 0, mat1_10 = -42, mat1_11 = 0;
+    // clang-format off
+    constexpr TestType mat1_00 = 8,   mat1_01 = 0,
+                       mat1_10 = -42, mat1_11 = 0;
 
-    constexpr Matrix<TestType, 2, 2> mat1 = { mat1_00, mat1_01, mat1_10, mat1_11 };
+    constexpr Matrix<TestType, 2, 2> mat1 = { mat1_00, mat1_01,
+                                              mat1_10, mat1_11 };
+    // clang-format on
+
+    constexpr TestType               zero = 0;
     constexpr Matrix<TestType, 2, 2> mat2;
+    constexpr Matrix<TestType, 2, 2> mat3 = mat1 * zero;
+    constexpr Matrix<TestType, 2, 2> mat4 = mat1 - mat1;
 
     static_assert(!mat1.isNull());
     static_assert(mat2.isNull());
 
-    CHECK(!mat1.isNull());
+
+    CHECK_FALSE(mat1.isNull());
     CHECK(mat2.isNull());
 }
 
 TEMPLATE_LIST_TEST_CASE("Is null?", "[algebra][matrix][dim2][method]", FloatingTypes)
 {
-    constexpr TestType mat1_00 = 0.0, mat1_01 = -9.33, mat1_10 = -42.55, mat1_11 = 2.8;
+    // clang-format off
+    constexpr TestType mat1_00 = 0.0,    mat1_01 = -9.33,
+                       mat1_10 = -42.55, mat1_11 = 2.8;
 
-    constexpr Matrix<TestType, 2, 2> mat1 = { mat1_00, mat1_01, mat1_10, mat1_11 };
+    constexpr Matrix<TestType, 2, 2> mat1 = { mat1_00, mat1_01,
+                                              mat1_10, mat1_11 };
+    // clang-format on
+
+    constexpr TestType               zero = 0;
     constexpr Matrix<TestType, 2, 2> mat2;
+    constexpr Matrix<TestType, 2, 2> mat3 = mat1 * zero;
+    constexpr Matrix<TestType, 2, 2> mat4 = mat1 - mat1;
 
     static_assert(!mat1.isNull());
     static_assert(mat2.isNull());
+    static_assert(mat3.isNull());
+    static_assert(mat4.isNull());
 
-    CHECK(!mat1.isNull());
+    CHECK_FALSE(mat1.isNull());
     CHECK(mat2.isNull());
+    CHECK(mat3.isNull());
+    CHECK(mat4.isNull());
 }
 
 TEMPLATE_LIST_TEST_CASE("Scalar multiplication operator", "[algebra][matrix][dim2][operator]", IntegerTypes)
