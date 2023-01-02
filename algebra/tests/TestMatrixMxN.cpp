@@ -1433,6 +1433,63 @@ TEMPLATE_LIST_TEST_CASE("Transpose", "[algebra][matrix][dimMxN][method]", Floati
     CHECK(transposed(1, 3) == mat(3, 1));
 }
 
+TEMPLATE_LIST_TEST_CASE("Is null?", "[algebra][matrix][dimMxN][method]", IntegerTypes)
+{
+    // clang-format off
+    constexpr TestType mat_00 = 0, mat_01 = 0, mat_02 = 3, mat_03 = 0,
+                       mat_10 = 0, mat_11 = 6, mat_12 = 7, mat_13 = 8;
+
+    constexpr Matrix<TestType, 2, 4> mat1 = { mat_00, mat_01, mat_02, mat_03,
+                                              mat_10, mat_11, mat_12, mat_13 };
+    // clang-format on
+
+
+    constexpr TestType               zero = 0;
+    constexpr Matrix<TestType, 2, 4> mat2;
+    constexpr Matrix<TestType, 2, 4> mat3 = mat1 * zero;
+    constexpr Matrix<TestType, 2, 4> mat4 = mat1 - mat1;
+
+    static_assert(!mat1.isNull());
+    static_assert(mat2.isNull());
+    static_assert(mat3.isNull());
+    static_assert(mat4.isNull());
+
+    CHECK_FALSE(mat1.isNull());
+    CHECK(mat2.isNull());
+    CHECK(mat3.isNull());
+    CHECK(mat4.isNull());
+}
+
+TEMPLATE_LIST_TEST_CASE("Is null?", "[algebra][matrix][dimMxN][method]", FloatingTypes)
+{
+    // clang-format off
+    constexpr TestType mat_00 =  0.0, mat_01 =   0.0,
+                       mat_10 = -5.0, mat_11 =  -6.0,
+                       mat_20 = -9.0, mat_21 = -10.0,
+                       mat_30 =  0.0, mat_31 = -14.0;
+
+    constexpr Matrix<TestType, 4, 2> mat1 = { mat_00, mat_01,
+                                              mat_10, mat_11,
+                                              mat_20, mat_21,
+                                              mat_30, mat_31 };
+    // clang-format on
+
+    constexpr TestType               zero = 0;
+    constexpr Matrix<TestType, 4, 2> mat2;
+    constexpr Matrix<TestType, 4, 2> mat3 = mat1 * zero;
+    constexpr Matrix<TestType, 4, 2> mat4 = mat1 - mat1;
+
+    static_assert(!mat1.isNull());
+    static_assert(mat2.isNull());
+    static_assert(mat3.isNull());
+    static_assert(mat4.isNull());
+
+    CHECK_FALSE(mat1.isNull());
+    CHECK(mat2.isNull());
+    CHECK(mat3.isNull());
+    CHECK(mat4.isNull());
+}
+
 TEMPLATE_LIST_TEST_CASE("Scalar multiplication operator", "[algebra][matrix][dimMxN][operator]", IntegerTypes)
 {
     // clang-format off
