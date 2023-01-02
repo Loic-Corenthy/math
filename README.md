@@ -7,8 +7,8 @@ Miscellaneous mathematical functions
 [![CMake](https://github.com/Loic-Corenthy/math/actions/workflows/cmake.yml/badge.svg)](https://github.com/Loic-Corenthy/math/actions/workflows/cmake.yml)
 
 ## Libraries
-This repositories contains multiple independent libraries:
+This repository contains multiple independent libraries:
 
-* **algebra** provides a vector and a matrix class. They are templated to accomodate with different types and sizes.
+* **algebra** provides a Vector and a Matrix class. They are templated to accommodate with different types and sizes.
 
-* **combinatorics** provides a function to generate permuations
+* **combinatorics** provides a function to generate permutations.

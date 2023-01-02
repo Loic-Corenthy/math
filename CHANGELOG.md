@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ====================
 
 ## Added
-- **algebra:** Add function to check if a matrix or a vector is null
+- **algebra:** Add functions to Matrix and Vector classes to check if they are null.
 
 
 [1.0.0] - 2022-10-15
