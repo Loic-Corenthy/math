@@ -1436,8 +1436,8 @@ TEMPLATE_LIST_TEST_CASE("Transpose", "[algebra][matrix][dimMxN][method]", Floati
 TEMPLATE_LIST_TEST_CASE("Is null?", "[algebra][matrix][dimMxN][method]", IntegerTypes)
 {
     // clang-format off
-    constexpr TestType mat_00 =  1, mat_01 =  2, mat_02 =  3, mat_03 =  4,
-                       mat_10 =  5, mat_11 =  6, mat_12 =  7, mat_13 =  8;
+    constexpr TestType mat_00 = 0, mat_01 = 0, mat_02 = 3, mat_03 = 0,
+                       mat_10 = 0, mat_11 = 6, mat_12 = 7, mat_13 = 8;
 
     constexpr Matrix<TestType, 2, 4> mat1 = { mat_00, mat_01, mat_02, mat_03,
                                               mat_10, mat_11, mat_12, mat_13 };
@@ -1463,10 +1463,10 @@ TEMPLATE_LIST_TEST_CASE("Is null?", "[algebra][matrix][dimMxN][method]", Integer
 TEMPLATE_LIST_TEST_CASE("Is null?", "[algebra][matrix][dimMxN][method]", FloatingTypes)
 {
     // clang-format off
-    constexpr TestType mat_00 =  -1.0, mat_01 =  -2.0,
-                       mat_10 =  -5.0, mat_11 =  -6.0,
-                       mat_20 =  -9.0, mat_21 = -10.0,
-                       mat_30 = -13.0, mat_31 = -14.0;
+    constexpr TestType mat_00 =  0.0, mat_01 =   0.0,
+                       mat_10 = -5.0, mat_11 =  -6.0,
+                       mat_20 = -9.0, mat_21 = -10.0,
+                       mat_30 =  0.0, mat_31 = -14.0;
 
     constexpr Matrix<TestType, 4, 2> mat1 = { mat_00, mat_01,
                                               mat_10, mat_11,
