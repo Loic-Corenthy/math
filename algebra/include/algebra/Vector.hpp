@@ -220,6 +220,12 @@ namespace LCNS::Algebra
          */
         Vector<coordinate, size> normalized() const requires(std::is_floating_point_v<coordinate>);
 
+        /*!
+         * @brief Check if this vector is the null vector
+         * @return true if all the coordinates are 0, false otherwise
+         */
+        [[nodiscard]] constexpr bool isNull() const noexcept;
+
     private:
         std::array<coordinate, size> _coords = {};
     };  // class Vector
@@ -516,5 +522,19 @@ namespace LCNS::Algebra
         result.normalize();
 
         return result;
+    }
+
+    template <Coordinate coordinate, unsigned int size>
+    constexpr bool Vector<coordinate, size>::isNull() const noexcept
+    {
+        for (const auto& c : _coords)
+        {
+            if (c != static_cast<coordinate>(0))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }  // namespace LCNS::Algebra
