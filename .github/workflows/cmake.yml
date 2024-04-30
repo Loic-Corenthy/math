@@ -9,6 +9,7 @@ on:
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
+  PRESET: linux_release
 
 jobs:
   ################################
@@ -18,7 +19,7 @@ jobs:
     # Name the Job
     name: Lint Code Base
     # Set the agent to run on
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04 # TODO: Switch back to ununtu-latest when bug in github CI will be fixed
 
     steps:
       - name: Checkout Code
@@ -41,7 +42,7 @@ jobs:
     # well on Windows or Mac.  You can convert this to a matrix build if you need
     # cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     env:
       CC: clang
       CXX: clang++
@@ -52,37 +53,39 @@ jobs:
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_CXX_STANDARD=20
+        run: cmake --preset ${{env.PRESET}}
 
       - name: Build
         # Build your program with the given configuration
-        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+        run: cmake --build ${{github.workspace}}/build/${{env.PRESET}} --parallel
 
       - name: Upload build directory to artefact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build_directory
-          path: ${{github.workspace}}/build/
+          path: |
+            ${{github.workspace}}/build/${{env.PRESET}}/algebra/tests/testVector
+            ${{github.workspace}}/build/${{env.PRESET}}/algebra/tests/testMatrix
 
   tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     needs: build
 
     steps:
       - name: Download build directory
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build_directory
           path: build
 
       - name: Update mode for test executable
-        run: chmod +x ./build/algebra/tests/testVector ./build/algebra/tests/testMatrix
+        run: chmod +x ./build/testVector ./build/testMatrix
 
       - name: Test algebra module
         working-directory: build
         # Execute tests defined by the CMake configuration.
         # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-        run: ctest -C ${{env.BUILD_TYPE}} --output-on-failure --test-dir algebra/tests
+        run: ctest -C ${{env.BUILD_TYPE}} --output-on-failure
 
       - name: Clean build directory artifact
         uses: geekyeggo/delete-artifact@v1
