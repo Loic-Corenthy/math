@@ -2,6 +2,8 @@
 
 #include "algebra/Vector.hpp"
 #include "algebra/Matrix.hpp"
+#include "algebra/Quaternion.hpp"
+#include "algebra/MappingFunctions.hpp"
 
 using vec1i = LCNS::Algebra::Vector<int, 1>;
 using vec1u = LCNS::Algebra::Vector<unsigned int, 1>;
@@ -22,6 +24,10 @@ using vec4i = LCNS::Algebra::Vector<int, 4>;
 using vec4u = LCNS::Algebra::Vector<unsigned int, 4>;
 using vec4f = LCNS::Algebra::Vector<float, 4>;
 using vec4d = LCNS::Algebra::Vector<double, 4>;
+
+using quati = LCNS::Algebra::Quaternion<int>;
+using quatf = LCNS::Algebra::Quaternion<float>;
+using quatd = LCNS::Algebra::Quaternion<double>;
 
 using mat2i = LCNS::Algebra::Matrix<int, 2, 2>;
 using mat2u = LCNS::Algebra::Matrix<unsigned int, 2, 2>;

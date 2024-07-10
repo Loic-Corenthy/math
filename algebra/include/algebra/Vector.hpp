@@ -51,9 +51,9 @@ namespace LCNS::Algebra
         constexpr Vector(auto x, auto y, auto z, auto w) requires(size == 4);
 
         /*!
-         * \brief Accessor (read/write)
+         * \brief Accessor (read only)
          * @param index is the index of the coordinate to access
-         * @return a reference to the corresponding coordinate
+         * @return a copy of the corresponding coordinate
          */
         constexpr coordinate operator[](unsigned int index) const;
 

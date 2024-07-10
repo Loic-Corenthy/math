@@ -23,18 +23,18 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           # Full git history is needed to get a proper list of changed files within `super-linter`
           fetch-depth: 0
 
       - name: Lint All
-        uses: github/super-linter/slim@v4
+        uses: super-linter/super-linter/slim@v6.7.0
         env:
           VALIDATE_ALL_CODEBASE: false
-          DEFAULT_BRANCH: main
+          # DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          LINTER_RULES_PATH: /
+          LINTER_RULES_PATH: .
           VALIDATE_CLANG_FORMAT: true
 
   build:
@@ -48,7 +48,7 @@ jobs:
       CXX: clang++
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
@@ -64,8 +64,7 @@ jobs:
         with:
           name: build_directory
           path: |
-            ${{github.workspace}}/build/${{env.PRESET}}/algebra/tests/testVector
-            ${{github.workspace}}/build/${{env.PRESET}}/algebra/tests/testMatrix
+            ${{github.workspace}}/build
 
   tests:
     runs-on: ubuntu-20.04
@@ -79,15 +78,16 @@ jobs:
           path: build
 
       - name: Update mode for test executable
-        run: chmod +x ./build/testVector ./build/testMatrix
+        run: |
+          chmod +x ${{github.workspace}}/build/${{env.PRESET}}/algebra/tests/testVector
+          chmod +x ${{github.workspace}}/build/${{env.PRESET}}/algebra/tests/testMatrix
+          chmod +x ${{github.workspace}}/build/${{env.PRESET}}/algebra/tests/testQuaternion
+          chmod +x ${{github.workspace}}/build/${{env.PRESET}}/algebra/tests/testMapping
 
       - name: Test algebra module
-        working-directory: build
-        # Execute tests defined by the CMake configuration.
-        # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-        run: ctest -C ${{env.BUILD_TYPE}} --output-on-failure
+        run: ctest -C ${{env.BUILD_TYPE}} --test-dir ${{github.workspace}}/build/${{env.PRESET}}/algebra/tests --output-on-failure --parallel
 
       - name: Clean build directory artifact
-        uses: geekyeggo/delete-artifact@v1
+        uses: geekyeggo/delete-artifact@v5
         with:
           name: build_directory

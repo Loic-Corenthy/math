@@ -1,3 +1,6 @@
+##########
+# Vector #
+##########
 add_executable(testVector)
 
 target_sources(testVector
@@ -7,17 +10,14 @@ target_sources(testVector
         "TestVector4.cpp"
 )
 
-target_link_libraries(testVector PRIVATE lcns::algebra Catch2::Catch2WithMain)
-
-target_compile_features(testVector PUBLIC cxx_std_20)
-
-set_target_properties(testVector PROPERTIES LINKER_LANGUAGE CXX)
-set_target_properties(testVector PROPERTIES CXX_EXTENSIONS OFF)
-
 add_test(NAME "Test vec2" COMMAND "$<TARGET_FILE:testVector>" "[algebra][vector][dim2]")
 add_test(NAME "Test vec3" COMMAND "$<TARGET_FILE:testVector>" "[algebra][vector][dim3]")
 add_test(NAME "Test vec4" COMMAND "$<TARGET_FILE:testVector>" "[algebra][vector][dim4]")
 
+
+##########
+# Matrix #
+##########
 add_executable(testMatrix)
 
 target_sources(testMatrix
@@ -29,13 +29,49 @@ target_sources(testMatrix
         "TestMatrixMxN.cpp"
 )
 
-target_link_libraries(testMatrix PRIVATE lcns::algebra Catch2::Catch2WithMain)
-
-target_compile_features(testMatrix PUBLIC cxx_std_20)
-
-set_target_properties(testMatrix PROPERTIES LINKER_LANGUAGE CXX)
-set_target_properties(testMatrix PROPERTIES CXX_EXTENSIONS OFF)
-
 add_test(NAME "Test mat2" COMMAND "$<TARGET_FILE:testMatrix>" "[algebra][matrix][dim2]")
 add_test(NAME "Test mat3" COMMAND "$<TARGET_FILE:testMatrix>" "[algebra][matrix][dim3]")
 add_test(NAME "Test mat4" COMMAND "$<TARGET_FILE:testMatrix>" "[algebra][matrix][dim4]")
+
+
+##############
+# Quaternion #
+##############
+add_executable(testQuaternion)
+
+target_sources(testQuaternion
+    PRIVATE
+        "Helper.hpp"
+        "TestQuaternion.cpp"
+)
+
+add_test(NAME "Test quat" COMMAND "$<TARGET_FILE:testQuaternion>" "[algebra][quat]")
+
+
+###########
+# Mapping #
+###########
+add_executable(testMapping)
+
+target_sources(testMapping
+    PRIVATE
+        "Helper.hpp"
+        "TestMappingFunctions.cpp"
+)
+
+add_test(NAME "Test mapping functions" COMMAND "$<TARGET_FILE:testMapping>" "[algebra][mapping]")
+
+
+####################################
+# Setup common to all test targets #
+####################################
+set(ALL_TEST_TARGETS testVector testMatrix testQuaternion testMapping)
+
+foreach(TEST_TARGET IN LISTS ALL_TEST_TARGETS)
+    target_link_libraries(${TEST_TARGET} PRIVATE lcns::algebra Catch2::Catch2WithMain)
+
+    target_compile_features(${TEST_TARGET} PUBLIC cxx_std_20)
+
+    set_target_properties(${TEST_TARGET} PROPERTIES LINKER_LANGUAGE CXX)
+    set_target_properties(${TEST_TARGET} PROPERTIES CXX_EXTENSIONS OFF)
+endforeach()
