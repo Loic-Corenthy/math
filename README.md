@@ -1,5 +1,5 @@
 # math
-Miscellaneous mathematical functions
+Miscellaneous mathematical helper classes and functions
 
 ## Status
 <!-- [![GitHub Super-Linter](https://github.com/Loic-Corenthy/math/workflows/CMake/badge.svg)](https://github.com/marketplace/actions/super-linter)
@@ -9,6 +9,12 @@ Miscellaneous mathematical functions
 ## Libraries
 This repository contains multiple independent libraries:
 
-* **algebra** provides a Vector and a Matrix class. They are templated to accommodate with different types and sizes.
+* **algebra**
+    - Vector
+    - Matrix
+    - Quaternion
 
-* **combinatorics** provides a function to generate permutations.
+Templated classes to accommodate with different types and sizes.
+
+* **combinatorics**
+    - Permutation generator function
