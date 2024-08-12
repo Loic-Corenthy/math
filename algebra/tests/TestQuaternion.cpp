@@ -3,9 +3,11 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_template_test_macros.hpp>
 #include <catch2/catch_approx.hpp>
+#include <catch2/generators/catch_generators_random.hpp>
 
 #include <numbers>
 
+using Catch::Generators::random;
 using LCNS::Algebra::Quaternion;
 
 using IntegerTypes  = std::tuple<short, int, long>;
@@ -997,4 +999,100 @@ TEMPLATE_LIST_TEST_CASE("Is null?", "[algebra][quat][method]", FloatingTypes)
     CHECK(quat2.isNull());
     CHECK(quat3.isNull());
     CHECK(quat4.isNull());
+}
+
+TEMPLATE_LIST_TEST_CASE("Conjugate", "[algebra][quat][method]", IntegerTypes)
+{
+    constexpr TestType x1 = 159;
+    constexpr TestType y1 = -88;
+    constexpr TestType z1 = 23;
+    constexpr TestType w1 = 55;
+
+    constexpr Quaternion<TestType> quat1(x1, y1, z1, w1);
+    constexpr auto                 conjugated = quat1.conjugated();
+
+    STATIC_CHECK(conjugated.x() == -x1);
+    STATIC_CHECK(conjugated.y() == -y1);
+    STATIC_CHECK(conjugated.z() == -z1);
+    STATIC_CHECK(conjugated.w() == w1);
+
+    CHECK(conjugated.x() == -x1);
+    CHECK(conjugated.y() == -y1);
+    CHECK(conjugated.z() == -z1);
+    CHECK(conjugated.w() == w1);
+
+    constexpr auto same = conjugated.conjugated();
+
+    STATIC_CHECK(same == quat1);
+    CHECK(same == quat1);
+
+    const TestType min = -100;
+    const TestType max = 100;
+    const auto     x2  = random(min, max).get();
+    const auto     y2  = random(min, max).get();
+    const auto     z2  = random(min, max).get();
+    const auto     w2  = random(min, max).get();
+
+    Quaternion<TestType> quat(x2, y2, z2, w2);
+    quat.conjugate();
+
+    CHECK(quat.x() == -x2);
+    CHECK(quat.y() == -y2);
+    CHECK(quat.z() == -z2);
+    CHECK(quat.w() == w2);
+
+    quat.conjugate();
+
+    CHECK(quat.x() == x2);
+    CHECK(quat.y() == y2);
+    CHECK(quat.z() == z2);
+    CHECK(quat.w() == w2);
+}
+
+TEMPLATE_LIST_TEST_CASE("Conjugate", "[algebra][quat][method]", FloatingTypes)
+{
+    constexpr TestType x1 = 0.88;
+    constexpr TestType y1 = -88.99;
+    constexpr TestType z1 = 147.0;
+    constexpr TestType w1 = -6.1;
+
+    constexpr Quaternion<TestType> quat1(x1, y1, z1, w1);
+    constexpr Quaternion<TestType> conjugated = quat1.conjugated();
+
+    STATIC_CHECK(conjugated.x() == -x1);
+    STATIC_CHECK(conjugated.y() == -y1);
+    STATIC_CHECK(conjugated.z() == -z1);
+    STATIC_CHECK(conjugated.w() == w1);
+
+    CHECK(conjugated.x() == -x1);
+    CHECK(conjugated.y() == -y1);
+    CHECK(conjugated.z() == -z1);
+    CHECK(conjugated.w() == w1);
+
+    constexpr auto same = conjugated.conjugated();
+
+    STATIC_CHECK(same == quat1);
+    CHECK(same == quat1);
+
+    const TestType min = -100.0;
+    const TestType max = 100.0;
+    const auto     x2  = random(min, max).get();
+    const auto     y2  = random(min, max).get();
+    const auto     z2  = random(min, max).get();
+    const auto     w2  = random(min, max).get();
+
+    Quaternion<TestType> quat(x2, y2, z2, w2);
+    quat.conjugate();
+
+    CHECK(quat.x() == -x2);
+    CHECK(quat.y() == -y2);
+    CHECK(quat.z() == -z2);
+    CHECK(quat.w() == w2);
+
+    quat.conjugate();
+
+    CHECK(quat.x() == x2);
+    CHECK(quat.y() == y2);
+    CHECK(quat.z() == z2);
+    CHECK(quat.w() == w2);
 }
