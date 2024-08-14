@@ -198,6 +198,18 @@ namespace LCNS::Algebra
          */
         [[nodiscard]] constexpr bool isNull() const noexcept;
 
+        /*!
+         * \brief Conjugate this quaternion, i.e. multiply the imaginary coefficient by -1
+         */
+        void conjugate() noexcept;
+
+        /*!
+         * \brief Create a new quaternion which corresponds its conjugate
+         *        Do not modify this object.
+         * @return a copy of the conjugate of this quaternion
+         */
+        constexpr Quaternion<coordinate> conjugated() const noexcept;
+
     private:
         std::array<coordinate, 4> _coords = {};
     };  // class Quaternion
@@ -460,6 +472,28 @@ namespace LCNS::Algebra
         }
 
         return true;
+    }
+
+    template <Coordinate coordinate>
+    void Quaternion<coordinate>::conjugate() noexcept
+    {
+        _coords[0] = -_coords[0];
+        _coords[1] = -_coords[1];
+        _coords[2] = -_coords[2];
+    }
+
+    template <Coordinate coordinate>
+    constexpr Quaternion<coordinate> Quaternion<coordinate>::conjugated() const noexcept
+    {
+        constexpr coordinate minusOne = -1;
+
+        // clang-format off
+        // The cast is necessary because negating changes the type in some cases, e.g. short int -> int
+        return { static_cast<coordinate>(-_coords[0]),
+                 static_cast<coordinate>(-_coords[1]),
+                 static_cast<coordinate>(-_coords[2]),
+                 _coords[3]};
+        // clang-format on
     }
 
 }  // namespace LCNS::Algebra
