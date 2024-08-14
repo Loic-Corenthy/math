@@ -3,6 +3,14 @@ Change log
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+[1.3.0] - 2024-08-14
+====================
+
+### Added
+**algebra**
+- Functions to compute the conjugate of a quaternion
+
+
 [1.2.0] - 2024-07-18
 ====================
 
