@@ -20,7 +20,7 @@ template <typename Container>
 void printListOfContainers(const Container& list)
 {
     size_t i = 0;
-    for (const auto container : list)
+    for (const auto& container : list)
     {
         cout << ++i << "\t[ ";
         for (const auto it : container)
