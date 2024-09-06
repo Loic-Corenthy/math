@@ -28,18 +28,17 @@ namespace LCNS::Algebra
         }
         else
         {
-            constexpr coordinate minus_one = -1.0;
             // In this case, phi can be set to zero
             if (mat(2, 0) == -1.0)
             {
-                constexpr double theta = pi / 2.0f;
+                constexpr double theta = pi / 2.0;
                 const double     psi   = atan2(mat(0, 1), mat(0, 2));
 
                 return { psi, theta, 0.0 };
             }
             else
             {
-                constexpr double theta = -pi / 2.0f;
+                constexpr double theta = -pi / 2.0;
                 const double     psi   = atan2(-mat(0, 1), -mat(0, 2));
 
                 return { psi, theta, 0.0 };

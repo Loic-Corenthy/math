@@ -485,8 +485,6 @@ namespace LCNS::Algebra
     template <Coordinate coordinate>
     constexpr Quaternion<coordinate> Quaternion<coordinate>::conjugated() const noexcept
     {
-        constexpr coordinate minusOne = -1;
-
         // clang-format off
         // The cast is necessary because negating changes the type in some cases, e.g. short int -> int
         return { static_cast<coordinate>(-_coords[0]),
