@@ -1,14 +1,14 @@
-add_library(lcnsCombinatorics)
+add_library(lcnsCombinatorics INTERFACE)
 
 target_sources(lcnsCombinatorics
-               PUBLIC
-                 "include/combinatorics/Concepts.hpp"
-                 "include/combinatorics/Permutations.hpp"
+    PUBLIC
+        "include/combinatorics/Permutations.hpp"
+        "include/combinatorics/Concepts.hpp"
 )
 
-target_include_directories(lcnsCombinatorics PUBLIC include)
+target_include_directories(lcnsCombinatorics INTERFACE include)
 
-target_compile_features(lcnsCombinatorics PUBLIC cxx_std_20)
+target_compile_features(lcnsCombinatorics INTERFACE cxx_std_20)
 
 set_target_properties(lcnsCombinatorics PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(lcnsCombinatorics PROPERTIES CXX_EXTENSIONS OFF)
