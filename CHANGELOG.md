@@ -3,6 +3,25 @@ Change log
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
+[1.3.1] - 2024-09-07
+====================
+
+### Changed
+**algebra**
+- Enabled more compiler checks
+
+**combinatorics**
+- Enabled more compiler checks
+
+### Fixed
+**algebra**
+- Now build the library as an INTERFACE CMake library
+- Minor bug fixes
+
+**combinatorics**
+- Now build the library as an INTERFACE CMake library
+
+
 [1.3.0] - 2024-08-14
 ====================
 
