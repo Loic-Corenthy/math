@@ -30,6 +30,4 @@ find_program(CLANG_TIDY_EXE NAMES "clang-tidy" REQUIRED)
 # Add the different modules
 add_subdirectory(algebra)
 add_subdirectory(combinatorics)
-
-# Clean up
-file(REMOVE ${TMP_FILES_TO_DELETE})
+add_subdirectory(large)
