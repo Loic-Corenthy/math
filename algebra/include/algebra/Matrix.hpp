@@ -362,42 +362,42 @@ namespace LCNS::Algebra
         {
             if constexpr (rows == 2)
             {
-                    return static_cast<coordinate>(static_cast<double>(_coeff[0]) * static_cast<double>(_coeff[3]) - static_cast<double>(_coeff[1]) * static_cast<double>(_coeff[2]));
+                return static_cast<coordinate>((static_cast<double>(_coeff[0]) * static_cast<double>(_coeff[3])) - (static_cast<double>(_coeff[1]) * static_cast<double>(_coeff[2])));
             }
             else if constexpr (rows == 3)
             {
-                return static_cast<coordinate>(  static_cast<double>(_coeff[0]) * static_cast<double>(_coeff[4]) * static_cast<double>(_coeff[8]) + static_cast<double>(_coeff[1]) * static_cast<double>(_coeff[5]) * static_cast<double>(_coeff[6]) + static_cast<double>(_coeff[2]) * static_cast<double>(_coeff[3]) * static_cast<double>(_coeff[7])
-                                               - static_cast<double>(_coeff[2]) * static_cast<double>(_coeff[4]) * static_cast<double>(_coeff[6]) - static_cast<double>(_coeff[1]) * static_cast<double>(_coeff[3]) * static_cast<double>(_coeff[8]) - static_cast<double>(_coeff[0]) * static_cast<double>(_coeff[5]) * static_cast<double>(_coeff[7]));
+                return static_cast<coordinate>(  (static_cast<double>(_coeff[0]) * static_cast<double>(_coeff[4]) * static_cast<double>(_coeff[8])) + (static_cast<double>(_coeff[1]) * static_cast<double>(_coeff[5]) * static_cast<double>(_coeff[6])) + (static_cast<double>(_coeff[2]) * static_cast<double>(_coeff[3]) * static_cast<double>(_coeff[7]))
+                                               - (static_cast<double>(_coeff[2]) * static_cast<double>(_coeff[4]) * static_cast<double>(_coeff[6])) - (static_cast<double>(_coeff[1]) * static_cast<double>(_coeff[3]) * static_cast<double>(_coeff[8])) - (static_cast<double>(_coeff[0]) * static_cast<double>(_coeff[5]) * static_cast<double>(_coeff[7])));
             }
             else if constexpr (rows == 4)
             {
-                return  static_cast<coordinate>(  static_cast<double>(_coeff[ 3]) * static_cast<double>(_coeff[ 6]) * static_cast<double>(_coeff[ 9]) * static_cast<double>(_coeff[12]) - static_cast<double>(_coeff[ 2]) * static_cast<double>(_coeff[ 7]) * static_cast<double>(_coeff[ 9]) * static_cast<double>(_coeff[12]) - static_cast<double>(_coeff[ 3]) * static_cast<double>(_coeff[ 5]) * static_cast<double>(_coeff[10]) * static_cast<double>(_coeff[12]) + static_cast<double>(_coeff[ 1]) * static_cast<double>(_coeff[ 7]) * static_cast<double>(_coeff[10]) * static_cast<double>(_coeff[12])
-                                                + static_cast<double>(_coeff[ 2]) * static_cast<double>(_coeff[ 5]) * static_cast<double>(_coeff[11]) * static_cast<double>(_coeff[12]) - static_cast<double>(_coeff[ 1]) * static_cast<double>(_coeff[ 6]) * static_cast<double>(_coeff[11]) * static_cast<double>(_coeff[12]) - static_cast<double>(_coeff[ 3]) * static_cast<double>(_coeff[ 6]) * static_cast<double>(_coeff[ 8]) * static_cast<double>(_coeff[13]) + static_cast<double>(_coeff[ 2]) * static_cast<double>(_coeff[ 7]) * static_cast<double>(_coeff[ 8]) * static_cast<double>(_coeff[13])
-                                                + static_cast<double>(_coeff[ 3]) * static_cast<double>(_coeff[ 4]) * static_cast<double>(_coeff[10]) * static_cast<double>(_coeff[13]) - static_cast<double>(_coeff[ 0]) * static_cast<double>(_coeff[ 7]) * static_cast<double>(_coeff[10]) * static_cast<double>(_coeff[13]) - static_cast<double>(_coeff[ 2]) * static_cast<double>(_coeff[ 4]) * static_cast<double>(_coeff[11]) * static_cast<double>(_coeff[13]) + static_cast<double>(_coeff[ 0]) * static_cast<double>(_coeff[ 6]) * static_cast<double>(_coeff[11]) * static_cast<double>(_coeff[13])
-                                                + static_cast<double>(_coeff[ 3]) * static_cast<double>(_coeff[ 5]) * static_cast<double>(_coeff[ 8]) * static_cast<double>(_coeff[14]) - static_cast<double>(_coeff[ 1]) * static_cast<double>(_coeff[ 7]) * static_cast<double>(_coeff[ 8]) * static_cast<double>(_coeff[14]) - static_cast<double>(_coeff[ 3]) * static_cast<double>(_coeff[ 4]) * static_cast<double>(_coeff[ 9]) * static_cast<double>(_coeff[14]) + static_cast<double>(_coeff[ 0]) * static_cast<double>(_coeff[ 7]) * static_cast<double>(_coeff[ 9]) * static_cast<double>(_coeff[14])
-                                                + static_cast<double>(_coeff[ 1]) * static_cast<double>(_coeff[ 4]) * static_cast<double>(_coeff[11]) * static_cast<double>(_coeff[14]) - static_cast<double>(_coeff[ 0]) * static_cast<double>(_coeff[ 5]) * static_cast<double>(_coeff[11]) * static_cast<double>(_coeff[14]) - static_cast<double>(_coeff[ 2]) * static_cast<double>(_coeff[ 5]) * static_cast<double>(_coeff[ 8]) * static_cast<double>(_coeff[15]) + static_cast<double>(_coeff[ 1]) * static_cast<double>(_coeff[ 6]) * static_cast<double>(_coeff[ 8]) * static_cast<double>(_coeff[15])
-                                                + static_cast<double>(_coeff[ 2]) * static_cast<double>(_coeff[ 4]) * static_cast<double>(_coeff[ 9]) * static_cast<double>(_coeff[15]) - static_cast<double>(_coeff[ 0]) * static_cast<double>(_coeff[ 6]) * static_cast<double>(_coeff[ 9]) * static_cast<double>(_coeff[15]) - static_cast<double>(_coeff[ 1]) * static_cast<double>(_coeff[ 4]) * static_cast<double>(_coeff[10]) * static_cast<double>(_coeff[15]) + static_cast<double>(_coeff[ 0]) * static_cast<double>(_coeff[ 5]) * static_cast<double>(_coeff[10]) * static_cast<double>(_coeff[15]));
+                return  static_cast<coordinate>(  (static_cast<double>(_coeff[ 3]) * static_cast<double>(_coeff[ 6]) * static_cast<double>(_coeff[ 9]) * static_cast<double>(_coeff[12])) - (static_cast<double>(_coeff[ 2]) * static_cast<double>(_coeff[ 7]) * static_cast<double>(_coeff[ 9]) * static_cast<double>(_coeff[12])) - (static_cast<double>(_coeff[ 3]) * static_cast<double>(_coeff[ 5]) * static_cast<double>(_coeff[10]) * static_cast<double>(_coeff[12])) + (static_cast<double>(_coeff[ 1]) * static_cast<double>(_coeff[ 7]) * static_cast<double>(_coeff[10]) * static_cast<double>(_coeff[12]))
+                                                + (static_cast<double>(_coeff[ 2]) * static_cast<double>(_coeff[ 5]) * static_cast<double>(_coeff[11]) * static_cast<double>(_coeff[12])) - (static_cast<double>(_coeff[ 1]) * static_cast<double>(_coeff[ 6]) * static_cast<double>(_coeff[11]) * static_cast<double>(_coeff[12])) - (static_cast<double>(_coeff[ 3]) * static_cast<double>(_coeff[ 6]) * static_cast<double>(_coeff[ 8]) * static_cast<double>(_coeff[13])) + (static_cast<double>(_coeff[ 2]) * static_cast<double>(_coeff[ 7]) * static_cast<double>(_coeff[ 8]) * static_cast<double>(_coeff[13]))
+                                                + (static_cast<double>(_coeff[ 3]) * static_cast<double>(_coeff[ 4]) * static_cast<double>(_coeff[10]) * static_cast<double>(_coeff[13])) - (static_cast<double>(_coeff[ 0]) * static_cast<double>(_coeff[ 7]) * static_cast<double>(_coeff[10]) * static_cast<double>(_coeff[13])) - (static_cast<double>(_coeff[ 2]) * static_cast<double>(_coeff[ 4]) * static_cast<double>(_coeff[11]) * static_cast<double>(_coeff[13])) + (static_cast<double>(_coeff[ 0]) * static_cast<double>(_coeff[ 6]) * static_cast<double>(_coeff[11]) * static_cast<double>(_coeff[13]))
+                                                + (static_cast<double>(_coeff[ 3]) * static_cast<double>(_coeff[ 5]) * static_cast<double>(_coeff[ 8]) * static_cast<double>(_coeff[14])) - (static_cast<double>(_coeff[ 1]) * static_cast<double>(_coeff[ 7]) * static_cast<double>(_coeff[ 8]) * static_cast<double>(_coeff[14])) - (static_cast<double>(_coeff[ 3]) * static_cast<double>(_coeff[ 4]) * static_cast<double>(_coeff[ 9]) * static_cast<double>(_coeff[14])) + (static_cast<double>(_coeff[ 0]) * static_cast<double>(_coeff[ 7]) * static_cast<double>(_coeff[ 9]) * static_cast<double>(_coeff[14]))
+                                                + (static_cast<double>(_coeff[ 1]) * static_cast<double>(_coeff[ 4]) * static_cast<double>(_coeff[11]) * static_cast<double>(_coeff[14])) - (static_cast<double>(_coeff[ 0]) * static_cast<double>(_coeff[ 5]) * static_cast<double>(_coeff[11]) * static_cast<double>(_coeff[14])) - (static_cast<double>(_coeff[ 2]) * static_cast<double>(_coeff[ 5]) * static_cast<double>(_coeff[ 8]) * static_cast<double>(_coeff[15])) + (static_cast<double>(_coeff[ 1]) * static_cast<double>(_coeff[ 6]) * static_cast<double>(_coeff[ 8]) * static_cast<double>(_coeff[15]))
+                                                + (static_cast<double>(_coeff[ 2]) * static_cast<double>(_coeff[ 4]) * static_cast<double>(_coeff[ 9]) * static_cast<double>(_coeff[15])) - (static_cast<double>(_coeff[ 0]) * static_cast<double>(_coeff[ 6]) * static_cast<double>(_coeff[ 9]) * static_cast<double>(_coeff[15])) - (static_cast<double>(_coeff[ 1]) * static_cast<double>(_coeff[ 4]) * static_cast<double>(_coeff[10]) * static_cast<double>(_coeff[15])) + (static_cast<double>(_coeff[ 0]) * static_cast<double>(_coeff[ 5]) * static_cast<double>(_coeff[10]) * static_cast<double>(_coeff[15])));
             }
         }
         else
         {
             if constexpr (rows == 2)
             {
-                return _coeff[0] * _coeff[3] - _coeff[1] * _coeff[2];
+                return (_coeff[0] * _coeff[3]) - (_coeff[1] * _coeff[2]);
             }
             else if constexpr (rows == 3)
             {
-                return ( _coeff[0] * _coeff[4] * _coeff[8] + _coeff[1] * _coeff[5] * _coeff[6] + _coeff[2] * _coeff[3] * _coeff[7]
-                       - _coeff[2] * _coeff[4] * _coeff[6] - _coeff[1] * _coeff[3] * _coeff[8] - _coeff[0] * _coeff[5] * _coeff[7]);
+                return ( (_coeff[0] * _coeff[4] * _coeff[8]) + (_coeff[1] * _coeff[5] * _coeff[6]) + (_coeff[2] * _coeff[3] * _coeff[7])
+                       - (_coeff[2] * _coeff[4] * _coeff[6]) - (_coeff[1] * _coeff[3] * _coeff[8]) - (_coeff[0] * _coeff[5] * _coeff[7]));
             }
             else if constexpr (rows == 4)
             {
-                return  ( _coeff[ 3] * _coeff[ 6] * _coeff[ 9] * _coeff[12] - _coeff[ 2] * _coeff[ 7] * _coeff[ 9] * _coeff[12] - _coeff[ 3] * _coeff[ 5] * _coeff[10] * _coeff[12] + _coeff[ 1] * _coeff[ 7] * _coeff[10] * _coeff[12]
-                        + _coeff[ 2] * _coeff[ 5] * _coeff[11] * _coeff[12] - _coeff[ 1] * _coeff[ 6] * _coeff[11] * _coeff[12] - _coeff[ 3] * _coeff[ 6] * _coeff[ 8] * _coeff[13] + _coeff[ 2] * _coeff[ 7] * _coeff[ 8] * _coeff[13]
-                        + _coeff[ 3] * _coeff[ 4] * _coeff[10] * _coeff[13] - _coeff[ 0] * _coeff[ 7] * _coeff[10] * _coeff[13] - _coeff[ 2] * _coeff[ 4] * _coeff[11] * _coeff[13] + _coeff[ 0] * _coeff[ 6] * _coeff[11] * _coeff[13]
-                        + _coeff[ 3] * _coeff[ 5] * _coeff[ 8] * _coeff[14] - _coeff[ 1] * _coeff[ 7] * _coeff[ 8] * _coeff[14] - _coeff[ 3] * _coeff[ 4] * _coeff[ 9] * _coeff[14] + _coeff[ 0] * _coeff[ 7] * _coeff[ 9] * _coeff[14]
-                        + _coeff[ 1] * _coeff[ 4] * _coeff[11] * _coeff[14] - _coeff[ 0] * _coeff[ 5] * _coeff[11] * _coeff[14] - _coeff[ 2] * _coeff[ 5] * _coeff[ 8] * _coeff[15] + _coeff[ 1] * _coeff[ 6] * _coeff[ 8] * _coeff[15]
-                        + _coeff[ 2] * _coeff[ 4] * _coeff[ 9] * _coeff[15] - _coeff[ 0] * _coeff[ 6] * _coeff[ 9] * _coeff[15] - _coeff[ 1] * _coeff[ 4] * _coeff[10] * _coeff[15] + _coeff[ 0] * _coeff[ 5] * _coeff[10] * _coeff[15]);
+                return  ( (_coeff[ 3] * _coeff[ 6] * _coeff[ 9] * _coeff[12]) - (_coeff[ 2] * _coeff[ 7] * _coeff[ 9] * _coeff[12]) - (_coeff[ 3] * _coeff[ 5] * _coeff[10] * _coeff[12]) + (_coeff[ 1] * _coeff[ 7] * _coeff[10] * _coeff[12])
+                        + (_coeff[ 2] * _coeff[ 5] * _coeff[11] * _coeff[12]) - (_coeff[ 1] * _coeff[ 6] * _coeff[11] * _coeff[12]) - (_coeff[ 3] * _coeff[ 6] * _coeff[ 8] * _coeff[13]) + (_coeff[ 2] * _coeff[ 7] * _coeff[ 8] * _coeff[13])
+                        + (_coeff[ 3] * _coeff[ 4] * _coeff[10] * _coeff[13]) - (_coeff[ 0] * _coeff[ 7] * _coeff[10] * _coeff[13]) - (_coeff[ 2] * _coeff[ 4] * _coeff[11] * _coeff[13]) + (_coeff[ 0] * _coeff[ 6] * _coeff[11] * _coeff[13])
+                        + (_coeff[ 3] * _coeff[ 5] * _coeff[ 8] * _coeff[14]) - (_coeff[ 1] * _coeff[ 7] * _coeff[ 8] * _coeff[14]) - (_coeff[ 3] * _coeff[ 4] * _coeff[ 9] * _coeff[14]) + (_coeff[ 0] * _coeff[ 7] * _coeff[ 9] * _coeff[14])
+                        + (_coeff[ 1] * _coeff[ 4] * _coeff[11] * _coeff[14]) - (_coeff[ 0] * _coeff[ 5] * _coeff[11] * _coeff[14]) - (_coeff[ 2] * _coeff[ 5] * _coeff[ 8] * _coeff[15]) + (_coeff[ 1] * _coeff[ 6] * _coeff[ 8] * _coeff[15])
+                        + (_coeff[ 2] * _coeff[ 4] * _coeff[ 9] * _coeff[15]) - (_coeff[ 0] * _coeff[ 6] * _coeff[ 9] * _coeff[15]) - (_coeff[ 1] * _coeff[ 4] * _coeff[10] * _coeff[15]) + (_coeff[ 0] * _coeff[ 5] * _coeff[10] * _coeff[15]));
             }
         }
 
@@ -460,7 +460,7 @@ namespace LCNS::Algebra
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>
     constexpr unsigned int Matrix<coordinate, rows, cols>::_(unsigned int i, unsigned int j) const
     {
-        return i * _cols + j;
+        return (i * _cols) + j;
     }
 
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>
@@ -484,41 +484,41 @@ namespace LCNS::Algebra
         else if constexpr (rows == 3)
         {
             // clang-format off
-            _coeff[0] =  (copy[4] * copy[8] - copy[7] * copy[5]) / det;
-            _coeff[3] = -(copy[3] * copy[8] - copy[6] * copy[5]) / det;
-            _coeff[6] =  (copy[3] * copy[7] - copy[6] * copy[4]) / det;
+            _coeff[0] =  ((copy[4] * copy[8]) - (copy[7] * copy[5])) / det;
+            _coeff[3] = -((copy[3] * copy[8]) - (copy[6] * copy[5])) / det;
+            _coeff[6] =  ((copy[3] * copy[7]) - (copy[6] * copy[4])) / det;
 
-            _coeff[1] = -(copy[1] * copy[8] - copy[7] * copy[2]) / det;
-            _coeff[4] =  (copy[0] * copy[8] - copy[6] * copy[2]) / det;
-            _coeff[7] = -(copy[0] * copy[7] - copy[6] * copy[1]) / det;
+            _coeff[1] = -((copy[1] * copy[8]) - (copy[7] * copy[2])) / det;
+            _coeff[4] =  ((copy[0] * copy[8]) - (copy[6] * copy[2])) / det;
+            _coeff[7] = -((copy[0] * copy[7]) - (copy[6] * copy[1])) / det;
 
-            _coeff[2] =  (copy[1] * copy[5] - copy[4] * copy[2]) / det;
-            _coeff[5] = -(copy[0] * copy[5] - copy[3] * copy[2]) / det;
-            _coeff[8] =  (copy[0] * copy[4] - copy[3] * copy[1]) / det;
+            _coeff[2] =  ((copy[1] * copy[5]) - (copy[4] * copy[2])) / det;
+            _coeff[5] = -((copy[0] * copy[5]) - (copy[3] * copy[2])) / det;
+            _coeff[8] =  ((copy[0] * copy[4]) - (copy[3] * copy[1])) / det;
             // clang-format on
         }
         else if constexpr (rows == 4)
         {
             // clang-format off
-            _coeff[ 0] = (-copy[ 7] * copy[10] * copy[13]  +  copy[ 6] * copy[11] * copy[13]  +  copy[ 7] * copy[ 9] * copy[14]  -  copy[ 5] * copy[11] * copy[14]  -  copy[ 6] * copy[ 9] * copy[15]  +  copy[ 5] * copy[10] * copy[15]) / det;
-            _coeff[ 4] = ( copy[ 7] * copy[10] * copy[12]  -  copy[ 6] * copy[11] * copy[12]  -  copy[ 7] * copy[ 8] * copy[14]  +  copy[ 4] * copy[11] * copy[14]  +  copy[ 6] * copy[ 8] * copy[15]  -  copy[ 4] * copy[10] * copy[15]) / det;
-            _coeff[ 8] = (-copy[ 7] * copy[ 9] * copy[12]  +  copy[ 5] * copy[11] * copy[12]  +  copy[ 7] * copy[ 8] * copy[13]  -  copy[ 4] * copy[11] * copy[13]  -  copy[ 5] * copy[ 8] * copy[15]  +  copy[ 4] * copy[ 9] * copy[15]) / det;
-            _coeff[12] = ( copy[ 6] * copy[ 9] * copy[12]  -  copy[ 5] * copy[10] * copy[12]  -  copy[ 6] * copy[ 8] * copy[13]  +  copy[ 4] * copy[10] * copy[13]  +  copy[ 5] * copy[ 8] * copy[14]  -  copy[ 4] * copy[ 9] * copy[14]) / det;
+            _coeff[ 0] = ((-copy[ 7] * copy[10] * copy[13])  +  (copy[ 6] * copy[11] * copy[13])  +  (copy[ 7] * copy[ 9] * copy[14])  -  (copy[ 5] * copy[11] * copy[14])  -  (copy[ 6] * copy[ 9] * copy[15])  +  (copy[ 5] * copy[10] * copy[15])) / det;
+            _coeff[ 4] = (( copy[ 7] * copy[10] * copy[12])  -  (copy[ 6] * copy[11] * copy[12])  -  (copy[ 7] * copy[ 8] * copy[14])  +  (copy[ 4] * copy[11] * copy[14])  +  (copy[ 6] * copy[ 8] * copy[15])  -  (copy[ 4] * copy[10] * copy[15])) / det;
+            _coeff[ 8] = ((-copy[ 7] * copy[ 9] * copy[12])  +  (copy[ 5] * copy[11] * copy[12])  +  (copy[ 7] * copy[ 8] * copy[13])  -  (copy[ 4] * copy[11] * copy[13])  -  (copy[ 5] * copy[ 8] * copy[15])  +  (copy[ 4] * copy[ 9] * copy[15])) / det;
+            _coeff[12] = (( copy[ 6] * copy[ 9] * copy[12])  -  (copy[ 5] * copy[10] * copy[12])  -  (copy[ 6] * copy[ 8] * copy[13])  +  (copy[ 4] * copy[10] * copy[13])  +  (copy[ 5] * copy[ 8] * copy[14])  -  (copy[ 4] * copy[ 9] * copy[14])) / det;
 
-            _coeff[ 1] = ( copy[ 3] * copy[10] * copy[13]  -  copy[ 2] * copy[11] * copy[13]  -  copy[ 3] * copy[ 9] * copy[14]  +  copy[ 1] * copy[11] * copy[14]  +  copy[ 2] * copy[ 9] * copy[15]  -  copy[ 1] * copy[10] * copy[15]) / det;
-            _coeff[ 5] = (-copy[ 3] * copy[10] * copy[12]  +  copy[ 2] * copy[11] * copy[12]  +  copy[ 3] * copy[ 8] * copy[14]  -  copy[ 0] * copy[11] * copy[14]  -  copy[ 2] * copy[ 8] * copy[15]  +  copy[ 0] * copy[10] * copy[15]) / det;
-            _coeff[ 9] = ( copy[ 3] * copy[ 9] * copy[12]  -  copy[ 1] * copy[11] * copy[12]  -  copy[ 3] * copy[ 8] * copy[13]  +  copy[ 0] * copy[11] * copy[13]  +  copy[ 1] * copy[ 8] * copy[15]  -  copy[ 0] * copy[ 9] * copy[15]) / det;
-            _coeff[13] = (-copy[ 2] * copy[ 9] * copy[12]  +  copy[ 1] * copy[10] * copy[12]  +  copy[ 2] * copy[ 8] * copy[13]  -  copy[ 0] * copy[10] * copy[13]  -  copy[ 1] * copy[ 8] * copy[14]  +  copy[ 0] * copy[ 9] * copy[14]) / det;
+            _coeff[ 1] = (( copy[ 3] * copy[10] * copy[13])  -  (copy[ 2] * copy[11] * copy[13])  -  (copy[ 3] * copy[ 9] * copy[14])  +  (copy[ 1] * copy[11] * copy[14])  +  (copy[ 2] * copy[ 9] * copy[15])  -  (copy[ 1] * copy[10] * copy[15])) / det;
+            _coeff[ 5] = ((-copy[ 3] * copy[10] * copy[12])  +  (copy[ 2] * copy[11] * copy[12])  +  (copy[ 3] * copy[ 8] * copy[14])  -  (copy[ 0] * copy[11] * copy[14])  -  (copy[ 2] * copy[ 8] * copy[15])  +  (copy[ 0] * copy[10] * copy[15])) / det;
+            _coeff[ 9] = (( copy[ 3] * copy[ 9] * copy[12])  -  (copy[ 1] * copy[11] * copy[12])  -  (copy[ 3] * copy[ 8] * copy[13])  +  (copy[ 0] * copy[11] * copy[13])  +  (copy[ 1] * copy[ 8] * copy[15])  -  (copy[ 0] * copy[ 9] * copy[15])) / det;
+            _coeff[13] = ((-copy[ 2] * copy[ 9] * copy[12])  +  (copy[ 1] * copy[10] * copy[12])  +  (copy[ 2] * copy[ 8] * copy[13])  -  (copy[ 0] * copy[10] * copy[13])  -  (copy[ 1] * copy[ 8] * copy[14])  +  (copy[ 0] * copy[ 9] * copy[14])) / det;
 
-            _coeff[ 2] = (-copy[ 3] * copy[ 6] * copy[13]  +  copy[ 2] * copy[ 7] * copy[13]  +  copy[ 3] * copy[ 5] * copy[14]  -  copy[ 1] * copy[ 7] * copy[14]  -  copy[ 2] * copy[ 5] * copy[15]  +  copy[ 1] * copy[ 6] * copy[15]) / det;
-            _coeff[ 6] = ( copy[ 3] * copy[ 6] * copy[12]  -  copy[ 2] * copy[ 7] * copy[12]  -  copy[ 3] * copy[ 4] * copy[14]  +  copy[ 0] * copy[ 7] * copy[14]  +  copy[ 2] * copy[ 4] * copy[15]  -  copy[ 0] * copy[ 6] * copy[15]) / det;
-            _coeff[10] = (-copy[ 3] * copy[ 5] * copy[12]  +  copy[ 1] * copy[ 7] * copy[12]  +  copy[ 3] * copy[ 4] * copy[13]  -  copy[ 0] * copy[ 7] * copy[13]  -  copy[ 1] * copy[ 4] * copy[15]  +  copy[ 0] * copy[ 5] * copy[15]) / det;
-            _coeff[14] = ( copy[ 2] * copy[ 5] * copy[12]  -  copy[ 1] * copy[ 6] * copy[12]  -  copy[ 2] * copy[ 4] * copy[13]  +  copy[ 0] * copy[ 6] * copy[13]  +  copy[ 1] * copy[ 4] * copy[14]  -  copy[ 0] * copy[ 5] * copy[14]) / det;
+            _coeff[ 2] = ((-copy[ 3] * copy[ 6] * copy[13])  +  (copy[ 2] * copy[ 7] * copy[13])  +  (copy[ 3] * copy[ 5] * copy[14])  -  (copy[ 1] * copy[ 7] * copy[14])  -  (copy[ 2] * copy[ 5] * copy[15])  +  (copy[ 1] * copy[ 6] * copy[15])) / det;
+            _coeff[ 6] = (( copy[ 3] * copy[ 6] * copy[12])  -  (copy[ 2] * copy[ 7] * copy[12])  -  (copy[ 3] * copy[ 4] * copy[14])  +  (copy[ 0] * copy[ 7] * copy[14])  +  (copy[ 2] * copy[ 4] * copy[15])  -  (copy[ 0] * copy[ 6] * copy[15])) / det;
+            _coeff[10] = ((-copy[ 3] * copy[ 5] * copy[12])  +  (copy[ 1] * copy[ 7] * copy[12])  +  (copy[ 3] * copy[ 4] * copy[13])  -  (copy[ 0] * copy[ 7] * copy[13])  -  (copy[ 1] * copy[ 4] * copy[15])  +  (copy[ 0] * copy[ 5] * copy[15])) / det;
+            _coeff[14] = (( copy[ 2] * copy[ 5] * copy[12])  -  (copy[ 1] * copy[ 6] * copy[12])  -  (copy[ 2] * copy[ 4] * copy[13])  +  (copy[ 0] * copy[ 6] * copy[13])  +  (copy[ 1] * copy[ 4] * copy[14])  -  (copy[ 0] * copy[ 5] * copy[14])) / det;
 
-            _coeff[ 3] = ( copy[ 3] * copy[ 6] * copy[ 9]  -  copy[ 2] * copy[ 7] * copy[ 9]  -  copy[ 3] * copy[ 5] * copy[10]  +  copy[ 1] * copy[ 7] * copy[10]  +  copy[ 2] * copy[ 5] * copy[11]  -  copy[ 1] * copy[ 6] * copy[11]) / det;
-            _coeff[ 7] = (-copy[ 3] * copy[ 6] * copy[ 8]  +  copy[ 2] * copy[ 7] * copy[ 8]  +  copy[ 3] * copy[ 4] * copy[10]  -  copy[ 0] * copy[ 7] * copy[10]  -  copy[ 2] * copy[ 4] * copy[11]  +  copy[ 0] * copy[ 6] * copy[11]) / det;
-            _coeff[11] = ( copy[ 3] * copy[ 5] * copy[ 8]  -  copy[ 1] * copy[ 7] * copy[ 8]  -  copy[ 3] * copy[ 4] * copy[ 9]  +  copy[ 0] * copy[ 7] * copy[ 9]  +  copy[ 1] * copy[ 4] * copy[11]  -  copy[ 0] * copy[ 5] * copy[11]) / det;
-            _coeff[15] = (-copy[ 2] * copy[ 5] * copy[ 8]  +  copy[ 1] * copy[ 6] * copy[ 8]  +  copy[ 2] * copy[ 4] * copy[ 9]  -  copy[ 0] * copy[ 6] * copy[ 9]  -  copy[ 1] * copy[ 4] * copy[10]  +  copy[ 0] * copy[ 5] * copy[10]) / det;
+            _coeff[ 3] = (( copy[ 3] * copy[ 6] * copy[ 9])  -  (copy[ 2] * copy[ 7] * copy[ 9])  -  (copy[ 3] * copy[ 5] * copy[10])  +  (copy[ 1] * copy[ 7] * copy[10])  +  (copy[ 2] * copy[ 5] * copy[11])  -  (copy[ 1] * copy[ 6] * copy[11])) / det;
+            _coeff[ 7] = ((-copy[ 3] * copy[ 6] * copy[ 8])  +  (copy[ 2] * copy[ 7] * copy[ 8])  +  (copy[ 3] * copy[ 4] * copy[10])  -  (copy[ 0] * copy[ 7] * copy[10])  -  (copy[ 2] * copy[ 4] * copy[11])  +  (copy[ 0] * copy[ 6] * copy[11])) / det;
+            _coeff[11] = (( copy[ 3] * copy[ 5] * copy[ 8])  -  (copy[ 1] * copy[ 7] * copy[ 8])  -  (copy[ 3] * copy[ 4] * copy[ 9])  +  (copy[ 0] * copy[ 7] * copy[ 9])  +  (copy[ 1] * copy[ 4] * copy[11])  -  (copy[ 0] * copy[ 5] * copy[11])) / det;
+            _coeff[15] = ((-copy[ 2] * copy[ 5] * copy[ 8])  +  (copy[ 1] * copy[ 6] * copy[ 8])  +  (copy[ 2] * copy[ 4] * copy[ 9])  -  (copy[ 0] * copy[ 6] * copy[ 9])  -  (copy[ 1] * copy[ 4] * copy[10])  +  (copy[ 0] * copy[ 5] * copy[10])) / det;
             // clang-format on
         }
     }

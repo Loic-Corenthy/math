@@ -1,0 +1,181 @@
+#include "algebra/Matrix.hpp"
+#include "algebra/MultiplicationLarge.hpp"
+
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/catch_approx.hpp>
+#include <catch2/benchmark/catch_benchmark.hpp>
+#include <catch2/matchers/catch_matchers_floating_point.hpp>
+
+#include <iostream>
+#include <random>
+#include <memory>
+
+using LCNS::Algebra::Matrix;
+using LCNS::Algebra::multiply_concurrently;
+
+#ifdef AVX_ENABLED_ON_CPU
+using LCNS::Algebra::multiply_simd;
+#endif
+
+using Catch::Matchers::WithinAbs;
+
+using namespace std;
+
+class BenchmarkFixture
+{
+public:
+    BenchmarkFixture()
+    : _gen(_rd())
+    {
+        cout << "CTEST_FULL_OUTPUT\n";
+    }
+
+    size_t random_row_index(size_t row_count)
+    {
+        static uniform_int_distribution<> dis(0, row_count - 1);
+
+        return static_cast<size_t>(dis(_gen));
+    }
+
+    size_t random_col_index(size_t col_count)
+    {
+        static uniform_int_distribution<> dis(0, col_count - 1);
+
+        return static_cast<size_t>(dis(_gen));
+    }
+
+    template <size_t row_count, size_t col_count>
+    unique_ptr<Matrix<float, row_count, col_count>> get_randomly_initialized()
+    {
+        auto                        result = make_unique<Matrix<float, row_count, col_count>>();
+        uniform_real_distribution<> dis(0.0f, 1.0f);
+
+        generate(result->data(), result->data() + row_count * col_count, [&]() { return dis(_gen); });
+
+        return result;
+    }
+
+    template <size_t row_count, size_t col_count>
+    void perform_random_checks(const Matrix<float, row_count, col_count>& lhs,
+                               const Matrix<float, row_count, col_count>& rhs,
+                               size_t                                     test_count = 100)
+    {
+        for (size_t i = 0; i < test_count; ++i)
+        {
+            const auto row_idx = random_row_index(row_count);
+            const auto col_idx = random_col_index(col_count);
+            CHECK_THAT(lhs(row_idx, col_idx), WithinAbs(rhs(row_idx, col_idx), 1e-3));
+        }
+    }
+
+private:
+    random_device _rd;
+    mt19937       _gen;
+};
+
+
+TEST_CASE_METHOD(BenchmarkFixture, "Multiplication 256", "[benchmark][matrix][large][256]")
+{
+    constexpr size_t lhs_row_count = 256;
+    constexpr size_t lhs_col_count = 512;
+    constexpr size_t rhs_row_count = lhs_col_count;
+    constexpr size_t rhs_col_count = 126;
+
+    const auto lhs = get_randomly_initialized<lhs_row_count, lhs_col_count>();
+    const auto rhs = get_randomly_initialized<rhs_row_count, rhs_col_count>();
+
+    Matrix<float, lhs_row_count, rhs_col_count> res1;
+    BENCHMARK("Simple multiplication")
+    {
+        res1 = (*lhs) * (*rhs);
+
+        return 0;
+    };
+
+    Matrix<float, lhs_row_count, rhs_col_count> res2;
+    BENCHMARK("Multithreaded multiplication")
+    {
+        res2 = multiply_concurrently(*lhs, *rhs);
+
+        return 0;
+    };
+    perform_random_checks<lhs_row_count, rhs_col_count>(res1, res2);
+
+#ifdef AVX_ENABLED_ON_CPU
+    Matrix<float, lhs_row_count, rhs_col_count> res3;
+    BENCHMARK("Simd multiplication")
+    {
+        res3 = multiply_simd(*lhs, *rhs);
+
+        return 0;
+    };
+    perform_random_checks<lhs_row_count, rhs_col_count>(res1, res3);
+
+    Matrix<float, lhs_row_count, rhs_col_count> res4;
+    BENCHMARK("Multithreaded and simd multiplication")
+    {
+        res4 = multiply_concurrently_simd(*lhs, *rhs);
+
+        return 0;
+    };
+    perform_random_checks<lhs_row_count, rhs_col_count>(res1, res4);
+#endif
+}
+
+
+TEST_CASE_METHOD(BenchmarkFixture, "Multiplication multithreading 1000", "[benchmark][matrix][large][1000]")
+{
+    constexpr size_t lhs_row_count = 1000u;
+    constexpr size_t lhs_col_count = 1000u;
+    constexpr size_t rhs_row_count = lhs_col_count;
+    constexpr size_t rhs_col_count = 1000u;
+
+    const auto lhs = get_randomly_initialized<lhs_row_count, lhs_col_count>();
+    const auto rhs = get_randomly_initialized<rhs_row_count, rhs_col_count>();
+
+    BENCHMARK("Multithreading multiplication")
+    {
+        [[maybe_unused]] const auto res = multiply_concurrently(*lhs, *rhs);
+
+        return 0;
+    };
+}
+
+#ifdef AVX_ENABLED_ON_CPU
+TEST_CASE_METHOD(BenchmarkFixture, "Multiplication simd 1000", "[benchmark][matrix][large][1000]")
+{
+    constexpr size_t lhs_row_count = 1000u;
+    constexpr size_t lhs_col_count = 1000u;
+    constexpr size_t rhs_row_count = lhs_col_count;
+    constexpr size_t rhs_col_count = 1000u;
+
+    const auto lhs = get_randomly_initialized<lhs_row_count, lhs_col_count>();
+    const auto rhs = get_randomly_initialized<rhs_row_count, rhs_col_count>();
+
+    BENCHMARK("Simd multiplication")
+    {
+        [[maybe_unused]] const auto res = multiply_simd(*lhs, *rhs);
+
+        return 0;
+    };
+}
+
+
+TEST_CASE_METHOD(BenchmarkFixture, "Multiplication multithreading and simd 1000", "[benchmark][matrix][large][1000]")
+{
+    constexpr size_t lhs_row_count = 1000u;
+    constexpr size_t lhs_col_count = 1000u;
+    constexpr size_t rhs_row_count = lhs_col_count;
+    constexpr size_t rhs_col_count = 1000u;
+
+    const auto lhs = get_randomly_initialized<lhs_row_count, lhs_col_count>();
+    const auto rhs = get_randomly_initialized<rhs_row_count, rhs_col_count>();
+
+    BENCHMARK("Multithreading and simd multiplication")
+    {
+        [[maybe_unused]] const auto res = multiply_concurrently_simd(*lhs, *rhs);
+
+        return 0;
+    };
+}
+#endif
