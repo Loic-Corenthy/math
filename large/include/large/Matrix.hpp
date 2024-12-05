@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <iostream>
 
 namespace LCNS::Large
 {
@@ -15,6 +16,10 @@ namespace LCNS::Large
         unsigned int row_count() const;
         unsigned int col_count() const;
 
+        const float* data() const;
+
+        Matrix transpose() const;
+
     private:
         std::vector<float> _coeff = {};
 
@@ -23,3 +28,5 @@ namespace LCNS::Large
     };
 
 }  // namespace LCNS::Large
+
+std::ostream& operator<<(std::ostream& os, const LCNS::Large::Matrix& m);

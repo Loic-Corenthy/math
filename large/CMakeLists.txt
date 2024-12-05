@@ -13,6 +13,8 @@ target_include_directories(lcnsLargeMatrix PUBLIC "include")
 
 target_compile_features(lcnsLargeMatrix PUBLIC cxx_std_20)
 
+target_compile_options(lcnsLargeMatrix PUBLIC -mavx2)
+
 set_target_properties(lcnsLargeMatrix PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(lcnsLargeMatrix PROPERTIES CXX_EXTENSIONS OFF)
 
