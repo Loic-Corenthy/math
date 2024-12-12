@@ -5,6 +5,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <array>
+#include <thread>
 
 using LCNS::Large::Matrix;
 
@@ -78,4 +79,10 @@ Matrix LCNS::Large::multiply_simd(const Matrix& lhs, const Matrix& rhs)
     }
 
     return result;
+}
+
+Matrix LCNS::Large::multiply_concurrently([[maybe_unused]] const Matrix& lhs,[[maybe_unused]]  const Matrix& rhs)
+{
+    std::cout << std::thread::hardware_concurrency() << '\n';
+    return Matrix(1,1);
 }
