@@ -6,10 +6,53 @@
 #include <cstdlib>
 #include <array>
 #include <thread>
+#include <vector>
+#include <span>
 
 using LCNS::Large::Matrix;
 
+using std::dynamic_extent;
+using std::ref;
 using std::runtime_error;
+using std::size_t;
+using std::span;
+using std::thread;
+using std::vector;
+
+namespace
+{
+    float dot_product(span<const float, dynamic_extent> row, span<const float, dynamic_extent> col)
+    {
+        float result = 0.0f;
+
+        auto row_begin = row.begin();
+        auto col_begin = col.begin();
+
+        while (row_begin != row.end())
+        {
+            result += (*row_begin) * (*col_begin);
+            row_begin++;
+            col_begin++;
+        }
+
+        return result;
+    }
+
+    void process_rows(size_t thread_index, int count, const Matrix& lhs, const Matrix& rhs_transposed, Matrix& result)
+    {
+        const auto row_end = thread_index + count;
+        for (size_t i = thread_index; i < row_end; ++i)
+        {
+            for (size_t j = 0; j < rhs_transposed.row_count(); j++)
+            {
+                result(i, j) = dot_product(
+                span(lhs.data() + i * lhs.col_count(), lhs.data() + (i + 1) * lhs.col_count()),
+                span(rhs_transposed.data() + j * rhs_transposed.row_count(), rhs_transposed.data() + (j + 1) * rhs_transposed.row_count()));
+            }
+        }
+    }
+}  // namespace
+
 
 Matrix LCNS::Large::multiply_classic(const Matrix& lhs, const Matrix& rhs)
 {
@@ -62,7 +105,7 @@ Matrix LCNS::Large::multiply_simd(const Matrix& lhs, const Matrix& rhs)
 
             if (division.rem != 0)
             {
-                __m256 lhs_chunk = _mm256_loadu_ps(lhs.data() + i * lhs.col_count() + 8 * division.quot );
+                __m256 lhs_chunk = _mm256_loadu_ps(lhs.data() + i * lhs.col_count() + 8 * division.quot);
                 __m256 rhs_chunk = _mm256_loadu_ps(rhs_transposed.data() + j * rhs_transposed.col_count() + 8 * division.quot);
 
                 __m256 multiplications = _mm256_mul_ps(lhs_chunk, rhs_chunk);
@@ -81,8 +124,28 @@ Matrix LCNS::Large::multiply_simd(const Matrix& lhs, const Matrix& rhs)
     return result;
 }
 
-Matrix LCNS::Large::multiply_concurrently([[maybe_unused]] const Matrix& lhs,[[maybe_unused]]  const Matrix& rhs)
+Matrix LCNS::Large::multiply_concurrently([[maybe_unused]] const Matrix& lhs, [[maybe_unused]] const Matrix& rhs)
 {
-    std::cout << std::thread::hardware_concurrency() << '\n';
-    return Matrix(1,1);
+    const Matrix rhs_transposed = rhs.transpose();
+    const auto   thread_count   = std::thread::hardware_concurrency();
+    const auto   repartition    = std::div(static_cast<int>(lhs.col_count()), static_cast<int>(thread_count));
+
+    const size_t real_thread_count = lhs.row_count() < thread_count ? lhs.row_count() : thread_count;
+    const int row_per_thread_count = repartition.quot == 0 ? 1 : repartition.quot;
+
+    vector<thread> row_threads;
+    row_threads.reserve(real_thread_count);
+    Matrix         result(lhs.row_count(), rhs.col_count());
+
+    for (size_t i = 0; i < real_thread_count; ++i)
+    {
+        row_threads.emplace_back(process_rows, i, row_per_thread_count, ref(lhs), ref(rhs_transposed), ref(result));
+    }
+
+    for (auto& thread : row_threads)
+    {
+        thread.join();
+    }
+
+    return result;
 }
