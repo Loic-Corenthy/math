@@ -55,6 +55,7 @@ TEST_CASE_METHOD(BenchmarkFixture, "Multiplication", "[benchmark][matrix][large]
 {
     Matrix res1(256, 126);
     Matrix res2(256, 126);
+    Matrix res3(256, 126);
 
     vector<float> test_data1;
     vector<float> test_data2;
@@ -73,10 +74,18 @@ TEST_CASE_METHOD(BenchmarkFixture, "Multiplication", "[benchmark][matrix][large]
         return 0;
     };
 
+    BENCHMARK("Multithreaded multiplication")
+    {
+        res3 = multiply_concurrently(lhs, rhs);
+
+        return 0;
+    };
+
     for (size_t i = 0; i < 100; ++i)
     {
         const auto row_idx = rand_index_row();
         const auto col_idx = rand_index_col();
         CHECK_THAT(res1(row_idx, col_idx), WithinAbs(res2(row_idx, col_idx), 1e-3));
+        CHECK_THAT(res1(row_idx, col_idx), WithinAbs(res3(row_idx, col_idx), 1e-3));
     }
 }
