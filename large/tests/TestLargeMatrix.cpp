@@ -142,14 +142,14 @@ TEST_CASE("Test multiplication with multithreading", "[test][matrix][large][thre
 {
     cout << "CTEST_FULL_OUTPUT\n";
 
-    Matrix lhs(21,21, true);
-    Matrix rhs(21, 21, true);
+    Matrix lhs(171,229, true);
+    Matrix rhs(229,35, true);
 
     cout << "lhs is " << lhs.row_count() << " x " << lhs.col_count() << '\n';
     cout << "rhs is " << rhs.row_count() << " x " << rhs.col_count() << '\n';
 
-    cout << "lhs is\n" << lhs << '\n';
-    cout << "rhs is\n" << rhs << '\n';
+    // cout << "lhs is\n" << lhs << '\n';
+    // cout << "rhs is\n" << rhs << '\n';
 
     const auto res1 = multiply_classic(lhs, rhs);
     const auto res2 = multiply_concurrently(lhs, rhs);
@@ -160,8 +160,8 @@ TEST_CASE("Test multiplication with multithreading", "[test][matrix][large][thre
     CHECK(res1.row_count() == lhs.row_count());
     CHECK(res1.col_count() == rhs.col_count());
 
-    cout << "The result of classic multiplication is\n" << res1 << '\n';
-    cout << "The result of threads multiplication is\n" << res2 << '\n';
+    // cout << "The result of classic multiplication is\n" << res1 << '\n';
+    // cout << "The result of threads multiplication is\n" << res2 << '\n';
 
     for (size_t i = 0u; i < res1.row_count(); ++i)
     {

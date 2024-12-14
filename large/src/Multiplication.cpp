@@ -47,7 +47,7 @@ namespace
             {
                 result(i, j) = dot_product(
                 span(lhs.data() + i * lhs.col_count(), lhs.data() + (i + 1) * lhs.col_count()),
-                span(rhs_transposed.data() + j * rhs_transposed.row_count(), rhs_transposed.data() + (j + 1) * rhs_transposed.row_count()));
+                span(rhs_transposed.data() + j * rhs_transposed.col_count(), rhs_transposed.data() + (j + 1) * rhs_transposed.col_count()));
             }
         }
     }
@@ -128,18 +128,27 @@ Matrix LCNS::Large::multiply_concurrently([[maybe_unused]] const Matrix& lhs, [[
 {
     const Matrix rhs_transposed = rhs.transpose();
     const auto   thread_count   = std::thread::hardware_concurrency();
-    const auto   repartition    = std::div(static_cast<int>(lhs.col_count()), static_cast<int>(thread_count));
+    const auto   repartition    = std::div(static_cast<int>(lhs.row_count()), static_cast<int>(thread_count));
 
-    const size_t real_thread_count = lhs.row_count() < thread_count ? lhs.row_count() : thread_count;
-    const int row_per_thread_count = repartition.quot == 0 ? 1 : repartition.quot;
+    const size_t real_thread_count    = lhs.row_count() < thread_count ? lhs.row_count() : thread_count;
+    const auto   row_per_thread_count = repartition.quot == 0 ? 1u : static_cast<size_t>(repartition.quot);
 
     vector<thread> row_threads;
     row_threads.reserve(real_thread_count);
-    Matrix         result(lhs.row_count(), rhs.col_count());
+    Matrix result(lhs.row_count(), rhs.col_count());
 
     for (size_t i = 0; i < real_thread_count; ++i)
     {
-        row_threads.emplace_back(process_rows, i, row_per_thread_count, ref(lhs), ref(rhs_transposed), ref(result));
+        row_threads.emplace_back(
+        process_rows, i * row_per_thread_count, row_per_thread_count, ref(lhs), ref(rhs_transposed), ref(result));
+    }
+
+    if (real_thread_count == thread_count && repartition.quot != 0)
+    {
+        for (size_t i = 0; i < static_cast<size_t>(repartition.rem); ++i)
+        {
+            row_threads.emplace_back(process_rows, row_per_thread_count * real_thread_count + i, 1, ref(lhs), ref(rhs_transposed), ref(result));
+        }
     }
 
     for (auto& thread : row_threads)
