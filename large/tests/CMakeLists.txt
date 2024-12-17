@@ -9,7 +9,8 @@ target_sources(testLargeMatrix
 add_test(NAME "Test large matrix (basic)" COMMAND "$<TARGET_FILE:testLargeMatrix>" "[test][matrix][large][basic]")
 add_test(NAME "Test large matrix (simd)" COMMAND "$<TARGET_FILE:testLargeMatrix>" "[test][matrix][large][simd]")
 add_test(NAME "Test large matrix (multithreading)" COMMAND "$<TARGET_FILE:testLargeMatrix>" "[test][matrix][large][threads]")
-add_test(NAME "Benchmark large matrix" COMMAND "$<TARGET_FILE:testLargeMatrix>" "[benchmark][matrix][large]")
+add_test(NAME "Benchmark large matrix with 256 rows" COMMAND "$<TARGET_FILE:testLargeMatrix>" "[benchmark][matrix][large][256]")
+add_test(NAME "Benchmark large matrix with 1000 rows" COMMAND "$<TARGET_FILE:testLargeMatrix>" "[benchmark][matrix][large][1000]")
 
 ####################################
 # Setup common to all test targets #
