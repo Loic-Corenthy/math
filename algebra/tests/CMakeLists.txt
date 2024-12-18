@@ -62,10 +62,24 @@ target_sources(testMapping
 add_test(NAME "Test mapping functions" COMMAND "$<TARGET_FILE:testMapping>" "[algebra][mapping]")
 
 
+########################
+# Multiplication Large #
+########################
+
+add_executable(testMultiplicationLarge)
+
+target_sources(testMultiplicationLarge
+    PRIVATE
+        "TestMultiplicationLarge.cpp"
+)
+
+add_test(NAME "Test multiplication with multithreading" COMMAND "$<TARGET_FILE:testMultiplicationLarge>" "[test][algebra][multiplication][multithreading]")
+
+
 ####################################
 # Setup common to all test targets #
 ####################################
-set(ALL_TEST_TARGETS testVector testMatrix testQuaternion testMapping)
+set(ALL_TEST_TARGETS testVector testMatrix testQuaternion testMapping testMultiplicationLarge)
 
 foreach(TEST_TARGET IN LISTS ALL_TEST_TARGETS)
     target_link_libraries(${TEST_TARGET} PRIVATE lcns::algebra Catch2::Catch2WithMain)

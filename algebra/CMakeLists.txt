@@ -7,6 +7,7 @@ target_sources(lcnsAlgebra
         "include/algebra/Matrix.hpp"
         "include/algebra/Quaternion.hpp"
         "include/algebra/MappingFunctions.hpp"
+        "include/algebra/MultiplicationLarge.hpp"
         "include/algebra/Algebra.hpp"
 )
 
