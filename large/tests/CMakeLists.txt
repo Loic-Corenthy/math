@@ -11,6 +11,7 @@ add_test(NAME "Test large matrix (simd)" COMMAND "$<TARGET_FILE:testLargeMatrix>
 add_test(NAME "Test large matrix (multithreading)" COMMAND "$<TARGET_FILE:testLargeMatrix>" "[test][matrix][large][threads]")
 add_test(NAME "Benchmark large matrix with 256 rows" COMMAND "$<TARGET_FILE:testLargeMatrix>" "[benchmark][matrix][large][256]")
 add_test(NAME "Benchmark large matrix with 1000 rows" COMMAND "$<TARGET_FILE:testLargeMatrix>" "[benchmark][matrix][large][1000]")
+add_test(NAME "Find thresholds" COMMAND "$<TARGET_FILE:testLargeMatrix>" "[test][matrix][large][threshold]")
 
 ####################################
 # Setup common to all test targets #

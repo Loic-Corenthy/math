@@ -142,8 +142,8 @@ TEST_CASE("Test multiplication with multithreading", "[test][matrix][large][thre
 {
     cout << "CTEST_FULL_OUTPUT\n";
 
-    Matrix lhs(171,229, true);
-    Matrix rhs(229,35, true);
+    Matrix lhs(171, 229, true);
+    Matrix rhs(229, 35, true);
 
     cout << "lhs is " << lhs.row_count() << " x " << lhs.col_count() << '\n';
     cout << "rhs is " << rhs.row_count() << " x " << rhs.col_count() << '\n';
@@ -169,5 +169,34 @@ TEST_CASE("Test multiplication with multithreading", "[test][matrix][large][thre
         {
             CHECK_THAT(res1(i, j), WithinAbs(res2(i, j), 1e-6));
         }
+    }
+}
+
+
+TEST_CASE("Test when it's worth it", "[test][matrix][large][threshold]")
+{
+    cout << "CTEST_FULL_OUTPUT\n";
+
+    for (unsigned int size = 4; size < 128; size += 4)
+    {
+        Matrix lhs(size, size, true);
+        Matrix rhs(size, size, true);
+
+        const auto start_classic = std::chrono::steady_clock::now();
+        const auto res1          = multiply_classic(lhs, rhs);
+        const auto end_classic   = std::chrono::steady_clock::now();
+
+        const auto start_concurently = std::chrono::steady_clock::now();
+        const auto res2              = multiply_concurrently(lhs, rhs);
+        const auto end_concurently   = std::chrono::steady_clock::now();
+
+
+        cout << "For matrices of size " << size
+             << " the classic implementation took " << std::chrono::duration_cast<std::chrono::microseconds>(end_classic - start_classic).count()
+             << " and the multithreading implementation took "<< std::chrono::duration_cast<std::chrono::microseconds>(end_concurently - start_concurently).count()
+             << '\n';
+
+        CHECK(res1.row_count() == res2.row_count());
+        CHECK(res1.col_count() == res2.col_count());
     }
 }
