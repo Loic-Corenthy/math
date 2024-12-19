@@ -10,55 +10,52 @@
 namespace LCNS::Algebra
 {
     // template <Coordinate coordinate, unsigned int rows_lhs, unsigned int cols_lhs, unsigned int rows_rhs, unsigned int cols_rhs>
-    // Matrix multiply_classic(const Matrix& lhs, const Matrix& rhs)
-    // {
-    //     return {};
-    // }
-
-    // template <Coordinate coordinate, unsigned int rows_lhs, unsigned int cols_lhs, unsigned int rows_rhs, unsigned int cols_rhs>
     // Matrix multiply_simd(const Matrix& lhs, const Matrix& rhs)
     // {
     //     return {};
     // }
 
-    template <Coordinate coordinate>
-    float dot_product(std::span<const coordinate, std::dynamic_extent> row, std::span<const coordinate, std::dynamic_extent> col)
+    namespace impl_details
     {
-        float result = 0.0f;
-
-        auto row_it = row.begin();
-        auto col_it = col.begin();
-
-        while (row_it != row.end())
+        template <Coordinate coordinate>
+        float dot_product(std::span<const coordinate, std::dynamic_extent> row, std::span<const coordinate, std::dynamic_extent> col)
         {
-            result += (*row_it) * (*col_it);
-            row_it++;
-            col_it++;
+            float result = 0.0f;
+
+            auto row_it = row.begin();
+            auto col_it = col.begin();
+
+            while (row_it != row.end())
+            {
+                result += (*row_it) * (*col_it);
+                row_it++;
+                col_it++;
+            }
+
+            return result;
         }
 
-        return result;
-    }
-
-    template <Coordinate coordinate, unsigned int lhs_rows, unsigned int lhs_cols, unsigned int rhs_rows, unsigned int rhs_cols>
-    void process_rows(size_t                                        thread_index,
-                      int                                           count,
-                      const Matrix<coordinate, lhs_rows, lhs_cols>& lhs,
-                      const Matrix<coordinate, rhs_cols, rhs_rows>& rhs_transposed,
-                      Matrix<coordinate, lhs_rows, rhs_cols>&       result)
-    {
-        const auto row_end = thread_index + count;
-        for (size_t i = thread_index; i < row_end; ++i)
+        template <Coordinate coordinate, unsigned int lhs_rows, unsigned int lhs_cols, unsigned int rhs_rows, unsigned int rhs_cols>
+        void process_rows(size_t                                        thread_index,
+                          int                                           count,
+                          const Matrix<coordinate, lhs_rows, lhs_cols>& lhs,
+                          const Matrix<coordinate, rhs_cols, rhs_rows>& rhs_transposed,
+                          Matrix<coordinate, lhs_rows, rhs_cols>&       result)
         {
-            // Note, because rhs is transposed, rhs_cols is "rhs_transposed row count"
-            // and rhs_rows is "rhs_transposed col count"
-            for (size_t j = 0; j < rhs_cols; j++)
+            const auto row_end = thread_index + count;
+            for (size_t i = thread_index; i < row_end; ++i)
             {
-                result(i, j) = dot_product(
-                std::span(lhs.data() + i * lhs_cols, lhs.data() + (i + 1) * lhs_cols),
-                std::span(rhs_transposed.data() + j * rhs_rows, rhs_transposed.data() + (j + 1) * rhs_rows));
+                // Note, because rhs is transposed, rhs_cols is "rhs_transposed row count"
+                // and rhs_rows is "rhs_transposed col count"
+                for (size_t j = 0; j < rhs_cols; j++)
+                {
+                    result(i, j) = dot_product(std::span(lhs.data() + i * lhs_cols, lhs.data() + (i + 1) * lhs_cols),
+                                               std::span(rhs_transposed.data() + j * rhs_rows, rhs_transposed.data() + (j + 1) * rhs_rows));
+                }
             }
         }
-    }
+    }  // namespace impl_details
+
 
     template <Coordinate coordinate, unsigned int lhs_rows, unsigned int lhs_cols, unsigned int rhs_rows, unsigned int rhs_cols>
     Matrix<coordinate, lhs_rows, rhs_cols> multiply_concurrently(const Matrix<coordinate, lhs_rows, lhs_cols>& lhs,
@@ -77,7 +74,7 @@ namespace LCNS::Algebra
 
         for (size_t i = 0; i < real_thread_count; ++i)
         {
-            row_threads.emplace_back(process_rows<coordinate, lhs_rows, lhs_cols, rhs_rows, rhs_cols>,
+            row_threads.emplace_back(impl_details::process_rows<coordinate, lhs_rows, lhs_cols, rhs_rows, rhs_cols>,
                                      i * row_per_thread_count,
                                      row_per_thread_count,
                                      std::ref(lhs),
@@ -89,7 +86,7 @@ namespace LCNS::Algebra
         {
             for (size_t i = 0; i < static_cast<size_t>(repartition.rem); ++i)
             {
-                row_threads.emplace_back(process_rows<coordinate, lhs_rows, lhs_cols, rhs_rows, rhs_cols>,
+                row_threads.emplace_back(impl_details::process_rows<coordinate, lhs_rows, lhs_cols, rhs_rows, rhs_cols>,
                                          row_per_thread_count * real_thread_count + i,
                                          1,
                                          std::ref(lhs),
