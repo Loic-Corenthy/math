@@ -4,49 +4,68 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_approx.hpp>
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
+#include <catch2/catch_template_test_macros.hpp>
 
 #include <iostream>
 #include <random>
 #include <algorithm>
+#include <type_traits>
 
 using LCNS::Algebra::Matrix;
 using LCNS::Algebra::multiply_concurrently;
 
 using Catch::Matchers::WithinAbs;
 
+using TestTypes = std::tuple<short, int, long, float, double>;
+
 using namespace std;
 
-template <Coordinate coordinate, unsigned int rows, unsigned int cols>
-Matrix<coordinate, rows, cols> generate_random_matrix()
+namespace
 {
-    Matrix<coordinate, rows, cols> result;
+    template <Coordinate coordinate, unsigned int rows, unsigned int cols>
+    Matrix<coordinate, rows, cols> generate_random_matrix(coordinate min, coordinate max)
+    {
+        Matrix<coordinate, rows, cols> result;
 
-    std::random_device               rd;
-    std::mt19937                     gen(rd());
-    std::uniform_real_distribution<> dis(0.0f, 1.0f);
+        std::random_device rd;
+        std::mt19937       gen(rd());
 
-    std::generate(result.data(), result.data() + rows * cols, [&]() { return dis(gen); });
+        if constexpr (is_integral_v<coordinate>)
+        {
+            std::uniform_int_distribution<> dis(min, max);
+            std::generate(result.data(), result.data() + rows * cols, [&]() { return static_cast<coordinate>(dis(gen)); });
+        }
+        else
+        {
+            std::uniform_real_distribution<> dis(min, max);
+            std::generate(result.data(), result.data() + rows * cols, [&]() { return static_cast<coordinate>(dis(gen)); });
+        }
 
-    return result;
+        return result;
+    }
 }
 
-TEST_CASE("Test multiplication with multithreading", "[test][algebra][multiplication][multithreading]")
+
+TEMPLATE_LIST_TEST_CASE("Test multiplication with multithreading", "[test][algebra][multiplication][multithreading]", TestTypes)
 {
     cout << "CTEST_FULL_OUTPUT\n";
 
-    const auto lhs = generate_random_matrix<float, 171, 229>();
-    const auto rhs = generate_random_matrix<float, 229, 35>();
+    const TestType min = 0;
+    const TestType max = is_floating_point_v<TestType> ? 1.0 : 10.0;
+
+    const auto lhs = generate_random_matrix<TestType, 171, 229>(min, max);
+    const auto rhs = generate_random_matrix<TestType, 229, 35>(min, max);
 
     const auto res1 = lhs * rhs;
 
-    const auto [lhs_rows, lhs_cols] = lhs.dimensions();
-    const auto [rhs_rows, rhs_cols] = rhs.dimensions();
+    const auto [lhs_rows, lhs_cols]   = lhs.dimensions();
+    const auto [rhs_rows, rhs_cols]   = rhs.dimensions();
     const auto [res1_rows, res1_cols] = res1.dimensions();
 
     CHECK(res1_rows == lhs_rows);
     CHECK(res1_cols == rhs_cols);
 
-    const auto res2 = multiply_concurrently(lhs, rhs);
+    const auto res2                   = multiply_concurrently(lhs, rhs);
     const auto [res2_rows, res2_cols] = res2.dimensions();
 
     CHECK(res1_rows == res2_rows);
@@ -56,7 +75,14 @@ TEST_CASE("Test multiplication with multithreading", "[test][algebra][multiplica
     {
         for (size_t j = 0u; j < res1_cols; ++j)
         {
-            CHECK_THAT(res1(i, j), WithinAbs(res2(i, j), 1e-6));
+            if constexpr (is_integral_v<TestType>)
+            {
+                CHECK(res1(i, j) == res2(i, j));
+            }
+            else
+            {
+                CHECK_THAT(res1(i, j), WithinAbs(res2(i, j), 1e-4));
+            }
         }
     }
 }
