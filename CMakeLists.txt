@@ -18,6 +18,7 @@ list(APPEND CMAKE_MODULE_PATH "${catch2_SOURCE_DIR}/extras")
 # Add local CMake scripts
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
 include(run_clang_tidy_on_interface)
+include(CheckCPU)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 

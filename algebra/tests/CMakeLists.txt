@@ -74,6 +74,7 @@ target_sources(testMultiplicationLarge
 )
 
 add_test(NAME "Test multiplication with multithreading" COMMAND "$<TARGET_FILE:testMultiplicationLarge>" "[test][algebra][multiplication][multithreading]")
+add_test(NAME "Test multiplication with simd" COMMAND "$<TARGET_FILE:testMultiplicationLarge>" "[test][algebra][multiplication][simd]")
 
 
 ####################################

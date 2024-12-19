@@ -85,7 +85,7 @@ Matrix LCNS::Large::multiply_simd(const Matrix& lhs, const Matrix& rhs)
     }
 
     const Matrix rhs_transposed = rhs.transpose();
-    const auto   division       = std::div(lhs.col_count(), 8);
+    const auto   division       = std::div(lhs.col_count(), 16);
 
     Matrix result(lhs.row_count(), rhs.col_count());
     for (unsigned int i = 0; i < lhs.row_count(); ++i)
@@ -95,20 +95,21 @@ Matrix LCNS::Large::multiply_simd(const Matrix& lhs, const Matrix& rhs)
             float dot_product = 0.0f;
             for (int k = 0; k < division.quot; ++k)
             {
-                __m256 lhs_chunk = _mm256_loadu_ps(lhs.data() + i * lhs.col_count() + 8 * k);
-                __m256 rhs_chunk = _mm256_loadu_ps(rhs_transposed.data() + j * rhs_transposed.col_count() + 8 * k);
+                __m512 lhs_chunk = _mm512_loadu_ps(lhs.data() + i * lhs.col_count() + 16 * k);
+                __m512 rhs_chunk = _mm512_loadu_ps(rhs_transposed.data() + j * rhs_transposed.col_count() + 16 * k);
 
-                __m256 multiplications = _mm256_mul_ps(lhs_chunk, rhs_chunk);
+                __m512 multiplications = _mm512_mul_ps(lhs_chunk, rhs_chunk);
                 float* tmp             = reinterpret_cast<float*>(&multiplications);
-                dot_product += (tmp[0] + tmp[1] + tmp[2] + tmp[3] + tmp[4] + tmp[5] + tmp[6] + tmp[7]);
+                dot_product += (tmp[0] + tmp[1] + tmp[2]  + tmp[3]  + tmp[4]  + tmp[5]  + tmp[6]  + tmp[7] +
+                                tmp[8] + tmp[9] + tmp[10] + tmp[11] + tmp[12] + tmp[13] + tmp[14] + tmp[15]);
             }
 
             if (division.rem != 0)
             {
-                __m256 lhs_chunk = _mm256_loadu_ps(lhs.data() + i * lhs.col_count() + 8 * division.quot);
-                __m256 rhs_chunk = _mm256_loadu_ps(rhs_transposed.data() + j * rhs_transposed.col_count() + 8 * division.quot);
+                __m512 lhs_chunk = _mm512_loadu_ps(lhs.data() + i * lhs.col_count() + 16 * division.quot);
+                __m512 rhs_chunk = _mm512_loadu_ps(rhs_transposed.data() + j * rhs_transposed.col_count() + 16 * division.quot);
 
-                __m256 multiplications = _mm256_mul_ps(lhs_chunk, rhs_chunk);
+                __m512 multiplications = _mm512_mul_ps(lhs_chunk, rhs_chunk);
                 float* tmp             = reinterpret_cast<float*>(&multiplications);
 
                 for (int k = 0; k < division.rem; ++k)

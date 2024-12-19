@@ -15,6 +15,16 @@ target_include_directories(lcnsAlgebra INTERFACE "include")
 
 target_compile_features(lcnsAlgebra INTERFACE cxx_std_20)
 
+if (${AVX512_ENABLED_ON_CPU})
+  target_compile_options(lcnsAlgebra INTERFACE -mavx512f)
+  target_compile_definitions(lcnsAlgebra INTERFACE AVX_ENABLED_ON_CPU)
+  target_compile_definitions(lcnsAlgebra INTERFACE AVX512_ENABLED)
+elseif(${AVX2_ENABLED_ON_CPU})
+  target_compile_options(lcnsAlgebra INTERFACE -mavx2)
+  target_compile_definitions(lcnsAlgebra INTERFACE AVX_ENABLED_ON_CPU)
+  target_compile_definitions(lcnsAlgebra INTERFACE AVX2_ENABLED)
+endif()
+
 set_target_properties(lcnsAlgebra PROPERTIES LINKER_LANGUAGE CXX)
 set_target_properties(lcnsAlgebra PROPERTIES CXX_EXTENSIONS OFF)
 
