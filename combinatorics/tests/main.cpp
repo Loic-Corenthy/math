@@ -1,31 +1,32 @@
 #include <combinatorics/Permutations.hpp>
 
+#include <algorithm>
 #include <iostream>
 #include <vector>
-#include <algorithm>
+#include <span>
 
 using namespace std;
 
 template <typename Container>
-void printContainer(const Container& v)
+void printContainer(const Container& ctnr)
 {
-    for (const auto it : v)
+    for (const auto& val : ctnr)
     {
-        cout << it << " ";
+        cout << val << " ";
     }
-    cout << endl;
+    cout << '\n';
 }
 
 template <typename Container>
 void printListOfContainers(const Container& list)
 {
-    size_t i = 0;
+    size_t index = 0;
     for (const auto& container : list)
     {
-        cout << ++i << "\t[ ";
-        for (const auto it : container)
+        cout << ++index << "\t[ ";
+        for (const auto itr : container)
         {
-            cout << it << " ";
+            cout << itr << " ";
         }
         cout << "]\n";
     }
@@ -33,14 +34,16 @@ void printListOfContainers(const Container& list)
 
 int main(int argc, char* argv[])
 {
-    if (argc < 2)
+    const auto input_args = span(argv, argc);
+
+    if (input_args.size() < 2)
     {
         cout << "Usage:\n ./permutation 5";
         return EXIT_FAILURE;
     }
 
-    vector<int> integers(atoi(argv[1]));
-    std::generate(integers.begin(), integers.end(), [n = 0]() mutable { return n++; });
+    vector<int> integers(atoi(input_args[1]));
+    generate(integers.begin(), integers.end(), [num = 0]() mutable { return num++; });
 
     cout << "list of integers\n";
     printContainer(integers);

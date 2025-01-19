@@ -1,10 +1,13 @@
+#pragma once
+
 #include <concepts>
 
+// clang-format off
 template <typename T>
-concept Container = requires(T c)
+concept Container = requires(T container)
 {
-    // any `c` that is a Container
-    c.size();   // must have c.size()
-    c.begin();  // and c.begin()
-    c.end();    // and c.end()
+    container.size();   // must have c.size()
+    container.begin();  // and c.begin()
+    container.end();    // and c.end()
 };
+// clang-format on

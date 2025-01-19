@@ -15,8 +15,21 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(Catch2)
 list(APPEND CMAKE_MODULE_PATH "${catch2_SOURCE_DIR}/extras")
 
+# Add local CMake scripts
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
+include(run_clang_tidy_on_interface)
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # Make CTest available for targets
 include(CTest)
 
+# External programs
+find_program(CLANG_TIDY_EXE NAMES "clang-tidy" REQUIRED)
+
+# Add the different modules
 add_subdirectory(algebra)
 add_subdirectory(combinatorics)
+
+# Clean up
+file(REMOVE ${TMP_FILES_TO_DELETE})

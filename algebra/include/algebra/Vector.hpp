@@ -527,9 +527,9 @@ namespace LCNS::Algebra
     template <Coordinate coordinate, unsigned int size>
     constexpr bool Vector<coordinate, size>::isNull() const noexcept
     {
-        for (const auto& c : _coords)
+        for (const auto& coord : _coords)
         {
-            if (c != static_cast<coordinate>(0))
+            if (coord != static_cast<coordinate>(0))
             {
                 return false;
             }

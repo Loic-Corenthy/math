@@ -74,4 +74,11 @@ foreach(TEST_TARGET IN LISTS ALL_TEST_TARGETS)
 
     set_target_properties(${TEST_TARGET} PROPERTIES LINKER_LANGUAGE CXX)
     set_target_properties(${TEST_TARGET} PROPERTIES CXX_EXTENSIONS OFF)
+
+    target_compile_options(${TEST_TARGET}
+      PRIVATE
+        $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
+)
+
 endforeach()

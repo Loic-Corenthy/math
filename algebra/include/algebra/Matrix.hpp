@@ -162,11 +162,13 @@ namespace LCNS::Algebra
          * @param copy takes the coefficients of this matrix as a copy
          * @param det is the determinant of this matrix
          */
-        constexpr void _inverseImpl(std::array<coordinate, rows * cols> copy,
-                                    coordinate det) requires(rows == cols && (0 < rows && rows < 5) && std::is_floating_point_v<coordinate>);
+        constexpr void _inverseImpl(std::array<coordinate, rows * cols> copy, coordinate det)
+        requires(rows == cols && (0 < rows && rows < 5) && std::is_floating_point_v<coordinate>);
 
     private:
-        std::array<coordinate, rows* cols> _coeff = {};
+        std::array<coordinate, rows * cols> _coeff = {};
+
+        static constexpr double _epsilon = 1E-9;
 
         unsigned int _rows = rows;
         unsigned int _cols = cols;
@@ -181,8 +183,12 @@ namespace LCNS::Algebra
         const auto diag = std::min(_rows, _cols);
 
         for (unsigned int i = 0; i < diag; ++i)
+        {
             for (unsigned int j = 0; j < diag; ++j)
+            {
                 _coeff[_(i, j)] = (i == j) ? scalar : static_cast<coordinate>(0);
+            }
+        }
     }
 
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>
@@ -269,9 +275,9 @@ namespace LCNS::Algebra
     {
         static_assert(std::is_same_v<decltype(scalar), coordinate>);
 
-        for (auto& c : _coeff)
+        for (auto& coeff : _coeff)
         {
-            c *= scalar;
+            coeff *= scalar;
         }
 
         return *this;
@@ -287,9 +293,9 @@ namespace LCNS::Algebra
             throw std::runtime_error("Divide by zero");
         }
 
-        for (auto& c : _coeff)
+        for (auto& coeff : _coeff)
         {
-            c /= scalar;
+            coeff /= scalar;
         }
 
         return *this;
@@ -317,8 +323,12 @@ namespace LCNS::Algebra
     Matrix<coordinate, rows, cols>& Matrix<coordinate, rows, cols>::transpose() requires(rows == cols)
     {
         for (unsigned int i = 0; i < _rows; ++i)
+        {
             for (unsigned int j = i + 1; j < _cols; ++j)
+            {
                 std::swap(_coeff[_(i, j)], _coeff[_(j, i)]);
+            }
+        }
 
         return *this;
     }
@@ -329,8 +339,12 @@ namespace LCNS::Algebra
         Matrix<coordinate, cols, rows> result;
 
         for (unsigned int i = 0; i < _rows; ++i)
+        {
             for (unsigned int j = 0; j < _cols; ++j)
+            {
                 result(j, i) = _coeff[_(i, j)];
+            }
+        }
 
         return result;
     }
@@ -396,16 +410,18 @@ namespace LCNS::Algebra
         coordinate result = 0;
 
         for (unsigned int i = 0; i < rows; ++i)
+        {
             result += _coeff[_(i, i)];
+        }
 
         return result;
     }
 
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>
-    Matrix<coordinate, rows, cols>& Matrix<coordinate, rows, cols>::inverse() requires(rows == cols && (0 < rows && rows < 5)
-                                                                                       && std::is_floating_point_v<coordinate>)
+    Matrix<coordinate, rows, cols>& Matrix<coordinate, rows, cols>::inverse()
+    requires(rows == cols && (0 < rows && rows < 5) && std::is_floating_point_v<coordinate>)
     {
-        if (const auto det = determinant(); std::abs(det) > 0.000'000'001)
+        if (const auto det = determinant(); std::abs(det) > _epsilon)
         {
             _inverseImpl(_coeff, det);
         }
@@ -419,7 +435,7 @@ namespace LCNS::Algebra
     {
         Matrix<coordinate, rows, cols> result;
 
-        if (const auto det = determinant(); std::abs(det) > 0.000'000'001)
+        if (const auto det = determinant(); std::abs(det) > _epsilon)
         {
             result._inverseImpl(_coeff, det);
         }
@@ -430,9 +446,9 @@ namespace LCNS::Algebra
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>
     constexpr bool Matrix<coordinate, rows, cols>::isNull() const noexcept
     {
-        for (const auto& c : _coeff)
+        for (const auto& coeff : _coeff)
         {
-            if (c != static_cast<coordinate>(0))
+            if (coeff != static_cast<coordinate>(0))
             {
                 return false;
             }
@@ -442,15 +458,14 @@ namespace LCNS::Algebra
     }
 
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>
-    inline constexpr unsigned int Matrix<coordinate, rows, cols>::_(unsigned int i, unsigned int j) const
+    constexpr unsigned int Matrix<coordinate, rows, cols>::_(unsigned int i, unsigned int j) const
     {
         return i * _cols + j;
     }
 
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>
-    constexpr void Matrix<coordinate, rows, cols>::_inverseImpl(std::array<coordinate, rows * cols> copy,
-                                                                coordinate det) requires(rows == cols && (0 < rows && rows < 5)
-                                                                                         && std::is_floating_point_v<coordinate>)
+    constexpr void Matrix<coordinate, rows, cols>::_inverseImpl(std::array<coordinate, rows * cols> copy, coordinate det)
+    requires(rows == cols && (0 < rows && rows < 5) && std::is_floating_point_v<coordinate>)
     {
         if constexpr (rows == 1)
         {
@@ -514,8 +529,12 @@ namespace LCNS::Algebra
         Matrix<coordinate, rows, cols> result;
 
         for (size_t i = 0; i < rows; ++i)
+        {
             for (size_t j = 0; j < cols; ++j)
+            {
                 result(i, j) = lhs(i, j) * rhs;
+            }
+        }
 
         return result;
     }
@@ -526,8 +545,12 @@ namespace LCNS::Algebra
         Matrix<coordinate, rows, cols> result;
 
         for (size_t i = 0; i < rows; ++i)
+        {
             for (size_t j = 0; j < cols; ++j)
+            {
                 result(i, j) = lhs * rhs(i, j);
+            }
+        }
 
         return result;
     }
@@ -544,22 +567,32 @@ namespace LCNS::Algebra
         Matrix<coordinate, rows_lhs, cols_rhs> result;
 
         for (size_t i = 0; i < rows_lhs; ++i)
+        {
             for (size_t j = 0; j < cols_rhs; ++j)
+            {
                 for (size_t k = 0; k < cols_lhs; ++k)
+                {
                     result(i, j) += lhs(i, k) * rhs(k, j);
+                }
+            }
+        }
 
         return result;
     }
 
     template <Coordinate coordinate, unsigned int rows_lhs, unsigned int cols_lhs, unsigned int size_rhs>
-    constexpr Vector<coordinate, rows_lhs> operator*(const Matrix<coordinate, rows_lhs, cols_lhs>& lhs,
-                                                     const Vector<coordinate, size_rhs>&           rhs) requires(cols_lhs == size_rhs)
+    constexpr Vector<coordinate, rows_lhs> operator*(const Matrix<coordinate, rows_lhs, cols_lhs>& lhs, const Vector<coordinate, size_rhs>& rhs)
+    requires(cols_lhs == size_rhs)
     {
         Vector<coordinate, rows_lhs> result;
 
         for (size_t i = 0; i < rows_lhs; ++i)
+        {
             for (size_t j = 0; j < cols_lhs; ++j)
+            {
                 result[i] += lhs(i, j) * rhs[j];
+            }
+        }
 
         return result;
     }
@@ -575,25 +608,29 @@ namespace LCNS::Algebra
         Matrix<coordinate, rows, cols> result;
 
         for (size_t i = 0; i < rows; ++i)
+        {
             for (size_t j = 0; j < cols; ++j)
+            {
                 result(i, j) = lhs(i, j) / rhs;
+            }
+        }
 
         return result;
     }
 
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>
-    std::ostream& operator<<(std::ostream& os, const Matrix<coordinate, rows, cols>& m)
+    std::ostream& operator<<(std::ostream& output_stream, const Matrix<coordinate, rows, cols>& mat)
     {
         for (size_t i = 0; i < rows; ++i)
         {
             for (size_t j = 0; j < cols; ++j)
             {
-                os << std::setw(sizeof(coordinate)) << m(i, j) << " ";
+                output_stream << std::setw(sizeof(coordinate)) << mat(i, j) << " ";
             }
 
-            os << '\n';
+            output_stream << '\n';
         }
 
-        return os;
+        return output_stream;
     }
 }  // namespace LCNS::Algebra

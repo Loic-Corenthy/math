@@ -339,32 +339,32 @@ namespace LCNS::Algebra
     }
 
     template <Coordinate coordinate>
-    Quaternion<coordinate>& Quaternion<coordinate>::operator*=(auto scalar) noexcept
+    Quaternion<coordinate>& Quaternion<coordinate>::operator*=(auto rhs) noexcept
     {
-        static_assert(std::is_same_v<decltype(scalar), coordinate>);
+        static_assert(std::is_same_v<decltype(rhs), coordinate>);
 
-        _coords[0] *= scalar;
-        _coords[1] *= scalar;
-        _coords[2] *= scalar;
-        _coords[3] *= scalar;
+        _coords[0] *= rhs;
+        _coords[1] *= rhs;
+        _coords[2] *= rhs;
+        _coords[3] *= rhs;
 
         return *this;
     }
 
     template <Coordinate coordinate>
-    Quaternion<coordinate>& Quaternion<coordinate>::operator/=(auto scalar)
+    Quaternion<coordinate>& Quaternion<coordinate>::operator/=(auto rhs)
     {
-        static_assert(std::is_same_v<decltype(scalar), coordinate>);
+        static_assert(std::is_same_v<decltype(rhs), coordinate>);
 
-        if (scalar == 0.0)
+        if (rhs == 0.0)
         {
             throw std::invalid_argument("Can't divide by 0");
         }
 
-        _coords[0] /= scalar;
-        _coords[1] /= scalar;
-        _coords[2] /= scalar;
-        _coords[3] /= scalar;
+        _coords[0] /= rhs;
+        _coords[1] /= rhs;
+        _coords[2] /= rhs;
+        _coords[3] /= rhs;
 
         return *this;
     }
@@ -463,9 +463,9 @@ namespace LCNS::Algebra
     template <Coordinate coordinate>
     constexpr bool Quaternion<coordinate>::isNull() const noexcept
     {
-        for (const auto& c : _coords)
+        for (const auto& coord : _coords)
         {
-            if (c != static_cast<coordinate>(0))
+            if (coord != static_cast<coordinate>(0))
             {
                 return false;
             }
