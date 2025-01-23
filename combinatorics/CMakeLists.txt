@@ -1,7 +1,7 @@
 add_library(lcnsCombinatorics INTERFACE)
 
 target_sources(lcnsCombinatorics
-    PUBLIC
+    INTERFACE
         "include/combinatorics/Permutations.hpp"
         "include/combinatorics/Concepts.hpp"
 )
@@ -20,5 +20,7 @@ target_compile_options(lcnsCombinatorics
 )
 
 add_library(lcns::combinatorics ALIAS lcnsCombinatorics)
+
+run_clang_tidy_on_interface(lcnsCombinatorics lcns::combinatorics "combinatorics/Permutations.hpp;combinatorics/Concepts.hpp")
 
 add_subdirectory(tests)

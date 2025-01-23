@@ -24,14 +24,14 @@ namespace LCNS::Combinatorics
             for (auto currentPermutation = currentLevelPermutations.begin(); currentPermutation != currentLevelPermutations.end();
                  currentPermutation++)
             {
-                size_t i    = pivot;
+                size_t idx  = pivot;
                 auto   copy = *currentPermutation;
-                while (i < input.size())
+                while (idx < input.size())
                 {
-                    std::swap(copy[pivot], copy[i]);
+                    std::swap(copy[pivot], copy[idx]);
                     allPermutations.insert(copy);
-                    std::swap(copy[pivot], copy[i]);
-                    ++i;
+                    std::swap(copy[pivot], copy[idx]);
+                    ++idx;
                 }
             }
 

@@ -25,4 +25,6 @@ target_compile_options(lcnsAlgebra
 
 add_library(lcns::algebra ALIAS lcnsAlgebra)
 
+run_clang_tidy_on_interface(lcnsAlgebra lcns::algebra "algebra/Algebra.hpp")
+
 add_subdirectory(tests)

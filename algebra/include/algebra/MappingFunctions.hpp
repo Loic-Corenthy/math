@@ -26,24 +26,20 @@ namespace LCNS::Algebra
 
             return { psi, theta, phi };
         }
-        else
+
+        // In this case, phi can be set to zero
+        if (mat(2, 0) == -1.0)
         {
-            // In this case, phi can be set to zero
-            if (mat(2, 0) == -1.0)
-            {
-                constexpr double theta = pi / 2.0;
-                const double     psi   = atan2(mat(0, 1), mat(0, 2));
+            constexpr double theta = pi / 2.0;
+            const double     psi   = atan2(mat(0, 1), mat(0, 2));
 
-                return { psi, theta, 0.0 };
-            }
-            else
-            {
-                constexpr double theta = -pi / 2.0;
-                const double     psi   = atan2(-mat(0, 1), -mat(0, 2));
-
-                return { psi, theta, 0.0 };
-            }
+            return { psi, theta, 0.0 };
         }
+
+        constexpr double theta = -pi / 2.0;
+        const double     psi   = atan2(-mat(0, 1), -mat(0, 2));
+
+        return { psi, theta, 0.0 };
     }
 
     template <Coordinate coordinate>
@@ -72,19 +68,21 @@ namespace LCNS::Algebra
     template <Coordinate coordinate>
     Matrix<coordinate, 3, 3> QuaternionAsRotationMatrix(const Quaternion<coordinate>& quat) requires std::is_floating_point_v<coordinate>
     {
-        const auto impl = [](const Quaternion<coordinate>& q)
+        const auto impl = [](const Quaternion<coordinate>& qtn)
         {
-            const coordinate xs = q.x() * q.x();
-            const coordinate ys = q.y() * q.y();
-            const coordinate zs = q.z() * q.z();
-            const coordinate ws = q.w() * q.w();
+            // NOLINTBEGIN(readability-identifier-length)
+            const coordinate xs = qtn.x() * qtn.x();
+            const coordinate ys = qtn.y() * qtn.y();
+            const coordinate zs = qtn.z() * qtn.z();
+            const coordinate ws = qtn.w() * qtn.w();
 
-            const coordinate xy = q.x() * q.y();
-            const coordinate xz = q.x() * q.z();
-            const coordinate yz = q.y() * q.z();
-            const coordinate wx = q.w() * q.x();
-            const coordinate wy = q.w() * q.y();
-            const coordinate wz = q.w() * q.z();
+            const coordinate xy = qtn.x() * qtn.y();
+            const coordinate xz = qtn.x() * qtn.z();
+            const coordinate yz = qtn.y() * qtn.z();
+            const coordinate wx = qtn.w() * qtn.x();
+            const coordinate wy = qtn.w() * qtn.y();
+            const coordinate wz = qtn.w() * qtn.z();
+            // NOLINTEND(readability-identifier-length)
 
             const coordinate two = 2.0;
 
@@ -99,12 +97,10 @@ namespace LCNS::Algebra
         {
             return impl(quat);
         }
-        else
-        {
-            auto copy = quat;
-            copy.normalize();
 
-            return impl(copy);
-        }
+        auto copy = quat;
+        copy.normalize();
+
+        return impl(copy);
     }
 }

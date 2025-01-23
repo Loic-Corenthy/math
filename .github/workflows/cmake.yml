@@ -10,6 +10,7 @@ env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
   PRESET: linux_release
+  BUILD_DIR: ${{github.workspace}}/build/${PRESET}
 
 jobs:
   ################################
@@ -19,7 +20,7 @@ jobs:
     # Name the Job
     name: Lint Code Base
     # Set the agent to run on
-    runs-on: ubuntu-20.04 # TODO: Switch back to ununtu-latest when bug in github CI will be fixed
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Code
@@ -41,7 +42,7 @@ jobs:
     # well on Windows or Mac.  You can convert this to a matrix build if you need
     # cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     env:
       CC: clang
       CXX: clang++
@@ -56,7 +57,10 @@ jobs:
 
       - name: Build
         # Build your program with the given configuration
-        run: cmake --build ${{github.workspace}}/build/${{env.PRESET}} --parallel
+        run: |
+          cmake --build ${{env.BUILD_DIR}} --parallel
+          clang-tidy -p ${{env.BUILD_DIR}} ${{env.BUILD_DIR}}/tmp_lcnsAlgebra_main.cpp
+          clang-tidy -p ${{env.BUILD_DIR}} ${{env.BUILD_DIR}}/tmp_lcnsCombinatorics_main.cpp
 
       - name: Upload build directory to artefact
         uses: actions/upload-artifact@v4
@@ -66,7 +70,7 @@ jobs:
             ${{github.workspace}}/build
 
   tests:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs: build
 
     steps:
@@ -78,13 +82,13 @@ jobs:
 
       - name: Update mode for test executable
         run: |
-          chmod +x ${{github.workspace}}/build/${{env.PRESET}}/algebra/tests/testVector
-          chmod +x ${{github.workspace}}/build/${{env.PRESET}}/algebra/tests/testMatrix
-          chmod +x ${{github.workspace}}/build/${{env.PRESET}}/algebra/tests/testQuaternion
-          chmod +x ${{github.workspace}}/build/${{env.PRESET}}/algebra/tests/testMapping
+          chmod +x ${{env.BUILD_DIR}}/algebra/tests/testVector
+          chmod +x ${{env.BUILD_DIR}}/algebra/tests/testMatrix
+          chmod +x ${{env.BUILD_DIR}}/algebra/tests/testQuaternion
+          chmod +x ${{env.BUILD_DIR}}/algebra/tests/testMapping
 
       - name: Test algebra module
-        run: ctest -C ${{env.BUILD_TYPE}} --test-dir ${{github.workspace}}/build/${{env.PRESET}}/algebra/tests --output-on-failure --parallel
+        run: ctest -C ${{env.BUILD_TYPE}} --test-dir ${{env.BUILD_DIR}}/algebra/tests --output-on-failure --parallel
 
       - name: Clean build directory artifact
         uses: geekyeggo/delete-artifact@v5
