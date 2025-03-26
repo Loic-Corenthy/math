@@ -1,5 +1,5 @@
-#include "large/Matrix.hpp"
-#include "large/Multiplication.hpp"
+#include "algebra/Matrix.hpp"
+#include "algebra/MultiplicationLarge.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_approx.hpp>
@@ -9,20 +9,17 @@
 #include <iostream>
 #include <random>
 
-using LCNS::Large::Matrix;
-using LCNS::Large::multiply_classic;
-
 using Catch::Matchers::WithinAbs;
 
 using namespace std;
 
+
+template <size_t lhs_row_count, size_t lhs_col_count, size_t rhs_row_count, size_t rhs_col_count> 
 class BenchmarkFixture
 {
 public:
-    BenchmarkFixture(size_t lhs_row_count, size_t lhs_col_count, size_t rhs_row_count, size_t rhs_col_count)
-    : lhs(lhs_row_count, lhs_col_count, true)
-    , rhs(rhs_row_count, rhs_col_count, true)
-    , _gen(_rd())
+    BenchmarkFixture()
+    : _gen(_rd())
     {
         cout << "CTEST_FULL_OUTPUT\n";
     }
@@ -42,35 +39,17 @@ public:
     }
 
 protected:
-    Matrix lhs;
-    Matrix rhs;
+    LCNS::Algebra::Matrix<float, lhs_row_count, lhs_col_count> lhs;
+    LCNS::Algebra::Matrix<float, rhs_row_count, rhs_col_count> rhs;
 
 private:
     random_device _rd;
     mt19937       _gen;
 };
 
-struct BenchmarkFixture256 : public BenchmarkFixture
+TEST_CASE_METHOD(BenchmarkFixture<256, 512, 512, 126>, "Multiplication", "[benchmark][matrix][large][256]")
 {
-    BenchmarkFixture256()
-    : BenchmarkFixture(256, 512, 512, 126)
-    {
-    }
-};
-
-struct BenchmarkFixture1000 : public BenchmarkFixture
-{
-    BenchmarkFixture1000()
-    : BenchmarkFixture(1000, 1200, 1200, 1100)
-    {
-    }
-};
-
-TEST_CASE_METHOD(BenchmarkFixture256, "Multiplication", "[benchmark][matrix][large][256]")
-{
-    Matrix res1(lhs.row_count(), rhs.col_count());
-    Matrix res2(lhs.row_count(), rhs.col_count());
-    Matrix res3(lhs.row_count(), rhs.col_count());
+    LCNS::Algebra::Matrix<float, 256, 126> res1, res2, res3;
 
     vector<float> test_data1;
     vector<float> test_data2;
@@ -106,22 +85,22 @@ TEST_CASE_METHOD(BenchmarkFixture256, "Multiplication", "[benchmark][matrix][lar
 }
 
 
-TEST_CASE_METHOD(BenchmarkFixture1000, "Multiplication", "[benchmark][matrix][large][1000]")
-{
-    BENCHMARK("Simd multiplication")
-    {
-        const auto res = multiply_simd(lhs, rhs);
+// TEST_CASE_METHOD(BenchmarkFixture1000, "Multiplication", "[benchmark][matrix][large][1000]")
+// {
+//     BENCHMARK("Simd multiplication")
+//     {
+//         const auto res = multiply_simd(lhs, rhs);
 
-        cout << res(345, 567) << '\n';
-        return 0;
-    };
+//         cout << res(345, 567) << '\n';
+//         return 0;
+//     };
 
-    BENCHMARK("Multithreading multiplication")
-    {
-        const auto res = multiply_concurrently(lhs, rhs);
+//     BENCHMARK("Multithreading multiplication")
+//     {
+//         const auto res = multiply_concurrently(lhs, rhs);
 
-        cout << res(345, 567) << '\n';
+//         cout << res(345, 567) << '\n';
 
-        return 0;
-    };
-}
+//         return 0;
+//     };
+// }
