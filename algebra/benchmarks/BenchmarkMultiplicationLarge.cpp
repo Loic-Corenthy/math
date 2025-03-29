@@ -8,10 +8,14 @@
 
 #include <iostream>
 #include <random>
+#include <memory>
+
+using LCNS::Algebra::Matrix;
+using LCNS::Algebra::multiply_simd;
+using LCNS::Algebra::multiply_concurrently;
 
 using Catch::Matchers::WithinAbs;
 
-using LCNS::Algebra::Matrix;
 using namespace std;
 
 class BenchmarkFixture
@@ -38,12 +42,12 @@ public:
     }
 
     template <size_t row_count, size_t col_count>
-    Matrix<float, row_count, col_count> get_randomly_initialized()
+    unique_ptr<Matrix<float, row_count, col_count>> get_randomly_initialized()
     {
-        Matrix<float, row_count, col_count> result;
-        uniform_real_distribution<>         dis(0.0f, 1.0f);
+        auto                        result = make_unique<Matrix<float, row_count, col_count>>();
+        uniform_real_distribution<> dis(0.0f, 1.0f);
 
-        generate(result.data(), result.data() + row_count * col_count, [&]() { return dis(_gen); });
+        generate(result->data(), result->data() + row_count * col_count, [&]() { return dis(_gen); });
 
         return result;
     }
@@ -81,21 +85,21 @@ TEST_CASE_METHOD(BenchmarkFixture, "Multiplication 256", "[benchmark][matrix][la
 
     BENCHMARK("Simple multiplication")
     {
-        res1 = lhs * rhs;
+        res1 = (*lhs) * (*rhs);
 
         return 0;
     };
 
     BENCHMARK("Simd multiplication")
     {
-        res2 = LCNS::Algebra::multiply_simd(lhs, rhs);
+        res2 = multiply_simd(*lhs, *rhs);
 
         return 0;
     };
 
     BENCHMARK("Multithreaded multiplication")
     {
-        res3 = LCNS::Algebra::multiply_concurrently(lhs, rhs);
+        res3 = multiply_concurrently(*lhs, *rhs);
 
         return 0;
     };
@@ -105,36 +109,38 @@ TEST_CASE_METHOD(BenchmarkFixture, "Multiplication 256", "[benchmark][matrix][la
     perform_random_checks<lhs_row_count, rhs_col_count>(res1, res3);
 }
 
-TEST_CASE_METHOD(BenchmarkFixture, "Multiplication 1000", "[benchmark][matrix][large][1000]")
+TEST_CASE_METHOD(BenchmarkFixture, "Multiplication simd 1000", "[benchmark][matrix][large][1000]")
 {
-    constexpr size_t lhs_row_count = 1000;
-    constexpr size_t lhs_col_count = 1200;
+    constexpr size_t lhs_row_count = 1024u;
+    constexpr size_t lhs_col_count = 512u;
     constexpr size_t rhs_row_count = lhs_col_count;
-    constexpr size_t rhs_col_count = 1100;
+    constexpr size_t rhs_col_count = 1000u;
 
     const auto lhs = get_randomly_initialized<lhs_row_count, lhs_col_count>();
     const auto rhs = get_randomly_initialized<rhs_row_count, rhs_col_count>();
 
-    Matrix<float, lhs_row_count, rhs_col_count> res1, res2;
+    BENCHMARK("Simd multiplication")
+    {
+        [[maybe_unused]] const auto res = multiply_simd(*lhs, *rhs);
 
-    res1 = lhs * rhs;
-    res2 = lhs * rhs;
+        return 0;
+    };
+}
 
-    // BENCHMARK("Simd multiplication")
-    // {
-    //     res1 = multiply_simd(lhs, rhs);
+TEST_CASE_METHOD(BenchmarkFixture, "Multiplication multithreading 1000", "[benchmark][matrix][large][1000]")
+{
+    constexpr size_t lhs_row_count = 1024u;
+    constexpr size_t lhs_col_count = 512u;
+    constexpr size_t rhs_row_count = lhs_col_count;
+    constexpr size_t rhs_col_count = 1000u;
 
-    //     return 0;
-    // };
+    const auto lhs = get_randomly_initialized<lhs_row_count, lhs_col_count>();
+    const auto rhs = get_randomly_initialized<rhs_row_count, rhs_col_count>();
 
-    // BENCHMARK("Multithreading multiplication")
-    // {
-    //     res2 = multiply_concurrently(lhs, rhs);
+    BENCHMARK("Multithreading multiplication")
+    {
+        [[maybe_unused]] const auto res = multiply_concurrently(*lhs, *rhs);
 
-    //     return 0;
-    // };
-
-    // perform_random_checks<lhs_row_count, rhs_col_count>(res1, res2);
-
-    CHECK(true);
+        return 0;
+    };
 }
