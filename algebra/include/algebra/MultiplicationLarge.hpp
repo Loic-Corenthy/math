@@ -3,8 +3,8 @@
 #include "algebra/Matrix.hpp"
 
 #ifdef AVX_ENABLED_ON_CPU
-#include <immintrin.h>
-#include <numeric>
+    #include <immintrin.h>
+    #include <numeric>
 #endif
 
 #include <cstdlib>
@@ -107,6 +107,20 @@ namespace LCNS::Algebra
                     auto* tmp = reinterpret_cast<float*>(&multiplications);
                     dot_product += std::accumulate(tmp, tmp + dppi, 0.0f);
                 }
+                else if constexpr (std::is_same_v<coordinate, int32_t>)
+                {
+#if defined(AVX512_ENABLED)
+                    __m512i lhs_chunk       = _mm512_loadu_epi32(lhs.data() + i * lhs_cols + dppi * k);
+                    __m512i rhs_chunk       = _mm512_loadu_epi32(rhs_transposed.data() + j * rhs_tr_cols + dppi * k);
+                    __m512i multiplications = _mm512_mullo_epi32(lhs_chunk, rhs_chunk);
+#elif defined(AVX2_ENABLED)
+                    assert(false && "Not implemented yet");
+#endif
+                    int32_t tmp[16] = {};
+                    _mm512_storeu_epi32(tmp, multiplications);
+
+                    dot_product += std::accumulate(tmp, tmp + dppi, 0);
+                }
                 else
                 {
                     static_assert(false && "unsupported type for simd operations");
@@ -153,9 +167,23 @@ namespace LCNS::Algebra
                 auto* tmp = reinterpret_cast<float*>(&multiplications);
                 return std::accumulate(tmp, tmp + division.rem, 0.0f);
             }
+            else if constexpr (std::is_same_v<coordinate, int32_t>)
+            {
+#if defined(AVX512_ENABLED)
+                __m512i lhs_chunk       = _mm512_loadu_epi32(lhs.data() + i * lhs_cols + dppi * division.quot);
+                __m512i rhs_chunk       = _mm512_loadu_epi32(rhs_transposed.data() + j * rhs_tr_cols + dppi * division.quot);
+                __m512i multiplications = _mm512_mullo_epi32(lhs_chunk, rhs_chunk);
+#elif defined(AVX2_ENABLED)
+                assert(false && "Not implemented yet");
+#endif
+                int32_t tmp[16] = {};
+                _mm512_storeu_epi32(tmp, multiplications);
+                return std::accumulate(tmp, tmp + division.rem, 0);
+            }
             else
             {
                 static_assert(false && "unsupported type for simd operations");
+                return {};
             }
         }
 #endif
@@ -164,7 +192,7 @@ namespace LCNS::Algebra
 #ifdef AVX_ENABLED_ON_CPU
     template <Coordinate coordinate, unsigned int lhs_rows, unsigned int lhs_cols, unsigned int rhs_rows, unsigned int rhs_cols>
     Matrix<coordinate, lhs_rows, rhs_cols> multiply_simd(const Matrix<coordinate, lhs_rows, lhs_cols>& lhs,
-                                                         const Matrix<coordinate, rhs_rows, rhs_cols>& rhs) requires std::is_floating_point_v<coordinate>
+                                                         const Matrix<coordinate, rhs_rows, rhs_cols>& rhs)
     {
         const auto rhs_transposed = rhs.transposed();
 
