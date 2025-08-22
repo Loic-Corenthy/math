@@ -59,10 +59,10 @@ namespace LCNS::Algebra
         const double cos_phi   = cos(phi * 0.5);
         const double sin_phi   = sin(phi * 0.5);
 
-        return { static_cast<coordinate>(sin_psi * cos_theta * cos_phi - cos_psi * sin_theta * sin_phi),
-                 static_cast<coordinate>(cos_psi * sin_theta * cos_phi + sin_psi * cos_theta * sin_phi),
-                 static_cast<coordinate>(cos_psi * cos_theta * sin_phi - sin_psi * sin_theta * cos_phi),
-                 static_cast<coordinate>(cos_psi * cos_theta * cos_phi + sin_psi * sin_theta * sin_phi) };
+        return { static_cast<coordinate>((sin_psi * cos_theta * cos_phi) - (cos_psi * sin_theta * sin_phi)),
+                 static_cast<coordinate>((cos_psi * sin_theta * cos_phi) + (sin_psi * cos_theta * sin_phi)),
+                 static_cast<coordinate>((cos_psi * cos_theta * sin_phi) - (sin_psi * sin_theta * cos_phi)),
+                 static_cast<coordinate>((cos_psi * cos_theta * cos_phi) + (sin_psi * sin_theta * sin_phi)) };
     }
 
     template <Coordinate coordinate>
