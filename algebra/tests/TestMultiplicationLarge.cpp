@@ -16,7 +16,9 @@ using LCNS::Algebra::multiply_concurrently;
 
 using Catch::Matchers::WithinAbs;
 
-using TestTypes = std::tuple<short, int, long, float, double>;
+using TestTypeAll      = std::tuple<short, int, long, float, double>;
+using TestTypeInteger  = std::tuple<int32_t>;
+using TestTypeFloating = std::tuple<float, double>;
 
 using namespace std;
 
@@ -43,10 +45,27 @@ namespace
 
         return result;
     }
+
+    template <Coordinate coordinate>
+    consteval double precision()
+    {
+        if constexpr (is_same_v<coordinate, float>)
+        {
+            return 1e-4;
+        }
+        else if constexpr (is_same_v<coordinate, double>)
+        {
+            return 1e-6;
+        }
+        else
+        {
+            static_assert(false && "Unexpected coordinate value");
+        }
+    }
 }
 
 
-TEMPLATE_LIST_TEST_CASE("Test multiplication with multithreading", "[test][algebra][multiplication][multithreading]", TestTypes)
+TEMPLATE_LIST_TEST_CASE("Test multiplication with multithreading", "[test][algebra][multiplication][multithreading]", TestTypeAll)
 {
     cout << "CTEST_FULL_OUTPUT\n";
 
@@ -87,103 +106,68 @@ TEMPLATE_LIST_TEST_CASE("Test multiplication with multithreading", "[test][algeb
     }
 }
 
-TEST_CASE("Test multiplication with simd", "[test][algebra][multiplication][simd]")
+TEMPLATE_LIST_TEST_CASE("Test floating multiplication with simd", "[test][algebra][multiplication][simd]", TestTypeFloating)
 {
     cout << "CTEST_FULL_OUTPUT\n";
 
-    SECTION("int32_t")
+    const TestType min = 0.0;
+    const TestType max = 1.0;
+
+    const auto lhs = generate_random_matrix<TestType, 17, 22>(min, max);
+    const auto rhs = generate_random_matrix<TestType, 22, 15>(min, max);
+
+    const auto res1 = lhs * rhs;
+
+    const auto [lhs_rows, lhs_cols]   = lhs.dimensions();
+    const auto [rhs_rows, rhs_cols]   = rhs.dimensions();
+    const auto [res1_rows, res1_cols] = res1.dimensions();
+
+    CHECK(res1_rows == lhs_rows);
+    CHECK(res1_cols == rhs_cols);
+
+    const auto res2                   = multiply_simd(lhs, rhs);
+    const auto [res2_rows, res2_cols] = res2.dimensions();
+
+    CHECK(res1_rows == res2_rows);
+    CHECK(res1_cols == res2_cols);
+
+    for (size_t i = 0u; i < res1_rows; ++i)
     {
-        const int32_t min = 0;
-        const int32_t max = 1000;
-
-        const auto lhs = generate_random_matrix<int32_t, 17, 31>(min, max);
-        const auto rhs = generate_random_matrix<int32_t, 31, 19>(min, max);
-
-        const auto res1 = lhs * rhs;
-
-        const auto [lhs_rows, lhs_cols]   = lhs.dimensions();
-        const auto [rhs_rows, rhs_cols]   = rhs.dimensions();
-        const auto [res1_rows, res1_cols] = res1.dimensions();
-
-        CHECK(res1_rows == lhs_rows);
-        CHECK(res1_cols == rhs_cols);
-
-        const auto res2                   = multiply_simd(lhs, rhs);
-        const auto [res2_rows, res2_cols] = res2.dimensions();
-
-        CHECK(res1_rows == res2_rows);
-        CHECK(res1_cols == res2_cols);
-
-        for (size_t i = 0u; i < res1_rows; ++i)
+        for (size_t j = 0u; j < res1_cols; ++j)
         {
-            for (size_t j = 0u; j < res1_cols; ++j)
-            {
-                CHECK(res1(i, j) == res2(i, j));
-            }
+            CHECK_THAT(res1(i, j), WithinAbs(res2(i, j), precision<TestType>()));
         }
     }
+}
 
-    SECTION("double")
+TEMPLATE_LIST_TEST_CASE("Test integer multiplication with simd", "[test][algebra][multiplication][simd]", TestTypeInteger)
+{
+    const TestType min = 0;
+    const TestType max = 1000;
+
+    const auto lhs = generate_random_matrix<TestType, 17, 31>(min, max);
+    const auto rhs = generate_random_matrix<TestType, 31, 19>(min, max);
+
+    const auto res1 = lhs * rhs;
+
+    const auto [lhs_rows, lhs_cols]   = lhs.dimensions();
+    const auto [rhs_rows, rhs_cols]   = rhs.dimensions();
+    const auto [res1_rows, res1_cols] = res1.dimensions();
+
+    CHECK(res1_rows == lhs_rows);
+    CHECK(res1_cols == rhs_cols);
+
+    const auto res2                   = multiply_simd(lhs, rhs);
+    const auto [res2_rows, res2_cols] = res2.dimensions();
+
+    CHECK(res1_rows == res2_rows);
+    CHECK(res1_cols == res2_cols);
+
+    for (size_t i = 0u; i < res1_rows; ++i)
     {
-        const double min = 0.0;
-        const double max = 1.0;
-
-        const auto lhs = generate_random_matrix<double, 17, 22>(min, max);
-        const auto rhs = generate_random_matrix<double, 22, 15>(min, max);
-
-        const auto res1 = lhs * rhs;
-
-        const auto [lhs_rows, lhs_cols]   = lhs.dimensions();
-        const auto [rhs_rows, rhs_cols]   = rhs.dimensions();
-        const auto [res1_rows, res1_cols] = res1.dimensions();
-
-        CHECK(res1_rows == lhs_rows);
-        CHECK(res1_cols == rhs_cols);
-
-        const auto res2                   = multiply_simd(lhs, rhs);
-        const auto [res2_rows, res2_cols] = res2.dimensions();
-
-        CHECK(res1_rows == res2_rows);
-        CHECK(res1_cols == res2_cols);
-
-        for (size_t i = 0u; i < res1_rows; ++i)
+        for (size_t j = 0u; j < res1_cols; ++j)
         {
-            for (size_t j = 0u; j < res1_cols; ++j)
-            {
-                CHECK_THAT(res1(i, j), WithinAbs(res2(i, j), 1e-6));
-            }
-        }
-    }
-
-    SECTION("float")
-    {
-        const float min = 0.0f;
-        const float max = 1.0f;
-
-        const auto lhs = generate_random_matrix<float, 55, 31>(min, max);
-        const auto rhs = generate_random_matrix<float, 31, 21>(min, max);
-
-        const auto res1 = lhs * rhs;
-
-        const auto [lhs_rows, lhs_cols]   = lhs.dimensions();
-        const auto [rhs_rows, rhs_cols]   = rhs.dimensions();
-        const auto [res1_rows, res1_cols] = res1.dimensions();
-
-        CHECK(res1_rows == lhs_rows);
-        CHECK(res1_cols == rhs_cols);
-
-        const auto res2                   = multiply_simd(lhs, rhs);
-        const auto [res2_rows, res2_cols] = res2.dimensions();
-
-        CHECK(res1_rows == res2_rows);
-        CHECK(res1_cols == res2_cols);
-
-        for (size_t i = 0u; i < res1_rows; ++i)
-        {
-            for (size_t j = 0u; j < res1_cols; ++j)
-            {
-                CHECK_THAT(res1(i, j), WithinAbs(res2(i, j), 1e-4));
-            }
+            CHECK(res1(i, j) == res2(i, j));
         }
     }
 }
