@@ -113,11 +113,18 @@ namespace LCNS::Algebra
                     __m512i lhs_chunk       = _mm512_loadu_epi32(lhs.data() + i * lhs_cols + dppi * k);
                     __m512i rhs_chunk       = _mm512_loadu_epi32(rhs_transposed.data() + j * rhs_tr_cols + dppi * k);
                     __m512i multiplications = _mm512_mullo_epi32(lhs_chunk, rhs_chunk);
-#elif defined(AVX2_ENABLED)
-                    assert(false && "Not implemented yet");
-#endif
+
                     int32_t tmp[16] = {};
                     _mm512_storeu_epi32(tmp, multiplications);
+#elif defined(AVX2_ENABLED)
+                    __m256i lhs_chunk       = _mm256_loadu_epi32(lhs.data() + i * lhs_cols + dppi * k);
+                    __m256i rhs_chunk       = _mm256_loadu_epi32(rhs_transposed.data() + j * rhs_tr_cols + dppi * k);
+                    [[maybe_unused]] __m256i multiplications = _mm256_mullo_epi32(lhs_chunk, rhs_chunk);
+
+                    int32_t tmp[8] = {};
+                    _mm256_storeu_epi32(tmp, multiplications);
+#endif
+
 
                     dot_product += std::accumulate(tmp, tmp + dppi, 0);
                 }
@@ -173,11 +180,18 @@ namespace LCNS::Algebra
                 __m512i lhs_chunk       = _mm512_loadu_epi32(lhs.data() + i * lhs_cols + dppi * division.quot);
                 __m512i rhs_chunk       = _mm512_loadu_epi32(rhs_transposed.data() + j * rhs_tr_cols + dppi * division.quot);
                 __m512i multiplications = _mm512_mullo_epi32(lhs_chunk, rhs_chunk);
-#elif defined(AVX2_ENABLED)
-                assert(false && "Not implemented yet");
-#endif
+
                 int32_t tmp[16] = {};
                 _mm512_storeu_epi32(tmp, multiplications);
+#elif defined(AVX2_ENABLED)
+                __m256i lhs_chunk       = _mm256_loadu_epi32(lhs.data() + i * lhs_cols + dppi * division.quot);
+                __m256i rhs_chunk       = _mm256_loadu_epi32(rhs_transposed.data() + j * rhs_tr_cols + dppi * division.quot);
+                __m256i multiplications = _mm256_mullo_epi32(lhs_chunk, rhs_chunk);
+
+                int32_t tmp[8] = {};
+                _mm256_storeu_epi32(tmp, multiplications);
+#endif
+
                 return std::accumulate(tmp, tmp + division.rem, 0);
             }
             else
