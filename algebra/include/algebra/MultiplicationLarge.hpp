@@ -15,7 +15,7 @@
 
 namespace LCNS::Algebra
 {
-    namespace impl_details
+    namespace ImplementationDetails
     {
         template <Coordinate coordinate>
         float dot_product_concurrently(std::span<const coordinate, std::dynamic_extent> row, std::span<const coordinate, std::dynamic_extent> col)
@@ -238,7 +238,7 @@ namespace LCNS::Algebra
             }
         }
 #endif
-    }  // namespace impl_details
+    }  // namespace ImplementationDetails
 
 #ifdef AVX_ENABLED_ON_CPU
     template <Coordinate coordinate, unsigned int lhs_rows, unsigned int lhs_cols, unsigned int rhs_rows, unsigned int rhs_cols>
@@ -247,7 +247,7 @@ namespace LCNS::Algebra
     {
         const auto rhs_transposed = rhs.transposed();
 
-        const auto dppi     = impl_details::data_points_per_instruction<coordinate>();
+        const auto dppi     = ImplementationDetails::data_points_per_instruction<coordinate>();
         const auto division = std::div(lhs_cols, dppi);
 
         Matrix<coordinate, lhs_rows, rhs_cols> result;
@@ -255,11 +255,11 @@ namespace LCNS::Algebra
         {
             for (unsigned int j = 0; j < rhs_cols; ++j)
             {
-                coordinate dot_product = impl_details::dot_product_simd(lhs, rhs_transposed, division, dppi, i, j);
+                coordinate dot_product = ImplementationDetails::dot_product_simd(lhs, rhs_transposed, division, dppi, i, j);
 
                 if (division.rem != 0)
                 {
-                    dot_product += impl_details::dot_product_simd_last_chunk(lhs, rhs_transposed, division, dppi, i, j);
+                    dot_product += ImplementationDetails::dot_product_simd_last_chunk(lhs, rhs_transposed, division, dppi, i, j);
                 }
 
                 result(i, j) = dot_product;
@@ -287,7 +287,7 @@ namespace LCNS::Algebra
 
         for (size_t i = 0; i < real_thread_count; ++i)
         {
-            row_threads.emplace_back(impl_details::process_rows<coordinate, lhs_rows, lhs_cols, rhs_rows, rhs_cols>,
+            row_threads.emplace_back(ImplementationDetails::process_rows<coordinate, lhs_rows, lhs_cols, rhs_rows, rhs_cols>,
                                      i * row_per_thread_count,
                                      row_per_thread_count,
                                      std::ref(lhs),
@@ -299,7 +299,7 @@ namespace LCNS::Algebra
         {
             for (size_t i = 0; i < static_cast<size_t>(repartition.rem); ++i)
             {
-                row_threads.emplace_back(impl_details::process_rows<coordinate, lhs_rows, lhs_cols, rhs_rows, rhs_cols>,
+                row_threads.emplace_back(ImplementationDetails::process_rows<coordinate, lhs_rows, lhs_cols, rhs_rows, rhs_cols>,
                                          row_per_thread_count * real_thread_count + i,
                                          1,
                                          std::ref(lhs),
