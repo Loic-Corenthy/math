@@ -16,9 +16,10 @@ using LCNS::Algebra::multiply_concurrently;
 
 using Catch::Matchers::WithinAbs;
 
-using TestTypeAll      = std::tuple<short, int, long, float, double>;
-using TestTypeInteger  = std::tuple<int32_t>;
-using TestTypeFloating = std::tuple<float, double>;
+using TestTypeAll             = std::tuple<short, int, long, float, double>;
+using TestTypeIntegerSigned   = std::tuple<int32_t, int16_t>;
+using TestTypeIntegerUnsigned = std::tuple<uint32_t>;
+using TestTypeFloating        = std::tuple<float, double>;
 
 using namespace std;
 
@@ -140,9 +141,9 @@ TEMPLATE_LIST_TEST_CASE("Test floating multiplication with simd", "[test][algebr
     }
 }
 
-TEMPLATE_LIST_TEST_CASE("Test integer multiplication with simd", "[test][algebra][multiplication][simd]", TestTypeInteger)
+TEMPLATE_LIST_TEST_CASE("Test integer multiplication with simd", "[test][algebra][multiplication][simd]", TestTypeIntegerSigned)
 {
-    const TestType min = 0;
+    const TestType min = -1000;
     const TestType max = 1000;
 
     const auto lhs = generate_random_matrix<TestType, 17, 31>(min, max);
