@@ -16,10 +16,9 @@ using LCNS::Algebra::multiply_concurrently;
 
 using Catch::Matchers::WithinAbs;
 
-using TestTypeAll             = std::tuple<short, int, long, float, double>;
-using TestTypeIntegerSigned   = std::tuple<int32_t, int16_t>;
-using TestTypeIntegerUnsigned = std::tuple<uint32_t>;
-using TestTypeFloating        = std::tuple<float, double>;
+using TestTypeAll      = std::tuple<short, int, long, float, double>;
+using TestTypeInteger  = std::tuple<int32_t, uint32_t, int16_t, uint16_t, int, unsigned int, short, unsigned short>;
+using TestTypeFloating = std::tuple<float, double>;
 
 using namespace std;
 
@@ -62,6 +61,29 @@ namespace
         {
             static_assert(false && "Unexpected coordinate value");
         }
+    }
+
+    template <Coordinate coordinate>
+    consteval std::tuple<coordinate, coordinate> get_min_max()
+    {
+        coordinate max{};
+
+        if constexpr (is_same_v<make_signed_t<coordinate>, int64_t> || is_same_v<make_signed_t<coordinate>, int32_t>)
+        {
+            max = 1e4;
+        }
+        else if constexpr (is_same_v<make_signed_t<coordinate>, int16_t>)
+        {
+            max = 1e3;
+        }
+        else
+        {
+            static_assert(false && "Unexpected coordinate value");
+        }
+
+        const coordinate min = is_signed_v<coordinate> ? -max : 0;
+
+        return make_tuple(min, max);
     }
 }
 
@@ -141,10 +163,9 @@ TEMPLATE_LIST_TEST_CASE("Test floating multiplication with simd", "[test][algebr
     }
 }
 
-TEMPLATE_LIST_TEST_CASE("Test integer multiplication with simd", "[test][algebra][multiplication][simd]", TestTypeIntegerSigned)
+TEMPLATE_LIST_TEST_CASE("Test integer multiplication with simd", "[test][algebra][multiplication][simd]", TestTypeInteger)
 {
-    const TestType min = -1000;
-    const TestType max = 1000;
+    const auto [min, max] = get_min_max<TestType>();
 
     const auto lhs = generate_random_matrix<TestType, 17, 31>(min, max);
     const auto rhs = generate_random_matrix<TestType, 31, 19>(min, max);

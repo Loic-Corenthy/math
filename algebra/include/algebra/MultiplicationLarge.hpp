@@ -3,8 +3,8 @@
 #include "algebra/Matrix.hpp"
 
 #ifdef AVX_ENABLED_ON_CPU
-    #include <immintrin.h>
-    #include <numeric>
+#include <immintrin.h>
+#include <numeric>
 #endif
 
 #include <cstdlib>
@@ -107,7 +107,7 @@ namespace LCNS::Algebra
                     auto* tmp = reinterpret_cast<float*>(&multiplications);
                     dot_product += std::accumulate(tmp, tmp + dppi, 0.0f);
                 }
-                else if constexpr (std::is_same_v<coordinate, int32_t>)
+                else if constexpr (std::is_same_v<std::make_signed_t<coordinate>, int32_t>)
                 {
 #if defined(AVX512_ENABLED)
                     __m512i lhs_chunk       = _mm512_loadu_epi32(lhs.data() + i * lhs_cols + dppi * k);
@@ -126,7 +126,7 @@ namespace LCNS::Algebra
 #endif
                     dot_product += std::accumulate(tmp, tmp + dppi, 0);
                 }
-                else if constexpr (std::is_same_v<coordinate, int16_t>)
+                else if constexpr (std::is_same_v<std::make_signed_t<coordinate>, int16_t>)
                 {
 #if defined(AVX512_ENABLED)
                     __m512i lhs_chunk       = _mm512_loadu_epi16(lhs.data() + i * lhs_cols + dppi * k);
@@ -191,7 +191,7 @@ namespace LCNS::Algebra
                 auto* tmp = reinterpret_cast<float*>(&multiplications);
                 return std::accumulate(tmp, tmp + division.rem, 0.0f);
             }
-            else if constexpr (std::is_same_v<coordinate, int32_t>)
+            else if constexpr (std::is_same_v<std::make_signed_t<coordinate>, int32_t>)
             {
 #if defined(AVX512_ENABLED)
                 __m512i lhs_chunk       = _mm512_loadu_epi32(lhs.data() + i * lhs_cols + dppi * division.quot);
@@ -211,7 +211,7 @@ namespace LCNS::Algebra
 
                 return std::accumulate(tmp, tmp + division.rem, 0);
             }
-            else if constexpr (std::is_same_v<coordinate, int16_t>)
+            else if constexpr (std::is_same_v<std::make_signed_t<coordinate>, int16_t>)
             {
 #if defined(AVX512_ENABLED)
                 __m512i lhs_chunk       = _mm512_loadu_epi16(lhs.data() + i * lhs_cols + dppi * division.quot);
