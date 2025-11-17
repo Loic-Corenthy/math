@@ -17,7 +17,7 @@ using LCNS::Algebra::multiply_concurrently;
 using Catch::Matchers::WithinAbs;
 
 using TestTypeAll      = std::tuple<short, int, long, float, double>;
-using TestTypeInteger  = std::tuple<int32_t, uint32_t, int16_t, uint16_t, int, unsigned int, short, unsigned short>;
+using TestTypeInteger  = std::tuple<int64_t, uint64_t, int32_t, uint32_t, int16_t, uint16_t, long, unsigned long, int, unsigned int, short, unsigned short>;
 using TestTypeFloating = std::tuple<float, double>;
 
 using namespace std;
@@ -165,6 +165,8 @@ TEMPLATE_LIST_TEST_CASE("Test floating multiplication with simd", "[test][algebr
 
 TEMPLATE_LIST_TEST_CASE("Test integer multiplication with simd", "[test][algebra][multiplication][simd]", TestTypeInteger)
 {
+    cout << "Testing " << typeid(TestType).name() << endl;
+
     const auto [min, max] = get_min_max<TestType>();
 
     const auto lhs = generate_random_matrix<TestType, 17, 31>(min, max);

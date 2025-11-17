@@ -107,6 +107,25 @@ namespace LCNS::Algebra
                     auto* tmp = reinterpret_cast<float*>(&multiplications);
                     dot_product += std::accumulate(tmp, tmp + dppi, 0.0f);
                 }
+                else if constexpr (std::is_same_v<std::make_signed_t<coordinate>, int64_t>)
+                {
+#if defined(AVX512_ENABLED)
+                    __m512i lhs_chunk       = _mm512_loadu_epi64(lhs.data() + i * lhs_cols + dppi * k);
+                    __m512i rhs_chunk       = _mm512_loadu_epi64(rhs_transposed.data() + j * rhs_tr_cols + dppi * k);
+                    __m512i multiplications = _mm512_mullo_epi64(lhs_chunk, rhs_chunk);
+
+                    int64_t tmp[8] = {};
+                    _mm512_storeu_epi64(tmp, multiplications);
+#elif defined(AVX2_ENABLED)
+                    __m256i lhs_chunk       = _mm256_loadu_epi64(lhs.data() + i * lhs_cols + dppi * k);
+                    __m256i rhs_chunk       = _mm256_loadu_epi64(rhs_transposed.data() + j * rhs_tr_cols + dppi * k);
+                    __m256i multiplications = _mm256_mullo_epi64(lhs_chunk, rhs_chunk);
+
+                    int64_t tmp[4] = {};
+                    _mm256_storeu_epi64(tmp, multiplications);
+#endif
+                    dot_product += std::accumulate(tmp, tmp + dppi, 0);
+                }
                 else if constexpr (std::is_same_v<std::make_signed_t<coordinate>, int32_t>)
                 {
 #if defined(AVX512_ENABLED)
@@ -190,6 +209,26 @@ namespace LCNS::Algebra
 #endif
                 auto* tmp = reinterpret_cast<float*>(&multiplications);
                 return std::accumulate(tmp, tmp + division.rem, 0.0f);
+            }
+            else if constexpr (std::is_same_v<std::make_signed_t<coordinate>, int64_t>)
+            {
+#if defined(AVX512_ENABLED)
+                __m512i lhs_chunk       = _mm512_loadu_epi64(lhs.data() + i * lhs_cols + dppi * division.quot);
+                __m512i rhs_chunk       = _mm512_loadu_epi64(rhs_transposed.data() + j * rhs_tr_cols + dppi * division.quot);
+                __m512i multiplications = _mm512_mullo_epi64(lhs_chunk, rhs_chunk);
+
+                int64_t tmp[8] = {};
+                _mm512_storeu_epi64(tmp, multiplications);
+#elif defined(AVX2_ENABLED)
+                __m256i lhs_chunk       = _mm256_loadu_epi64(lhs.data() + i * lhs_cols + dppi * division.quot);
+                __m256i rhs_chunk       = _mm256_loadu_epi64(rhs_transposed.data() + j * rhs_tr_cols + dppi * division.quot);
+                __m256i multiplications = _mm256_mullo_epi64(lhs_chunk, rhs_chunk);
+
+                int64_t tmp[4] = {};
+                _mm256_storeu_epi64(tmp, multiplications);
+#endif
+
+                return std::accumulate(tmp, tmp + division.rem, 0);
             }
             else if constexpr (std::is_same_v<std::make_signed_t<coordinate>, int32_t>)
             {
