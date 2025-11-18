@@ -188,3 +188,36 @@ TEMPLATE_LIST_TEST_CASE("Test integer multiplication with simd", "[test][algebra
         }
     }
 }
+
+TEMPLATE_LIST_TEST_CASE("Test floating multiplication with multithreading and simd", "[test][algebra][multiplication][multithreading][simd]", TestTypeFloating)
+{
+    const TestType min = 0.0;
+    const TestType max = 1.0;
+
+    const auto lhs = generate_random_matrix<TestType, 17, 22>(min, max);
+    const auto rhs = generate_random_matrix<TestType, 22, 15>(min, max);
+
+    const auto res1 = lhs * rhs;
+
+    const auto [lhs_rows, lhs_cols]   = lhs.dimensions();
+    const auto [rhs_rows, rhs_cols]   = rhs.dimensions();
+    const auto [res1_rows, res1_cols] = res1.dimensions();
+
+    CHECK(res1_rows == lhs_rows);
+    CHECK(res1_cols == rhs_cols);
+
+    const auto res2                   = multiply_concurrently_simd(lhs, rhs);
+    const auto [res2_rows, res2_cols] = res2.dimensions();
+
+    CHECK(res1_rows == res2_rows);
+    CHECK(res1_cols == res2_cols);
+
+    for (size_t i = 0u; i < res1_rows; ++i)
+    {
+        for (size_t j = 0u; j < res1_cols; ++j)
+        {
+            CHECK_THAT(res1(i, j), WithinAbs(res2(i, j), precision<TestType>()));
+        }
+    }
+}
+

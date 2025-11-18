@@ -81,7 +81,7 @@ TEST_CASE_METHOD(BenchmarkFixture, "Multiplication 256", "[benchmark][matrix][la
     const auto lhs = get_randomly_initialized<lhs_row_count, lhs_col_count>();
     const auto rhs = get_randomly_initialized<rhs_row_count, rhs_col_count>();
 
-    Matrix<float, lhs_row_count, rhs_col_count> res1, res2, res3;
+    Matrix<float, lhs_row_count, rhs_col_count> res1, res2, res3, res4;
 
     BENCHMARK("Simple multiplication")
     {
@@ -104,9 +104,16 @@ TEST_CASE_METHOD(BenchmarkFixture, "Multiplication 256", "[benchmark][matrix][la
         return 0;
     };
 
+    BENCHMARK("Multithreaded and simd multiplication")
+    {
+        res4 = multiply_concurrently_simd(*lhs, *rhs);
+
+        return 0;
+    };
 
     perform_random_checks<lhs_row_count, rhs_col_count>(res1, res2);
     perform_random_checks<lhs_row_count, rhs_col_count>(res1, res3);
+    perform_random_checks<lhs_row_count, rhs_col_count>(res1, res4);
 }
 
 TEST_CASE_METHOD(BenchmarkFixture, "Multiplication simd 1000", "[benchmark][matrix][large][1000]")
@@ -140,6 +147,24 @@ TEST_CASE_METHOD(BenchmarkFixture, "Multiplication multithreading 1000", "[bench
     BENCHMARK("Multithreading multiplication")
     {
         [[maybe_unused]] const auto res = multiply_concurrently(*lhs, *rhs);
+
+        return 0;
+    };
+}
+
+TEST_CASE_METHOD(BenchmarkFixture, "Multiplication multithreading and simd 1000", "[benchmark][matrix][large][1000]")
+{
+    constexpr size_t lhs_row_count = 1024u;
+    constexpr size_t lhs_col_count = 512u;
+    constexpr size_t rhs_row_count = lhs_col_count;
+    constexpr size_t rhs_col_count = 1000u;
+
+    const auto lhs = get_randomly_initialized<lhs_row_count, lhs_col_count>();
+    const auto rhs = get_randomly_initialized<rhs_row_count, rhs_col_count>();
+
+    BENCHMARK("Multithreading multiplication")
+    {
+        [[maybe_unused]] const auto res = multiply_concurrently_simd(*lhs, *rhs);
 
         return 0;
     };
