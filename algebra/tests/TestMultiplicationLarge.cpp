@@ -6,7 +6,6 @@
 #include <catch2/matchers/catch_matchers_floating_point.hpp>
 #include <catch2/catch_template_test_macros.hpp>
 
-#include <iostream>
 #include <random>
 #include <algorithm>
 #include <type_traits>
@@ -90,8 +89,6 @@ namespace
 
 TEMPLATE_LIST_TEST_CASE("Test multiplication with multithreading", "[test][algebra][multiplication][multithreading]", TestTypeAll)
 {
-    cout << "CTEST_FULL_OUTPUT\n";
-
     const TestType min = 0;
     const TestType max = is_floating_point_v<TestType> ? 1.0 : 10.0;
 
@@ -131,8 +128,6 @@ TEMPLATE_LIST_TEST_CASE("Test multiplication with multithreading", "[test][algeb
 
 TEMPLATE_LIST_TEST_CASE("Test floating multiplication with simd", "[test][algebra][multiplication][simd]", TestTypeFloating)
 {
-    cout << "CTEST_FULL_OUTPUT\n";
-
     const TestType min = 0.0;
     const TestType max = 1.0;
 
@@ -165,8 +160,6 @@ TEMPLATE_LIST_TEST_CASE("Test floating multiplication with simd", "[test][algebr
 
 TEMPLATE_LIST_TEST_CASE("Test integer multiplication with simd", "[test][algebra][multiplication][simd]", TestTypeInteger)
 {
-    cout << "Testing " << typeid(TestType).name() << endl;
-
     const auto [min, max] = get_min_max<TestType>();
 
     const auto lhs = generate_random_matrix<TestType, 17, 31>(min, max);
