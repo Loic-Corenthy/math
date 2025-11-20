@@ -19,11 +19,11 @@ target_sources(lcnsAlgebra
 target_compile_features(lcnsAlgebra INTERFACE cxx_std_20)
 
 if (${AVX512_ENABLED_ON_CPU})
-  target_compile_options(lcnsAlgebra INTERFACE -mavx512f)
+  target_compile_options(lcnsAlgebra INTERFACE -mavx512f -mavx512dq -mavx512bw -mavx512vl)
   target_compile_definitions(lcnsAlgebra INTERFACE AVX_ENABLED_ON_CPU)
   target_compile_definitions(lcnsAlgebra INTERFACE AVX512_ENABLED)
 elseif(${AVX2_ENABLED_ON_CPU})
-  target_compile_options(lcnsAlgebra INTERFACE -mavx2)
+  target_compile_options(lcnsAlgebra INTERFACE -mavx2 -mavx)
   target_compile_options(lcnsAlgebra INTERFACE "SHELL:-march=native")
   target_compile_definitions(lcnsAlgebra INTERFACE AVX_ENABLED_ON_CPU)
   target_compile_definitions(lcnsAlgebra INTERFACE AVX2_ENABLED)
