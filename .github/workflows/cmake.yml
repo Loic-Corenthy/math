@@ -21,7 +21,6 @@ jobs:
     name: Lint Code Base
     # Set the agent to run on
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -30,7 +29,7 @@ jobs:
           fetch-depth: 0
 
       - name: Lint All
-        uses: super-linter/super-linter/slim@v6.7.0
+        uses: super-linter/super-linter/slim@v8.5.0
         env:
           VALIDATE_ALL_CODEBASE: false
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -46,6 +45,7 @@ jobs:
     env:
       CC: clang
       CXX: clang++
+      CI: true
 
     steps:
       - uses: actions/checkout@v4
@@ -86,9 +86,13 @@ jobs:
           chmod +x ${{env.BUILD_DIR}}/algebra/tests/testMatrix
           chmod +x ${{env.BUILD_DIR}}/algebra/tests/testQuaternion
           chmod +x ${{env.BUILD_DIR}}/algebra/tests/testMapping
+          chmod +x ${{env.BUILD_DIR}}/algebra/tests/testMultiplicationLarge
+
+      - name: Check CPU
+        run: grep -o 'avx[^ ]*' /proc/cpuinfo
 
       - name: Test algebra module
-        run: ctest -C ${{env.BUILD_TYPE}} --test-dir ${{env.BUILD_DIR}}/algebra/tests --output-on-failure --parallel
+        run: ctest -C ${{env.BUILD_TYPE}} --test-dir ${{env.BUILD_DIR}}/algebra/tests --output-on-failure -VV --parallel
 
       - name: Clean build directory artifact
         uses: geekyeggo/delete-artifact@v5

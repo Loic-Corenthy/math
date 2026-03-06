@@ -62,10 +62,32 @@ target_sources(testMapping
 add_test(NAME "Test mapping functions" COMMAND "$<TARGET_FILE:testMapping>" "[algebra][mapping]")
 
 
+########################
+# Multiplication Large #
+########################
+
+add_executable(testMultiplicationLarge)
+
+target_sources(testMultiplicationLarge
+    PRIVATE
+        "TestMultiplicationLarge.cpp"
+)
+
+add_test(NAME "Test multiplication with multithreading" COMMAND "$<TARGET_FILE:testMultiplicationLarge>" "[test][algebra][multiplication][multithreading]")
+
+# Add tests involving simd only if CPU is valid
+get_target_property(CHECK_AVX_ENABLED lcnsAlgebra INTERFACE_COMPILE_DEFINITIONS)
+string(FIND "${CHECK_AVX_ENABLED}" "AVX_ENABLED_ON_CPU" ENABLE_AVX_TESTS)
+
+if (ENABLE_AVX_TESTS GREATER_EQUAL "0")
+add_test(NAME "Test multiplication with simd" COMMAND "$<TARGET_FILE:testMultiplicationLarge>" "[test][algebra][multiplication][simd]")
+add_test(NAME "Test multiplication with multithreading and simd" COMMAND "$<TARGET_FILE:testMultiplicationLarge>" "[test][algebra][multiplication][multithreading][simd]")
+endif()
+
 ####################################
 # Setup common to all test targets #
 ####################################
-set(ALL_TEST_TARGETS testVector testMatrix testQuaternion testMapping)
+set(ALL_TEST_TARGETS testVector testMatrix testQuaternion testMapping testMultiplicationLarge)
 
 foreach(TEST_TARGET IN LISTS ALL_TEST_TARGETS)
     target_link_libraries(${TEST_TARGET} PRIVATE lcns::algebra Catch2::Catch2WithMain)
