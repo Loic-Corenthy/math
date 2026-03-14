@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.29.0)
 
-project (mathUtilities VERSION 1.0.0
+project (mathUtilities VERSION 1.3.1
                        DESCRIPTION "Miscellaneous math function and classes"
                        LANGUAGES CXX)
 
