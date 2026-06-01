@@ -114,17 +114,20 @@ namespace LCNS::Algebra
                     __m512i rhs_chunk       = _mm512_load_epi64(rhs_transposed.data() + (j * rhs_tr_cols) + (dppi * k));
                     __m512i multiplications = _mm512_mullo_epi64(lhs_chunk, rhs_chunk);
 
-                    std::array<int64_t, 8> tmp{};
-                    _mm512_storeu_epi64(tmp.data(), multiplications);
+                    // std::array<int64_t, 8> tmp{};
+                    int64_t tmp[8] = {};
+                    // _mm512_store_epi64(tmp.data(), multiplications);
+                    _mm512_store_epi64(tmp, multiplications);
 #elif defined(AVX2_ENABLED)
                     __m256i lhs_chunk       = _mm256_load_epi64(lhs.data() + i * lhs_cols + dppi * k);
                     __m256i rhs_chunk       = _mm256_load_epi64(rhs_transposed.data() + j * rhs_tr_cols + dppi * k);
                     __m256i multiplications = _mm256_mullo_epi64(lhs_chunk, rhs_chunk);
 
                     std::array<int64_t, 4> tmp{};
-                    _mm256_storeu_epi64(tmp.data(), multiplications);
+                    _mm256_store_epi64(tmp.data(), multiplications);
 #endif
-                    dot_product += std::accumulate(tmp.data(), tmp.data() + dppi, 0); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                    // dot_product += std::accumulate(tmp.data(), tmp.data() + dppi, 0); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+                    dot_product += std::accumulate(tmp, tmp + dppi, 0); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                 }
                 else if constexpr (std::is_same_v<std::make_signed_t<coordinate>, int32_t>)
                 {
@@ -134,29 +137,29 @@ namespace LCNS::Algebra
                     __m512i multiplications = _mm512_mullo_epi32(lhs_chunk, rhs_chunk);
 
                     std::array<int32_t, 16> tmp{};
-                    _mm512_storeu_epi32(tmp.data(), multiplications);
+                    _mm512_store_epi32(tmp.data(), multiplications);
 #elif defined(AVX2_ENABLED)
                     __m256i lhs_chunk       = _mm256_load_epi32(lhs.data() + i * lhs_cols + dppi * k);
                     __m256i rhs_chunk       = _mm256_load_epi32(rhs_transposed.data() + j * rhs_tr_cols + dppi * k);
                     __m256i multiplications = _mm256_mullo_epi32(lhs_chunk, rhs_chunk);
 
                     std::array<int32_t, 8> tmp{};
-                    _mm256_storeu_epi32(tmp.data(), multiplications);
+                    _mm256_store_epi32(tmp.data(), multiplications);
 #endif
                     dot_product += std::accumulate(tmp.data(), tmp.data() + dppi, 0); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
                 }
                 else if constexpr (std::is_same_v<std::make_signed_t<coordinate>, int16_t>)
                 {
 #if defined(AVX512_ENABLED)
-                    __m512i lhs_chunk       = _mm512_load_epi16(lhs.data() + (i * lhs_cols) + (dppi * k));
-                    __m512i rhs_chunk       = _mm512_load_epi16(rhs_transposed.data() + (j * rhs_tr_cols) + (dppi * k));
+                    __m512i lhs_chunk       = _mm512_loadu_epi16(lhs.data() + (i * lhs_cols) + (dppi * k));
+                    __m512i rhs_chunk       = _mm512_loadu_epi16(rhs_transposed.data() + (j * rhs_tr_cols) + (dppi * k));
                     __m512i multiplications = _mm512_mullo_epi16(lhs_chunk, rhs_chunk);
 
                     std::array<int16_t, 32> tmp{};
                     _mm512_storeu_epi16(tmp.data(), multiplications);
 #elif defined(AVX2_ENABLED)
-                    __m256i lhs_chunk       = _mm256_load_epi16(lhs.data() + i * lhs_cols + dppi * k);
-                    __m256i rhs_chunk       = _mm256_load_epi16(rhs_transposed.data() + j * rhs_tr_cols + dppi * k);
+                    __m256i lhs_chunk       = _mm256_loadu_epi16(lhs.data() + i * lhs_cols + dppi * k);
+                    __m256i rhs_chunk       = _mm256_loadu_epi16(rhs_transposed.data() + j * rhs_tr_cols + dppi * k);
                     __m256i multiplications = _mm256_mullo_epi16(lhs_chunk, rhs_chunk);
 
                     std::array<int16_t, 16> tmp};
@@ -218,14 +221,14 @@ namespace LCNS::Algebra
                 __m512i multiplications = _mm512_mullo_epi64(lhs_chunk, rhs_chunk);
 
                 std::array<int64_t, 8> tmp{};
-                _mm512_storeu_epi64(tmp.data(), multiplications);
+                _mm512_store_epi64(tmp.data(), multiplications);
 #elif defined(AVX2_ENABLED)
                 __m256i lhs_chunk       = _mm256_load_epi64(lhs.data() + i * lhs_cols + dppi * division.quot);
                 __m256i rhs_chunk       = _mm256_load_epi64(rhs_transposed.data() + j * rhs_tr_cols + dppi * division.quot);
                 __m256i multiplications = _mm256_mullo_epi64(lhs_chunk, rhs_chunk);
 
                 std::array<int64_t, 4> tmp{};
-                _mm256_storeu_epi64(tmp.data(), multiplications);
+                _mm256_store_epi64(tmp.data(), multiplications);
 #endif
 
                 return std::accumulate(tmp.data(), tmp.data() + division.rem, 0); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
@@ -238,14 +241,14 @@ namespace LCNS::Algebra
                 __m512i multiplications = _mm512_mullo_epi32(lhs_chunk, rhs_chunk);
 
                 std::array<int32_t, 16> tmp{};
-                _mm512_storeu_epi32(tmp.data(), multiplications);
+                _mm512_store_epi32(tmp.data(), multiplications);
 #elif defined(AVX2_ENABLED)
                 __m256i lhs_chunk       = _mm256_load_epi32(lhs.data() + i * lhs_cols + dppi * division.quot);
                 __m256i rhs_chunk       = _mm256_load_epi32(rhs_transposed.data() + j * rhs_tr_cols + dppi * division.quot);
                 __m256i multiplications = _mm256_mullo_epi32(lhs_chunk, rhs_chunk);
 
                 std::array<int32_t, 8> tmp{};
-                _mm256_storeu_epi32(tmp.data(), multiplications);
+                _mm256_store_epi32(tmp.data(), multiplications);
 #endif
 
                 return std::accumulate(tmp.data(), tmp.data() + division.rem, 0); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
@@ -253,19 +256,19 @@ namespace LCNS::Algebra
             else if constexpr (std::is_same_v<std::make_signed_t<coordinate>, int16_t>)
             {
 #if defined(AVX512_ENABLED)
-                __m512i lhs_chunk       = _mm512_load_epi16(lhs.data() + (i * lhs_cols) + (dppi * division.quot));
-                __m512i rhs_chunk       = _mm512_load_epi16(rhs_transposed.data() + (j * rhs_tr_cols) + (dppi * division.quot));
+                __m512i lhs_chunk       = _mm512_loadu_epi16(lhs.data() + (i * lhs_cols) + (dppi * division.quot));
+                __m512i rhs_chunk       = _mm512_loadu_epi16(rhs_transposed.data() + (j * rhs_tr_cols) + (dppi * division.quot));
                 __m512i multiplications = _mm512_mullo_epi16(lhs_chunk, rhs_chunk);
 
                 std::array<int16_t, 32> tmp{};
-                _mm512_storeu_epi32(tmp.data(), multiplications);
+                _mm512_storeu_epi16(tmp.data(), multiplications);
 #elif defined(AVX2_ENABLED)
-                __m256i lhs_chunk       = _mm256_load_epi16(lhs.data() + i * lhs_cols + dppi * division.quot);
-                __m256i rhs_chunk       = _mm256_load_epi16(rhs_transposed.data() + j * rhs_tr_cols + dppi * division.quot);
+                __m256i lhs_chunk       = _mm256_loadu_epi16(lhs.data() + i * lhs_cols + dppi * division.quot);
+                __m256i rhs_chunk       = _mm256_loadu_epi16(rhs_transposed.data() + j * rhs_tr_cols + dppi * division.quot);
                 __m256i multiplications = _mm256_mullo_epi16(lhs_chunk, rhs_chunk);
 
                 std::array<int16_t, 16> tmp{};
-                _mm256_storeu_epi32(tmp.data(), multiplications);
+                _mm256_storeu_epi16(tmp.data(), multiplications);
 #endif
 
                 return std::accumulate(tmp.data(), tmp.data() + division.rem, 0); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
