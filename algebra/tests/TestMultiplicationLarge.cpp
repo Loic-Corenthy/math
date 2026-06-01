@@ -29,18 +29,18 @@ namespace
     {
         Matrix<coordinate, rows, cols> result;
 
-        std::random_device rd;
-        std::mt19937       gen(rd());
+        std::random_device rand_dev;
+        std::mt19937       gen(rand_dev());
 
         if constexpr (is_integral_v<coordinate>)
         {
             std::uniform_int_distribution<> dis(min, max);
-            std::generate(result.data(), result.data() + rows * cols, [&]() { return static_cast<coordinate>(dis(gen)); });
+            std::generate(result.data(), result.data() + rows * cols, [&]() { return static_cast<coordinate>(dis(gen)); }); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
         }
         else
         {
             std::uniform_real_distribution<> dis(min, max);
-            std::generate(result.data(), result.data() + rows * cols, [&]() { return static_cast<coordinate>(dis(gen)); });
+            std::generate(result.data(), result.data() + rows * cols, [&]() { return static_cast<coordinate>(dis(gen)); }); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
         }
 
         return result;
@@ -59,7 +59,7 @@ namespace
         }
         else
         {
-            static_assert(false && "Unexpected coordinate value");
+            static_assert(false, "Unexpected coordinate value");
         }
     }
 
@@ -78,7 +78,7 @@ namespace
         }
         else
         {
-            static_assert(false && "Unexpected coordinate value");
+            static_assert(false, "Unexpected coordinate value");
         }
 
         const coordinate min = is_signed_v<coordinate> ? -max : 0;
@@ -111,9 +111,9 @@ TEMPLATE_LIST_TEST_CASE("Test multiplication with multithreading", "[test][algeb
     CHECK(res1_rows == res2_rows);
     CHECK(res1_cols == res2_cols);
 
-    for (size_t i = 0u; i < res1_rows; ++i)
+    for (size_t i = 0U; i < res1_rows; ++i)
     {
-        for (size_t j = 0u; j < res1_cols; ++j)
+        for (size_t j = 0U; j < res1_cols; ++j)
         {
             if constexpr (is_integral_v<TestType>)
             {
@@ -152,9 +152,9 @@ TEMPLATE_LIST_TEST_CASE("Test floating multiplication with simd", "[test][algebr
     CHECK(res1_rows == res2_rows);
     CHECK(res1_cols == res2_cols);
 
-    for (size_t i = 0u; i < res1_rows; ++i)
+    for (size_t i = 0U; i < res1_rows; ++i)
     {
-        for (size_t j = 0u; j < res1_cols; ++j)
+        for (size_t j = 0U; j < res1_cols; ++j)
         {
             CHECK_THAT(res1(i, j), WithinAbs(res2(i, j), precision<TestType>()));
         }
@@ -183,9 +183,9 @@ TEMPLATE_LIST_TEST_CASE("Test integer multiplication with simd", "[test][algebra
     CHECK(res1_rows == res2_rows);
     CHECK(res1_cols == res2_cols);
 
-    for (size_t i = 0u; i < res1_rows; ++i)
+    for (size_t i = 0U; i < res1_rows; ++i)
     {
-        for (size_t j = 0u; j < res1_cols; ++j)
+        for (size_t j = 0U; j < res1_cols; ++j)
         {
             CHECK(res1(i, j) == res2(i, j));
         }
@@ -217,9 +217,9 @@ TEMPLATE_LIST_TEST_CASE("Test floating multiplication with multithreading and si
     CHECK(res1_rows == res2_rows);
     CHECK(res1_cols == res2_cols);
 
-    for (size_t i = 0u; i < res1_rows; ++i)
+    for (size_t i = 0U; i < res1_rows; ++i)
     {
-        for (size_t j = 0u; j < res1_cols; ++j)
+        for (size_t j = 0U; j < res1_cols; ++j)
         {
             CHECK_THAT(res1(i, j), WithinAbs(res2(i, j), precision<TestType>()));
         }
@@ -227,3 +227,4 @@ TEMPLATE_LIST_TEST_CASE("Test floating multiplication with multithreading and si
 }
 
 #endif
+
