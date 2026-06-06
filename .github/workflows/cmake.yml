@@ -60,22 +60,28 @@ jobs:
           THIS_PULL_REQUEST_COMMITS=$(gh pr view ${{ github.event.pull_request.number }} --json commits --jq '.commits[]? | "\(.oid)"' 2>/dev/null || true)
           echo ${THIS_PULL_REQUEST_COMMITS}
 
+      - name: Configure cmake query API
+        run: |
+          mkdir -p ${{env.BUILD_DIR}}/.cmake/api/v1/query
+          touch ${{env.BUILD_DIR}}/.cmake/api/v1/query/codemodel-v2
+          find ${{env.BUILD_DIR}} -iname "codemodel-v2"
+
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
         run: cmake --preset ${{env.PRESET}}
 
-      - name: Configure cmake query API
-        run: |
-          mkdir -p ${{env.BUILD_DIR}}/.cmake/api/v1/query
-          touch ${{env.BUILD_DIR}}/.cmake/api/v1/query/codemodel-v2
-
       - name: Build
         # Build your program with the given configuration
         run: |
+          cmake --version
           cmake --build ${{env.BUILD_DIR}} --parallel
           clang-tidy -p ${{env.BUILD_DIR}} ${{env.BUILD_DIR}}/tmp_lcnsAlgebra_main.cpp
           clang-tidy -p ${{env.BUILD_DIR}} ${{env.BUILD_DIR}}/tmp_lcnsCombinatorics_main.cpp
+
+      - name: Get targets of edited files
+        run: BUILD_DIR=${{env.BUILD_DIR}} ./Scripts/modified-targets.sh
+
 
       - name: Upload build directory to artefact
         uses: actions/upload-artifact@v4
