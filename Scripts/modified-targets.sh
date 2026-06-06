@@ -6,6 +6,7 @@ set -euo pipefail
 COMMIT="${1:-HEAD}"
 
 # TODO Add a comment about this script expecting BUILD_DIR as environment variable argument
+echo "Commit argument is ${COMMIT}"
 
 if [ ! -d "$BUILD_DIR/.cmake/api/v1/reply" ]; then
     echo "Error: CMake File API reply directory not found." >&2
@@ -28,13 +29,14 @@ fi
 CODEMODEL_JSON=$(ls -t $BUILD_DIR/.cmake/api/v1/reply/codemodel-v2-*.json | head -n 1)
 
 # 4. Extract target JSON references from the codemodel
-TARGET_JSONS=$(jq -r '.configurations[0].targets[].jsonFile' "$CODEMODEL_JSON")
+TARGET_JSONS=$(jq -r '.configurations[0] | (.targets[].jsonFile, .abstractTargets[]?.jsonFile)' "$CODEMODEL_JSON")
 
 # 5. Map files to targets
 echo "AFFECTED TARGETS:"
 echo "-----------------"
 CHANGED_TARGETS=$(mats=()
 for target_json in $TARGET_JSONS; do
+
     TARGET_PATH="$BUILD_DIR/.cmake/api/v1/reply/$target_json"
 
     # Extract target name
@@ -50,12 +52,12 @@ for target_json in $TARGET_JSONS; do
 
     # Check if any modified file matches the target's sources
     for file in "${MODIFIED_FILES[@]}"; do
-        # Check if the file is listed in the target's sources array
-        MATCH=$(jq --arg f "$file" --arg prefix "$SRC_DIR" '
-            .sources[] | select(($prefix + .path) == $f)
-        ' "$TARGET_PATH" 2>/dev/null)
 
-        if [ -not -z "$MATCH" ]; then
+        # Check if the file is listed in the target's sources array
+        # MATCH=$(jq --arg f "$file" --arg prefix "$SRC_DIR" '.sources[]?, .interfaceSources[]? | select(($prefix + .path) == $f)' "$TARGET_PATH" 2>/dev/null)
+        MATCH=$(jq --arg f "$file" --arg prefix "$SRC_DIR" '.sources[]?, .interfaceSources[]? | select(.path == $f)' "$TARGET_PATH" 2>/dev/null)
+
+        if [ -n "$MATCH" ]; then
             echo "$TARGET_NAME"
             break # Move to next target once a match is found
         fi

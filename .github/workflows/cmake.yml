@@ -11,7 +11,7 @@ env:
   BUILD_TYPE: Release
   PRESET: linux_release
   BUILD_DIR: ${{github.workspace}}/build/${PRESET}
-  THIS_PULL_REQUEST_COMMITS:
+  PR_COMMITS:
 
 jobs:
   ################################
@@ -53,12 +53,21 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Fetch pull request commits
+        id: pull_request_commits
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "=== Commit hashes and messages ==="
-          THIS_PULL_REQUEST_COMMITS=$(gh pr view ${{ github.event.pull_request.number }} --json commits --jq '.commits[]? | "\(.oid)"' 2>/dev/null || true)
-          echo ${THIS_PULL_REQUEST_COMMITS}
+          PR_COMMITS=$(gh pr view ${{ github.event.pull_request.number }} --json commits --jq '.commits[]? | "\(.oid)"' 2>/dev/null || true)
+
+          # 2. Pick a unique delimiter (EOF is standard)
+          DELIMITER="EOF"
+
+          # 3. Stream the heredoc format into GITHUB_OUTPUT
+          echo "commits<<$DELIMITER" >> $GITHUB_OUTPUT
+          echo "$PR_COMMITS" >> $GITHUB_OUTPUT
+          echo "$DELIMITER" >> $GITHUB_OUTPUT
+
+          echo "$PR_COMMITS"
 
       - name: Configure cmake query API
         run: |
@@ -80,8 +89,15 @@ jobs:
           clang-tidy -p ${{env.BUILD_DIR}} ${{env.BUILD_DIR}}/tmp_lcnsCombinatorics_main.cpp
 
       - name: Get targets of edited files
-        run: BUILD_DIR=${{env.BUILD_DIR}} ./Scripts/modified-targets.sh
-
+        run: |
+          while IFS= read -r commit;
+          do
+            [ -z "$commit" ] && continue
+            echo "----------------------------------------"
+            echo "Processing: $commit"
+            echo "----------------------------------------"
+            BUILD_DIR=${{env.BUILD_DIR}} ./Scripts/modified-targets.sh "${commit}"
+          done <<< "${{ steps.pull_request_commits.outputs.commits }}"
 
       - name: Upload build directory to artefact
         uses: actions/upload-artifact@v4
