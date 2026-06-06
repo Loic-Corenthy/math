@@ -36,6 +36,7 @@ jobs:
           LINTER_RULES_PATH: .
           VALIDATE_CLANG_FORMAT: true
 
+
   build:
     # The CMake configure and build commands are platform agnostic and should work equally
     # well on Windows or Mac.  You can convert this to a matrix build if you need
@@ -51,11 +52,9 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Fetch pull request commits
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "=== Commit hashes and messages ==="
-          gh pr view ${{ github.event.pull_request.number }} --json commits --jq '.commits[]? | "\(.oid) \(.messageHeadLine)"' 2>/dev/null || true
+          gh pr view ${{ github.event.pull_request.number }} --json commits --jq '.commits[]? | "\(.oid)"' 2>/dev/null || true
 
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
