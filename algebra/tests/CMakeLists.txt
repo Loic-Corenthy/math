@@ -13,7 +13,7 @@ target_sources(testVector
 add_test(NAME "Test vec2" COMMAND "$<TARGET_FILE:testVector>" "[algebra][vector][dim2]")
 add_test(NAME "Test vec3" COMMAND "$<TARGET_FILE:testVector>" "[algebra][vector][dim3]")
 add_test(NAME "Test vec4" COMMAND "$<TARGET_FILE:testVector>" "[algebra][vector][dim4]")
-
+set_tests_properties("Test vec2" "Test vec3" "Test vec4" PROPERTIES LABELS "testVector")
 
 ##########
 # Matrix #
@@ -32,6 +32,7 @@ target_sources(testMatrix
 add_test(NAME "Test mat2" COMMAND "$<TARGET_FILE:testMatrix>" "[algebra][matrix][dim2]")
 add_test(NAME "Test mat3" COMMAND "$<TARGET_FILE:testMatrix>" "[algebra][matrix][dim3]")
 add_test(NAME "Test mat4" COMMAND "$<TARGET_FILE:testMatrix>" "[algebra][matrix][dim4]")
+set_tests_properties("Test mat2" "Test mat3" "Test mat4" PROPERTIES LABELS "testMatrix")
 
 
 ##############
@@ -46,6 +47,7 @@ target_sources(testQuaternion
 )
 
 add_test(NAME "Test quat" COMMAND "$<TARGET_FILE:testQuaternion>" "[algebra][quat]")
+set_tests_properties("Test quat" PROPERTIES LABELS "testQuaternion")
 
 
 ###########
@@ -60,6 +62,7 @@ target_sources(testMapping
 )
 
 add_test(NAME "Test mapping functions" COMMAND "$<TARGET_FILE:testMapping>" "[algebra][mapping]")
+set_tests_properties("Test mapping functions" PROPERTIES LABELS "testMapping")
 
 
 ########################
@@ -74,6 +77,7 @@ target_sources(testMultiplicationLarge
 )
 
 add_test(NAME "Test multiplication with multithreading" COMMAND "$<TARGET_FILE:testMultiplicationLarge>" "[test][algebra][multiplication][multithreading]")
+set_tests_properties("Test multiplication with multithreading" PROPERTIES LABELS "testMultiplicationLarge")
 
 # Add tests involving simd only if CPU is valid
 get_target_property(CHECK_AVX_ENABLED lcnsAlgebra INTERFACE_COMPILE_DEFINITIONS)
@@ -82,6 +86,7 @@ string(FIND "${CHECK_AVX_ENABLED}" "AVX_ENABLED_ON_CPU" ENABLE_AVX_TESTS)
 if (ENABLE_AVX_TESTS GREATER_EQUAL "0")
 add_test(NAME "Test multiplication with simd" COMMAND "$<TARGET_FILE:testMultiplicationLarge>" "[test][algebra][multiplication][simd]")
 add_test(NAME "Test multiplication with multithreading and simd" COMMAND "$<TARGET_FILE:testMultiplicationLarge>" "[test][algebra][multiplication][multithreading][simd]")
+set_tests_properties("Test multiplication with simd" "Test multiplication with multithreading and simd" PROPERTIES LABELS "testMultiplicationLarge")
 endif()
 
 ####################################
