@@ -6,7 +6,6 @@ set -euo pipefail
 COMMIT="${1:-HEAD}"
 
 # TODO Add a comment about this script expecting BUILD_DIR as environment variable argument
-echo "Commit argument is ${COMMIT}"
 
 if [ ! -d "$BUILD_DIR/.cmake/api/v1/reply" ]; then
     echo "Error: CMake File API reply directory not found." >&2

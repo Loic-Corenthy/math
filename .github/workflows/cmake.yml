@@ -95,9 +95,6 @@ jobs:
           while IFS= read -r commit;
           do
             [ -z "$commit" ] && continue
-            echo "----------------------------------------"
-            echo "Processing: $commit"
-            echo "----------------------------------------"
             BUILD_DIR=${{env.BUILD_DIR}} ./Scripts/modified-targets.sh "${commit}"
           done <<< "${{ steps.pull_request_commits.outputs.commits }}"
 
