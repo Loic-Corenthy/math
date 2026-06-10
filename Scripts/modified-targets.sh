@@ -29,7 +29,7 @@ CODEMODEL_JSON=$(ls -t $BUILD_DIR/.cmake/api/v1/reply/codemodel-v2-*.json | head
 TARGET_JSONS=$(jq -r '.configurations[0] | (.targets[].jsonFile, .abstractTargets[]?.jsonFile)' "$CODEMODEL_JSON")
 
 # 5. Map files to targets
-CHANGED_TARGETS=$(mats=()
+CHANGED_TARGETS=$(#mats=()
 for target_json in $TARGET_JSONS; do
 
     TARGET_PATH="$BUILD_DIR/.cmake/api/v1/reply/$target_json"
@@ -53,8 +53,8 @@ for target_json in $TARGET_JSONS; do
         MATCH=$(jq --arg f "$file" --arg prefix "$SRC_DIR" '.sources[]?, .interfaceSources[]? | select(.path == $f)' "$TARGET_PATH" 2>/dev/null)
 
         if [ -n "$MATCH" ]; then
-            # echo "$TARGET_NAME"
-            break # Move to next target once a match is found
+            echo "$TARGET_NAME"
+            break
         fi
     done
 done)
