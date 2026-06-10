@@ -13,8 +13,6 @@ if [ ! -d "$BUILD_DIR/.cmake/api/v1/reply" ]; then
     exit 1
 fi
 
-echo "Analyzing commit: $(git rev-parse --short "$COMMIT")" >&2
-
 # 2. Get list of modified files relative to repo root
 # Filters for Added, Copied, Modified, and Renamed files
 mapfile -t MODIFIED_FILES < <(git diff-tree --no-commit-id --name-only -r "$COMMIT" --diff-filter=ACMR)
@@ -31,8 +29,6 @@ CODEMODEL_JSON=$(ls -t $BUILD_DIR/.cmake/api/v1/reply/codemodel-v2-*.json | head
 TARGET_JSONS=$(jq -r '.configurations[0] | (.targets[].jsonFile, .abstractTargets[]?.jsonFile)' "$CODEMODEL_JSON")
 
 # 5. Map files to targets
-echo "AFFECTED TARGETS:"
-echo "-----------------"
 CHANGED_TARGETS=$(mats=()
 for target_json in $TARGET_JSONS; do
 
@@ -57,16 +53,14 @@ for target_json in $TARGET_JSONS; do
         MATCH=$(jq --arg f "$file" --arg prefix "$SRC_DIR" '.sources[]?, .interfaceSources[]? | select(.path == $f)' "$TARGET_PATH" 2>/dev/null)
 
         if [ -n "$MATCH" ]; then
-            echo "$TARGET_NAME"
+            # echo "$TARGET_NAME"
             break # Move to next target once a match is found
         fi
     done
 done)
 
 # Deduplicate and print the results
-if [ -z "$CHANGED_TARGETS" ]; then
-    echo "No matching CMake targets found for the modified files."
-else
+if [ -n "$CHANGED_TARGETS" ]; then
     echo "$CHANGED_TARGETS" | sort -u
 fi
 
