@@ -20,6 +20,8 @@ mapfile -t MODIFIED_FILES < <(git diff-tree --no-commit-id --name-only -r "$COMM
 if [ ${#MODIFIED_FILES[@]} -eq 0 ]; then
     echo "No files modified in this commit."
     exit 0
+else
+    echo ${MODIFIED_FILES}
 fi
 
 # 3. Find the latest codemodel JSON reply file
@@ -51,6 +53,9 @@ for target_json in $TARGET_JSONS; do
         # Check if the file is listed in the target's sources array
         # MATCH=$(jq --arg f "$file" --arg prefix "$SRC_DIR" '.sources[]?, .interfaceSources[]? | select(($prefix + .path) == $f)' "$TARGET_PATH" 2>/dev/null)
         MATCH=$(jq --arg f "$file" --arg prefix "$SRC_DIR" '.sources[]?, .interfaceSources[]? | select(.path == $f)' "$TARGET_PATH" 2>/dev/null)
+
+        echo "Match is ${MATCH} for target ${TARGET_NAME}"
+
 
         if [[ -n "$MATCH" && "${TARGET_NAME}" == test* ]]; then
             echo "${TARGET_NAME}"
