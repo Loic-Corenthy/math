@@ -142,6 +142,7 @@ jobs:
         run: |
           ALL_TESTS=$(ctest --test-dir ${{env.BUILD_DIR}}/algebra/tests --show-only=json-v1 | jq -r ".tests[].command[0]" | awk -F'/' '{print $NF}' | sort -u)
           echo "All the tests are: ${ALL_TESTS}"
+          test_names=${ALL_TESTS} modified_targets="${{ steps.targets_to_test.outputs.target_names}}" ./Scripts/create-test-groups.sh
 
       - name: Test algebra module
         run: ctest -C ${{env.BUILD_TYPE}} --test-dir ${{env.BUILD_DIR}}/algebra/tests --output-on-failure -VV --parallel
