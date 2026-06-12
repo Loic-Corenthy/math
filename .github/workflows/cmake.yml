@@ -116,6 +116,13 @@ jobs:
           path: |
             ${{github.workspace}}/build
 
+      - name: Upload create-test-groups script
+        uses: actions/upload-artifact@v4
+        with:
+          name: create-test-groups
+          path: |
+            ${{github.workspace}}/Scripts/create-test-groups.sh
+
   tests:
     runs-on: ubuntu-latest
     needs: build
@@ -127,13 +134,20 @@ jobs:
           name: build_directory
           path: build
 
-      - name: Update mode for test executable
+      - name: Download create-test-groups script
+        uses: actions/download-artifact@v4
+        with:
+          name: create-test-groups
+          path: Scripts/
+
+      - name: Update mode for executables
         run: |
           chmod +x ${{env.BUILD_DIR}}/algebra/tests/testVector
           chmod +x ${{env.BUILD_DIR}}/algebra/tests/testMatrix
           chmod +x ${{env.BUILD_DIR}}/algebra/tests/testQuaternion
           chmod +x ${{env.BUILD_DIR}}/algebra/tests/testMapping
           chmod +x ${{env.BUILD_DIR}}/algebra/tests/testMultiplicationLarge
+          chmod +x ./Scripts/create-test-groups.sh
 
       - name: Check CPU
         run: grep -o 'avx[^ ]*' /proc/cpuinfo
