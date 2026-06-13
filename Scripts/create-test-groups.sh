@@ -29,11 +29,9 @@ for test_name in $test_names:
     # We use a regex match inside [[ ]] to look for the exact word boundary
     # to prevent partial word matches (e.g., catching "test_math" inside "test_math_advanced")
     if [[ " $modified_targets " =~ [[:space:]]${test_name}[[:space:]] ]]; then
-        echo "[MATCH] Adding '$test_name' to first_tests"
         # Append to the string (adding a space delimiter if it's not the first item)
         if [ -z "$first_tests" ]; then first_tests="$test_name"; else first_tests="$first_tests $test_name"; fi
     else
-        echo "[MISMATCH] Adding '$test_name' to second_tests"
         if [ -z "$second_tests" ]; then second_tests="$test_name"; else second_tests="$second_tests $test_name"; fi
     fi
   done
