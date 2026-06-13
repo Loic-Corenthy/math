@@ -166,7 +166,7 @@ jobs:
           # Get everything after the delimiter
           right="${TEST_GROUPS#*$delimiter}"
 
-          echo 'first_group="${TEST_GROUPS%$delimiter*}" second_group=${TEST_GROUPS#*$delimiter}' >> $GITHUB_OUTPUT
+          echo "first_group=\"${TEST_GROUPS%$delimiter*}\" second_group=\"${TEST_GROUPS#*$delimiter}\"" >> $GITHUB_OUTPUT
 
       - name: Run tests for targets modified in this pull request
         run: ctest -C ${{env.BUILD_TYPE}} --test-dir ${{env.BUILD_DIR}}/algebra/tests --output-on-failure -VV --parallel -R "${{ steps.define_test_groups.outputs.first_group}}"
