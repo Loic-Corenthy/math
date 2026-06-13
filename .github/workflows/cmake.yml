@@ -166,6 +166,9 @@ jobs:
           # Get everything after the delimiter
           right="${TEST_GROUPS#*$delimiter}"
 
+          echo "Left is: ${left}"
+          echo "Right is ${right}"
+
           echo "first_group=${left}" >> $GITHUB_OUTPUT
           echo "second_group=${right}" >> $GITHUB_OUTPUT
 
