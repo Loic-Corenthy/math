@@ -42,8 +42,7 @@ for test_name in $test_names:
 # =====================================================================
 # 4. PRINT THE FINAL RESULTS
 # =====================================================================
-echo "--------------------------------------------------"
-echo "FINAL RESULT VARIABLES:"
-echo "--------------------------------------------------"
-echo "first_tests:  \"$first_tests\""
-echo "second_tests: \"$second_tests\""
+echo "$first_tests"
+echo "###" #delimiter
+echo "$second_tests"
+

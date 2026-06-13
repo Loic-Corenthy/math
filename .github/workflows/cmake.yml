@@ -156,7 +156,17 @@ jobs:
         run: |
           ALL_TESTS=$(ctest --test-dir ${{env.BUILD_DIR}}/algebra/tests --show-only=json-v1 | jq -r ".tests[].command[0]" | awk -F'/' '{print $NF}' | sort -u)
           echo "All the tests are: ${ALL_TESTS}"
-          test_names=${ALL_TESTS} modified_targets="${{ needs.build.outputs.target_names}}" ./Scripts/create-test-groups.sh
+          TEST_GROUPS=$(test_names=${ALL_TESTS} modified_targets="${{ needs.build.outputs.target_names}}" ./Scripts/create-test-groups.sh)
+
+          delimiter="###"
+          # Get everything before the delimiter
+          left="${TEST_GROUPS%$delimiter*}"
+
+          # Get everything after the delimiter
+          right="${TEST_GROUPS#*$delimiter}"
+
+          echo "Left:  $left"
+          echo "Right: $right"
 
       - name: Test algebra module
         run: ctest -C ${{env.BUILD_TYPE}} --test-dir ${{env.BUILD_DIR}}/algebra/tests --output-on-failure -VV --parallel
