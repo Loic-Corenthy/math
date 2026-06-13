@@ -35,7 +35,5 @@ for test_name in $test_names:
 # =====================================================================
 # 4. PRINT THE FINAL RESULTS
 # =====================================================================
-echo "$first_tests"
-echo "###" #delimiter
-echo "$second_tests"
+echo "${first_tests}###${second_tests}"
 
