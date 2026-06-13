@@ -11,10 +11,6 @@ set -e
 first_tests=""
 second_tests=""
 
-echo "--------------------------------------------------"
-echo "Modified Targets to check: $modified_targets"
-echo "--------------------------------------------------"
-
 # =====================================================================
 # 2. QUERY CTEST AND LOOP THROUGH EACH TEST
 # =====================================================================
@@ -35,7 +31,6 @@ for test_name in $test_names:
         if [ -z "$second_tests" ]; then second_tests="$test_name"; else second_tests="$second_tests $test_name"; fi
     fi
   done
-
 
 # =====================================================================
 # 4. PRINT THE FINAL RESULTS
