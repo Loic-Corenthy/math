@@ -176,7 +176,7 @@ jobs:
         run: |
           if [[ -n "${{ steps.define_test_groups.outputs.first_group}}" ]]; then
           CTEST_REGEX=$(echo "${{ steps.define_test_groups.outputs.first_group}}" | sed -E 's/[[:space:]]+/|/g; s/^/^\(/; s/$/\)$/; s/://')
-            ctest -C ${{env.BUILD_TYPE}} --test-dir ${{env.BUILD_DIR}}/algebra/tests --output-on-failure -VV --parallel -R ${CTEST_REGEX}
+            ctest -C ${{env.BUILD_TYPE}} --test-dir ${{env.BUILD_DIR}}/algebra/tests --output-on-failure -VV --parallel -R "${CTEST_REGEX}"
           fi
 
       - name: Run the other tests
@@ -184,7 +184,7 @@ jobs:
           if [[ -n "${{ steps.define_test_groups.outputs.second_group}}" ]]; then
             CTEST_REGEX=$(echo "${{ steps.define_test_groups.outputs.second_group}}" | sed -E 's/[[:space:]]+/|/g; s/^/^\(/; s/$/\)$/; s/://')
             echo "${CTEST_REGEX}"
-            ctest -C ${{env.BUILD_TYPE}} --test-dir ${{env.BUILD_DIR}}/algebra/tests --output-on-failure -VV --parallel -R ${CTEST_REGEX}
+            ctest -C ${{env.BUILD_TYPE}} --test-dir ${{env.BUILD_DIR}}/algebra/tests --output-on-failure -VV --parallel -R "${CTEST_REGEX}"
           fi
 
       - name: Clean build directory artifact
