@@ -173,7 +173,10 @@ jobs:
           echo "second_group=${right}" >> $GITHUB_OUTPUT
 
       - name: Run tests for targets modified in this pull request
-        run: ctest -C ${{env.BUILD_TYPE}} --test-dir ${{env.BUILD_DIR}}/algebra/tests --output-on-failure -VV --parallel -R ${{ steps.define_test_groups.outputs.first_group}}
+        run: |
+          if [[ -n "${{ steps.define_test_groups.outputs.first_group}}" ]]; then
+            ctest -C ${{env.BUILD_TYPE}} --test-dir ${{env.BUILD_DIR}}/algebra/tests --output-on-failure -VV --parallel -R ${{ steps.define_test_groups.outputs.first_group}}
+          fi
 
       - name: Run the other tests
         run: ctest -C ${{env.BUILD_TYPE}} --test-dir ${{env.BUILD_DIR}}/algebra/tests --output-on-failure -VV --parallel -R ${{ steps.define_test_groups.outputs.second_group}}
