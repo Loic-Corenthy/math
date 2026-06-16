@@ -68,37 +68,38 @@ if [ -n "$CHANGED_TARGETS" ]; then
     CHANGED_TARGETS=$(sort -u <<< "${CHANGED_TARGETS}")
 fi
 
+echo "${CHANGED_TARGETS}"
 
-FINAL_RESULT=${CHANGED_TARGETS}
-
-for changed_target in ${CHANGED_TARGETS}; do
-    for target in ${TARGET_JSONS}; do
-        TARGET_PATH="$BUILD_DIR/.cmake/api/v1/reply/$target"
-
-        # Extract target name
-        TARGET_NAME=$(jq -r '.name' "$TARGET_PATH")
-
-        # Extract all source files for this target
-        # CMake paths are often relative to the target's source directory,
-        # so we resolve them relative to the repository root.
-        SRC_DIR=$(jq -r '.paths.source' "$TARGET_PATH")
-
-        # Adjust dot prefix if source is at root
-        if [ "$SRC_DIR" = "." ]; then SRC_DIR=""; else SRC_DIR="$SRC_DIR/"; fi
-
-
-        FINAL_MATCH=$(jq --arg ct ${changed_target} --arg prefix "$SRC_DIR" '.linkLibraries[]? | select(.id? | contains("lcnsAlgebra")) | .id' "$TARGET_PATH")
-
-        if [[ -n "${FINAL_MATCH}" ]]; then
-            FINAL_RESULT+=$(jq -r '.name' ${TARGET_PATH})
-            FINAL_RESULT+=$'\n'
-        fi
-    done
-done
-
-PREFIX="test"
-FILTERED_TESTS=$(grep "^$PREFIX" <<< "$FINAL_RESULT")
-
-echo "${FILTERED_TESTS}"
-echo "DEBUG_RESULT"
+# FINAL_RESULT=${CHANGED_TARGETS}
+# 
+# for changed_target in ${CHANGED_TARGETS}; do
+#     for target in ${TARGET_JSONS}; do
+#         TARGET_PATH="$BUILD_DIR/.cmake/api/v1/reply/$target"
+# 
+#         # Extract target name
+#         TARGET_NAME=$(jq -r '.name' "$TARGET_PATH")
+# 
+#         # Extract all source files for this target
+#         # CMake paths are often relative to the target's source directory,
+#         # so we resolve them relative to the repository root.
+#         SRC_DIR=$(jq -r '.paths.source' "$TARGET_PATH")
+# 
+#         # Adjust dot prefix if source is at root
+#         if [ "$SRC_DIR" = "." ]; then SRC_DIR=""; else SRC_DIR="$SRC_DIR/"; fi
+# 
+# 
+#         FINAL_MATCH=$(jq --arg ct ${changed_target} --arg prefix "$SRC_DIR" '.linkLibraries[]? | select(.id? | contains("lcnsAlgebra")) | .id' "$TARGET_PATH")
+# 
+#         if [[ -n "${FINAL_MATCH}" ]]; then
+#             FINAL_RESULT+=$(jq -r '.name' ${TARGET_PATH})
+#             FINAL_RESULT+=$'\n'
+#         fi
+#     done
+# done
+# 
+# PREFIX="test"
+# FILTERED_TESTS=$(grep "^$PREFIX" <<< "$FINAL_RESULT")
+# 
+# echo "${FILTERED_TESTS}"
+# echo "DEBUG_RESULT"
 
