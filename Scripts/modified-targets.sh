@@ -100,4 +100,5 @@ PREFIX="test"
 FILTERED_TESTS=$(grep "^$PREFIX" <<< "$FINAL_RESULT")
 
 echo "${FILTERED_TESTS}"
+echo "DEBUG_RESULT"
 
