@@ -1,10 +1,9 @@
 import logging
-import sys
 
 
 class ColorFormatter(logging.Formatter):
     def __init__(self):
-    # ANSI escape sequences for colors
+        # ANSI escape sequences for colors
         self.GREY = "\x1b[38;20m"
         self.GREEN = "\x1b[32;20m"
         self.YELLOW = "\x1b[33;20m"
@@ -13,15 +12,15 @@ class ColorFormatter(logging.Formatter):
         self.RESET = "\x1b[0m"
 
         # Base log message format
-        log_format = "%(asctime)s - %(levelname)s - %(message)s (%(filename)s:%(lineno)d)"
+        self.log_format = "%(asctime)s - %(levelname)s - %(message)s (%(filename)s:%(lineno)d)"
 
         # Mapping log levels to colors
         self.FORMATS = {
-            logging.DEBUG: self.GREY + log_format + self.RESET,
-            logging.INFO: self.GREEN + log_format + self.RESET,
-            logging.WARNING: self.YELLOW + log_format + self.RESET,
-            logging.ERROR: self.RED + log_format + self.RESET,
-            logging.CRITICAL: self.BOLD_RED + log_format + self.RESET,
+            logging.DEBUG: self.GREY + self.log_format + self.RESET,
+            logging.INFO: self.GREEN + self.log_format + self.RESET,
+            logging.WARNING: self.YELLOW + self.log_format + self.RESET,
+            logging.ERROR: self.RED + self.log_format + self.RESET,
+            logging.CRITICAL: self.BOLD_RED + self.log_format + self.RESET,
         }
 
     def format(self, record):
