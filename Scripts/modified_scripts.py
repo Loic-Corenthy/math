@@ -1,4 +1,5 @@
 import logging
+import subprocess
 import sys
 from pathlib import Path
 
@@ -17,15 +18,16 @@ def ModifiedFiles(build_dir : str):
     handler.setFormatter(ColorFormatter.ColorFormatter())
     logger.addHandler(handler)
 
-
-
     # Check if the reply file from cmake exists
     path = Path(f"{build_dir}/.cmake/api/v1/reply")
 
-    if not path.is_file():
-        logger.error("cmake \"reply\" file not found")
+    if not path.is_dir():
+        logger.error("cmake's \"reply\" directory not found")
         return 1
 
+    modified_files = subprocess.run(["git", "diff-tree", "--no-commit-id", "--name-only", "-r", "--diff-filter=ACMR",  "HEAD"], capture_output=True, text=True, check=True)
+
+    logger.info(f"The list of modified files is:\n{modified_files.stdout}")
     # Test outputs
     # logger.debug("This is a debug message.")
     # logger.info("This is an info message.")
