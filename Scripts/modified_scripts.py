@@ -23,8 +23,15 @@ def ModifiedFiles(build_dir : str):
     handler.setFormatter(ColorFormatter.ColorFormatter())
     logger.addHandler(handler)
 
+
+    root_dir = Path(build_dir)
+
     # Check if the reply file from cmake exists
-    path = Path(f"{build_dir}/.cmake/api/v1/reply")
+    path = root_dir / ".cmake/api/v1/reply"
+
+
+    logger.debug(f"Path to reply is: {path}")
+
 
     if not path.is_dir():
         logger.error("cmake's \"reply\" directory not found")
@@ -38,19 +45,15 @@ def ModifiedFiles(build_dir : str):
     else:
         logger.info(f"Modified files for this pull request: {modified_files}")
 
+    path_to_codemodel = root_dir / ".cmake/api/v1/reply/"
 
- 
-    #path_to_codemodel = build_dir + "/.cmake/api/v1/reply/codemodel-v2-*.json"
-    path_to_codemodel = build_dir + "/.cmake/api/v1/reply/"
+    codemodel_json = [str(p) for p in path_to_codemodel.rglob("codemodel-v2-*.json") if p.is_file()]
 
-    # logger.debug(path_to_codemodel)
-    #codemodel_json=RunRequest("ls -t " + path_to_codemodel + " | head -n 1")
-    codemodel_json=RunRequest("find -iname codemodel-v2-*.json " + path_to_codemodel)
-    # codemodel_json_request = subprocess.run(["ls", "-t", path_to_codemodel], capture_output=True, text=True, check=True)
+    # logger.info(f"Da result is {codemodel_json[0]}")
 
-    # codemodel_json = codemodel_json_request.stdout.splitlines()
 
-    logger.info(f"{codemodel_json}")
+
+
 
     # Test outputs
     # logger.debug("This is a debug message.")
