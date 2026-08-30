@@ -39,16 +39,18 @@ def ModifiedFiles(build_dir : str):
         logger.info(f"Modified files for this pull request: {modified_files}")
 
 
-    # #codemodel_json = subprocess.run(["ls", "-t", f"{build_dir}/.cmake/api/v1/reply/codemodel-v2-*.json", "|", "head", "-n", "1"], capture_output=True, text=True, check=True)
-    # path_to_codemodel = build_dir + "/.cmake/api/v1/reply/codemodel-v2-*.json"
+ 
+    #path_to_codemodel = build_dir + "/.cmake/api/v1/reply/codemodel-v2-*.json"
+    path_to_codemodel = build_dir + "/.cmake/api/v1/reply/"
 
     # logger.debug(path_to_codemodel)
-
+    #codemodel_json=RunRequest("ls -t " + path_to_codemodel + " | head -n 1")
+    codemodel_json=RunRequest("find -iname codemodel-v2-*.json " + path_to_codemodel)
     # codemodel_json_request = subprocess.run(["ls", "-t", path_to_codemodel], capture_output=True, text=True, check=True)
 
     # codemodel_json = codemodel_json_request.stdout.splitlines()
 
-    # logger.info(f"{codemodel_json}")
+    logger.info(f"{codemodel_json}")
 
     # Test outputs
     # logger.debug("This is a debug message.")
