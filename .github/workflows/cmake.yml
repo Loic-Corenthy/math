@@ -11,6 +11,7 @@ env:
   BUILD_TYPE: Release
   PRESET: linux_release
   BUILD_DIR: ${{github.workspace}}/build/${PRESET}
+  PR_COMMITS:
 
 jobs:
   ################################
@@ -36,6 +37,7 @@ jobs:
           LINTER_RULES_PATH: .
           VALIDATE_CLANG_FORMAT: true
 
+
   build:
     # The CMake configure and build commands are platform agnostic and should work equally
     # well on Windows or Mac.  You can convert this to a matrix build if you need
@@ -49,6 +51,31 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # <-- This forces Git to download all commits and history
+
+      - name: Fetch pull request commits
+        id: pull_request_commits
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_COMMITS=$(gh pr view ${{ github.event.pull_request.number }} --json commits --jq '.commits[]? | "\(.oid)"' 2>/dev/null || true)
+
+          # 2. Pick a unique delimiter (EOF is standard)
+          DELIMITER="EOF"
+
+          # 3. Stream the heredoc format into GITHUB_OUTPUT
+          echo "commits<<$DELIMITER" >> $GITHUB_OUTPUT
+          echo "$PR_COMMITS" >> $GITHUB_OUTPUT
+          echo "$DELIMITER" >> $GITHUB_OUTPUT
+
+          echo "$PR_COMMITS"
+
+      - name: Configure cmake query API
+        run: |
+          mkdir -p ${{env.BUILD_DIR}}/.cmake/api/v1/query
+          touch ${{env.BUILD_DIR}}/.cmake/api/v1/query/codemodel-v2
+          find ${{env.BUILD_DIR}} -iname "codemodel-v2"
 
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
@@ -58,9 +85,29 @@ jobs:
       - name: Build
         # Build your program with the given configuration
         run: |
+          cmake --version
           cmake --build ${{env.BUILD_DIR}} --parallel
           clang-tidy -p ${{env.BUILD_DIR}} ${{env.BUILD_DIR}}/tmp_lcnsAlgebra_main.cpp
           clang-tidy -p ${{env.BUILD_DIR}} ${{env.BUILD_DIR}}/tmp_lcnsCombinatorics_main.cpp
+
+      - name: Get targets of edited files
+        id: targets_to_test
+        run: |
+          TARGETS_TO_TEST_FIRST=$(while IFS= read -r commit;
+          do
+            [ -z "$commit" ] && continue
+            BUILD_DIR=${{env.BUILD_DIR}} ./Scripts/modified-targets.sh "${commit}"
+          done <<< "${{ steps.pull_request_commits.outputs.commits }}")
+
+          # 2. Pick a unique delimiter (EOF is standard)
+          DELIMITER="EOF"
+
+          # 3. Stream the heredoc format into GITHUB_OUTPUT
+          echo "target_names<<$DELIMITER" >> $GITHUB_OUTPUT
+          echo "$TARGETS_TO_TEST_FIRST" >> $GITHUB_OUTPUT
+          echo "$DELIMITER" >> $GITHUB_OUTPUT
+
+          echo " The targes we want to test first are: ${TARGETS_TO_TEST_FIRST}"
 
       - name: Upload build directory to artefact
         uses: actions/upload-artifact@v4
@@ -68,6 +115,13 @@ jobs:
           name: build_directory
           path: |
             ${{github.workspace}}/build
+
+      - name: Upload create-test-groups script
+        uses: actions/upload-artifact@v4
+        with:
+          name: create-test-groups
+          path: |
+            ${{github.workspace}}/Scripts/create-test-groups.sh
 
   tests:
     runs-on: ubuntu-latest
@@ -80,19 +134,58 @@ jobs:
           name: build_directory
           path: build
 
-      - name: Update mode for test executable
+      - name: Download create-test-groups script
+        uses: actions/download-artifact@v4
+        with:
+          name: create-test-groups
+          path: Scripts/
+
+      - name: Update mode for executables
         run: |
           chmod +x ${{env.BUILD_DIR}}/algebra/tests/testVector
           chmod +x ${{env.BUILD_DIR}}/algebra/tests/testMatrix
           chmod +x ${{env.BUILD_DIR}}/algebra/tests/testQuaternion
           chmod +x ${{env.BUILD_DIR}}/algebra/tests/testMapping
           chmod +x ${{env.BUILD_DIR}}/algebra/tests/testMultiplicationLarge
+          chmod +x ./Scripts/create-test-groups.sh
 
       - name: Check CPU
         run: grep -o 'avx[^ ]*' /proc/cpuinfo
 
-      - name: Test algebra module
-        run: ctest -C ${{env.BUILD_TYPE}} --test-dir ${{env.BUILD_DIR}}/algebra/tests --output-on-failure -VV --parallel
+      - name: Define test groups
+        id: define_test_groups
+        run: |
+          ALL_TESTS=$(ctest --test-dir ${{env.BUILD_DIR}}/algebra/tests --show-only=json-v1 | jq -r ".tests[].command[0]" | awk -F'/' '{print $NF}' | sort -u)
+          echo "All the tests are: ${ALL_TESTS}"
+          TEST_GROUPS=$(test_names=${ALL_TESTS} modified_targets="${{ needs.build.outputs.target_names}}" ./Scripts/create-test-groups.sh)
+
+          delimiter="###"
+          # Get everything before the delimiter
+          left="${TEST_GROUPS%$delimiter*}"
+
+          # Get everything after the delimiter
+          right="${TEST_GROUPS#*$delimiter}"
+
+          echo "Left is: ${left}"
+          echo "Right is ${right}"
+
+          echo "first_group=${left}" >> $GITHUB_OUTPUT
+          echo "second_group=${right}" >> $GITHUB_OUTPUT
+
+      - name: Run tests for targets modified in this pull request
+        run: |
+          if [[ -n "${{ steps.define_test_groups.outputs.first_group}}" ]]; then
+          CTEST_REGEX=$(echo "${{ steps.define_test_groups.outputs.first_group}}" | sed -E 's/[[:space:]]+/|/g; s/^/^\(/; s/$/\)$/; s/://')
+            ctest -C ${{env.BUILD_TYPE}} --test-dir ${{env.BUILD_DIR}}/algebra/tests --output-on-failure -VV --parallel -L "${CTEST_REGEX}"
+          fi
+
+      - name: Run the other tests
+        run: |
+          if [[ -n "${{ steps.define_test_groups.outputs.second_group}}" ]]; then
+            CTEST_REGEX=$(echo "${{ steps.define_test_groups.outputs.second_group}}" | sed -E 's/[[:space:]]+/|/g; s/^/^\(/; s/$/\)$/; s/://')
+            echo "${CTEST_REGEX}"
+            ctest -C ${{env.BUILD_TYPE}} --test-dir ${{env.BUILD_DIR}}/algebra/tests --output-on-failure -VV --parallel -L "${CTEST_REGEX}"
+          fi
 
       - name: Clean build directory artifact
         uses: geekyeggo/delete-artifact@v5
