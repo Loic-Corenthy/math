@@ -13,6 +13,15 @@ def RunRequest(request : str ):
 
     return result.stdout.splitlines()
 
+
+def GetTargetData(target_path : Path):
+    with open(target_path, "r") as target_file:
+        target_data = json.load(target_file)
+
+    return target_data
+
+
+
 def ModifiedFiles(build_dir : str):
     # Setup logger and handler
 
@@ -66,13 +75,22 @@ def ModifiedFiles(build_dir : str):
 
         target_path = path_reply_dir / target
 
-        with open(target_path, "r") as target_file:
-            target_data = json.load(target_file)
+        target_data = GetTargetData(target_path)
 
-            target_name = jq.all('.name', target_data)
+        target_name = jq.all('.name', target_data)
+        logger.warning(f"The target name is {target_name[0]}")
 
-            logger.warning(f"The target name is {target_name[0]}")
+        # Extract all source files for this target
+        # CMake paths are often relative to the target's source directory, so we resolve them relative to the repository root.
+        source_dir = jq.all('.paths.source', target_data)
 
+        # Adjust dot prefix if source is at root
+        if source_dir[0] == ".":
+            source_dir[0] = ""
+        else:
+            source_dir[0] += "/"
+
+        logger.warning(f"The source directory is {source_dir}")
 
     # Test outputs
     # logger.debug("This is a debug message.")
