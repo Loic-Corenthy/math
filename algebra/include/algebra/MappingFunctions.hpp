@@ -103,4 +103,10 @@ namespace LCNS::Algebra
 
         return impl(copy);
     }
+
+    int FortyTwo()
+    {
+        const int res{42};
+        return res;
+    }
 }
