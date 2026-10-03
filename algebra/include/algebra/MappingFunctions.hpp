@@ -1,6 +1,5 @@
 #pragma once
 
-#include "algebra/Vector.hpp"
 #include "algebra/Matrix.hpp"
 #include "algebra/Quaternion.hpp"
 
