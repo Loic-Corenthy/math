@@ -40,4 +40,11 @@ namespace LCNS::Combinatorics
         return allPermutations;
     }
 
+    int func()
+    {
+        const auto val{42};
+        return val;
+    }
+
+
 }  // namespace LCNS::Combinatorics
