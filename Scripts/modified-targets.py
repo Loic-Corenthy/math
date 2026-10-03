@@ -20,7 +20,21 @@ def GetTargetData(target_path : Path):
 
     return target_data
 
+def GetModifiedFiles():
 
+    # git rev-list main..HEAD | xargs -n 1 git diff-tree --no-commit-id --name-only -r | sort -u
+    commit_list = RunRequest("git rev-list main..HEAD")
+    print(f"list of commits: {" ".join(commit_list)}")
+
+    # file_list = RunRequest(f"git diff-tree --no-commit-id --name-only -r {" ".join(commit_list)}")
+    result = set()
+    for commit in commit_list:
+        files_per_commit = RunRequest(f"git diff-tree --no-commit-id --name-only -r --diff-filter=ACMR {commit}")
+        for file in files_per_commit:
+            if file.endswith((".hpp", ".h", ".cpp", ".c")):
+                result.add(file)
+
+    return list(result)
 
 def ModifiedFiles(build_dir : str):
     # Setup logger and handler
@@ -46,7 +60,10 @@ def ModifiedFiles(build_dir : str):
 
     # 2. Get the list of modified files
     # Filters for Added, Copied, Modified, and Renamed files
-    modified_files = RunRequest("git diff-tree --no-commit-id --name-only -r --diff-filter=ACMR HEAD")
+    # modified_files = RunRequest("git diff-tree --no-commit-id --name-only -r --diff-filter=ACMR HEAD")
+    modified_files = GetModifiedFiles()
+
+    logger.warning(f"The modified files are: {modified_files}")
 
     if len(modified_files) == 0:
         logger.warning("No files modified in this pull request. Nothing to do")
@@ -69,6 +86,7 @@ def ModifiedFiles(build_dir : str):
     target_json = jq.all('.configurations[0] | (.targets[], .abstractTargets[]?) | select(.directoryIndex != 0) | .jsonFile', data)
 
 
+    edited_targets = []
     # 5. Map files to targets
     for target in target_json:
         logger.info(f"Now processing target {target}")
@@ -78,7 +96,7 @@ def ModifiedFiles(build_dir : str):
         target_data = GetTargetData(target_path)
 
         target_name = jq.all('.name', target_data)
-        logger.warning(f"The target name is {target_name[0]}")
+        # logger.warning(f"The target name is {target_name[0]}")
 
         # Extract all source files for this target
         # CMake paths are often relative to the target's source directory, so we resolve them relative to the repository root.
@@ -90,7 +108,23 @@ def ModifiedFiles(build_dir : str):
         else:
             source_dir[0] += "/"
 
-        logger.warning(f"The source directory is {source_dir}")
+        # logger.warning(f"The source directory is {source_dir}")
+
+
+        for file in modified_files:
+            logger.info(f"now looking at prefix: {source_dir[0]} and file: {file}")
+            request = jq.compile('.sources[]?, .interfaceSources[]? | select(.path == $f)', args={"f": file})
+
+            match = request.input_value(target_data).all()
+
+            logger.warning(match)
+
+            if match:
+                logger.info(f"This target was modified: {target_name}")
+                edited_targets += target_name
+
+
+    logger.info(f"All edited targers are {edited_targets}")
 
     # Test outputs
     # logger.debug("This is a debug message.")
@@ -98,6 +132,5 @@ def ModifiedFiles(build_dir : str):
     # logger.warning("This is a warning message.")
     # logger.error("This is an error message.")
     # logger.critical("This is a critical error message!")
-
 
 ModifiedFiles(sys.argv[1])
