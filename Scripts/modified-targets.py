@@ -1,6 +1,7 @@
 import jq
 import json
 import logging
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -86,22 +87,18 @@ def ModifiedFiles(build_dir : str) -> list(str):
     # Remove directoryIndex = 0 because we use FetchContent_Declare from the root directory and we don't want to take these targets into account
     target_json = jq.all('.configurations[0] | (.targets[], .abstractTargets[]?) | select(.directoryIndex != 0) | .jsonFile', data)
 
-
     # 5. Map files to targets
     edited_targets = []
 
     for target in target_json:
-        logger.info(f"Now processing target {target}")
-
+        # Get the full path of the json file for a target
         target_path = path_reply_dir / target
 
         target_data = GetJSONFileContent(target_path)
 
         target_name = jq.all('.name', target_data)
-        # logger.warning(f"The target name is {target_name[0]}")
 
         # Extract all source files for this target
-        # CMake paths are often relative to the target's source directory, so we resolve them relative to the repository root.
         source_dir = jq.all('.paths.source', target_data)
 
         # Adjust dot prefix if source is at root
@@ -110,29 +107,39 @@ def ModifiedFiles(build_dir : str) -> list(str):
         else:
             source_dir[0] += "/"
 
-        # logger.warning(f"The source directory is {source_dir}")
-
-
         for file in modified_files:
-            logger.info(f"now looking at prefix: {source_dir[0]} and file: {file}")
             request = jq.compile('.sources[]?, .interfaceSources[]? | select(.path == $f)', args={"f": file})
 
             match = request.input_value(target_data).all()
-
-            logger.warning(match)
 
             if match:
                 logger.info(f"This target was modified: {target_name}")
                 edited_targets += target_name
 
+    return edited_targets
 
-    logger.info(f"All edited targets are {edited_targets}")
 
-    # Test outputs
-    # logger.debug("This is a debug message.")
-    # logger.info("This is an info message.")
-    # logger.warning("This is a warning message.")
-    # logger.error("This is an error message.")
-    # logger.critical("This is a critical error message!")
+def FilterTargets(targets : list(str)) -> list(str):
+    valid = ["test*"]
 
-ModifiedFiles(sys.argv[1])
+
+    # strings = ["apple123", "banana_456", "cherry", "date", "elderberry"]
+    # patterns = [r"^a", r"\d+"]  # Starts with 'a' OR contains digits
+
+    # Combine into a single pattern: (?:^a)|(?:\d+)
+    combined_regex = re.compile("|".join(f"(?:{p})" for p in valid))
+
+    filtered_targets = [t for t in targets if combined_regex.search(t)]
+
+    return set(filtered_targets)
+
+
+def main() -> None:
+    target_candiates = ModifiedFiles(sys.argv[1])
+    targets_to_test = FilterTargets(target_candiates)
+    print(targets_to_test)
+
+
+if __name__ == "__main__":
+    main()
+
