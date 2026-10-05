@@ -40,9 +40,10 @@ namespace LCNS::Combinatorics
         return allPermutations;
     }
 
-    int func()
+    template <typename T>
+    T func()
     {
-        const auto val{ 42 };
+        const T val{ 42 };
         return val;
     }
 
