@@ -7,26 +7,30 @@ from pathlib import Path
 
 import ColorFormatter
 
-def RunRequest(request : str ):
+def RunRequest(request : str ) -> list(str): 
+    """Helper function to run a command in the cli"""
     elements = request.split(" ")
     result = subprocess.run(elements, capture_output=True, text=True, check=True)
 
     return result.stdout.splitlines()
 
 
-def GetTargetData(target_path : Path):
-    with open(target_path, "r") as target_file:
-        target_data = json.load(target_file)
+def GetJSONFileContent(path : Path):
+    """Helper function to get the content of a json file"""
+    with open(path, "r") as file:
+        data = json.load(file)
 
-    return target_data
+    return data
 
-def GetModifiedFiles():
 
-    # git rev-list main..HEAD | xargs -n 1 git diff-tree --no-commit-id --name-only -r | sort -u
-    commit_list = RunRequest("git rev-list main..HEAD")
-    print(f"list of commits: {" ".join(commit_list)}")
+def GetModifiedFiles(base : str, target : str) -> list(str):
+    """Get the list of modified files in the commits between base and target
 
-    # file_list = RunRequest(f"git diff-tree --no-commit-id --name-only -r {" ".join(commit_list)}")
+    This essentially emulates the following cli command:
+    git rev-list main..HEAD | xargs -n 1 git diff-tree --no-commit-id --name-only -r --diff-filter=ACMR | sort -u
+    """
+    commit_list = RunRequest(f"git rev-list {base}..{target}")
+
     result = set()
     for commit in commit_list:
         files_per_commit = RunRequest(f"git diff-tree --no-commit-id --name-only -r --diff-filter=ACMR {commit}")
@@ -36,7 +40,8 @@ def GetModifiedFiles():
 
     return list(result)
 
-def ModifiedFiles(build_dir : str):
+
+def ModifiedFiles(build_dir : str) -> list(str):
     # Setup logger and handler
 
     logger = logging.getLogger("MyLogger")
@@ -61,7 +66,7 @@ def ModifiedFiles(build_dir : str):
     # 2. Get the list of modified files
     # Filters for Added, Copied, Modified, and Renamed files
     # modified_files = RunRequest("git diff-tree --no-commit-id --name-only -r --diff-filter=ACMR HEAD")
-    modified_files = GetModifiedFiles()
+    modified_files = GetModifiedFiles("main", "HEAD")
 
     logger.warning(f"The modified files are: {modified_files}")
 
@@ -93,7 +98,7 @@ def ModifiedFiles(build_dir : str):
 
         target_path = path_reply_dir / target
 
-        target_data = GetTargetData(target_path)
+        target_data = GetJSONFileContent(target_path)
 
         target_name = jq.all('.name', target_data)
         # logger.warning(f"The target name is {target_name[0]}")
@@ -124,7 +129,7 @@ def ModifiedFiles(build_dir : str):
                 edited_targets += target_name
 
 
-    logger.info(f"All edited targers are {edited_targets}")
+    logger.info(f"All edited targets are {edited_targets}")
 
     # Test outputs
     # logger.debug("This is a debug message.")
