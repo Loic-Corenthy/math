@@ -1,6 +1,7 @@
 #include "algebra/Algebra.hpp"
 
 #include "Helper.hpp"
+#include "algebra/MappingFunctions.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_template_test_macros.hpp>
@@ -19,7 +20,8 @@ using FloatingTypes = std::tuple<float, double>;
 
 using std::numbers::pi;
 
-consteval double DegToRad(double deg) { return deg * pi / 180.0; }
+consteval double DegToRad(double deg)
+{ return deg * pi / 180.0; }
 
 void CheckMatricesAreEqual(const auto& lhs, const auto& rhs, const auto precision)
 {
@@ -31,6 +33,14 @@ void CheckMatricesAreEqual(const auto& lhs, const auto& rhs, const auto precisio
         }
     }
 }
+
+TEST_CASE("Just do debug")
+{
+    const auto some_value = LCNS::Algebra::FortyTwo();
+
+    CHECK(some_value == 42);
+}
+
 
 TEMPLATE_LIST_TEST_CASE("Euler angles from 3x3 rotation matrix", "[algebra][mapping]", FloatingTypes)
 {

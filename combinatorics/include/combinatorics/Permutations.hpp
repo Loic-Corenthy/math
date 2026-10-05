@@ -42,7 +42,7 @@ namespace LCNS::Combinatorics
 
     int func()
     {
-        const auto val{42};
+        const auto val{ 42 };
         return val;
     }
 
