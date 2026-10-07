@@ -56,7 +56,7 @@ def CreateLogger():
     return logger
 
 
-def ModifiedFiles(build_dir : str) -> list(str):
+def ModifiedFiles(build_dir : str, base : str, target : str) -> list(str):
     """Get a list of targets corresponding to the files edited in the mentioned commits"""
     logger = CreateLogger()
 
@@ -71,7 +71,7 @@ def ModifiedFiles(build_dir : str) -> list(str):
         return 1
 
     # 2. Get the list of modified files
-    modified_files = GetModifiedFiles("main", "HEAD")
+    modified_files = GetModifiedFiles(base, target)
 
     if len(modified_files) == 0:
         logger.warning("No files modified in this pull request. Nothing to do")
@@ -135,7 +135,13 @@ def FilterTargets(targets : list(str)) -> list(str):
 
 
 def main() -> None:
-    target_candiates = ModifiedFiles(sys.argv[1])
+    if len(sys.argv) < 4:
+        logger = CreateLogger()
+
+        logger.error("modified-targets must be called with 3 arguments, e.g. \"python modified-targets.py build/linux_release main HEAD\"")
+        return
+
+    target_candiates = ModifiedFiles(sys.argv[1], sys.argv[2], sys.argv[3])
     targets_to_test = FilterTargets(target_candiates)
     print(targets_to_test)
 
