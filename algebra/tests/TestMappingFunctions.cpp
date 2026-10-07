@@ -34,14 +34,6 @@ void CheckMatricesAreEqual(const auto& lhs, const auto& rhs, const auto precisio
     }
 }
 
-TEST_CASE("Just do debug")
-{
-    const auto some_value = LCNS::Algebra::FortyTwo();
-
-    CHECK(some_value == 42);
-}
-
-
 TEMPLATE_LIST_TEST_CASE("Euler angles from 3x3 rotation matrix", "[algebra][mapping]", FloatingTypes)
 {
     SECTION("Example 1: (Rz,Ry,Rx)=(20, 15, 30)")
