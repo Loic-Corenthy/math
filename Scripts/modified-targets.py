@@ -29,6 +29,7 @@ def GetModifiedFiles(base : str, target : str) -> list(str):
 
     This essentially emulates the following cli command:
     git rev-list main..HEAD | xargs -n 1 git diff-tree --no-commit-id --name-only -r --diff-filter=ACMR | sort -u
+    with `main` being the base branch and `HEAD` the target one
 
     (Filters for Added, Copied, Modified, and Renamed files)
     """
