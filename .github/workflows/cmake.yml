@@ -86,7 +86,7 @@ jobs:
       - name: Get targets of edited files
         id: targets_to_test
         run: |
-          python Scripts/modified-targets.py ${{env.BUILD_DIR}} "main" "feature/issue-52/split-tests"
+          python Scripts/modified-targets.py ${{env.BUILD_DIR}} "origin/main" "origin/feature/issue-52/split-tests"
 
       - name: Upload build directory to artefact
         uses: actions/upload-artifact@v4
