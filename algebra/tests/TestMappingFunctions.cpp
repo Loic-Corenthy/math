@@ -1,6 +1,7 @@
 #include "algebra/Algebra.hpp"
 
 #include "Helper.hpp"
+#include "algebra/MappingFunctions.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_template_test_macros.hpp>
@@ -19,7 +20,8 @@ using FloatingTypes = std::tuple<float, double>;
 
 using std::numbers::pi;
 
-consteval double DegToRad(double deg) { return deg * pi / 180.0; }
+consteval double DegToRad(double deg)
+{ return deg * pi / 180.0; }
 
 void CheckMatricesAreEqual(const auto& lhs, const auto& rhs, const auto precision)
 {
