@@ -14,7 +14,14 @@
 namespace LCNS::Algebra
 {
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>
+
+#if defined(AVX512_ENABLED)
+    class alignas(64) Matrix
+#elif defined(AVX2_ENABLED)
+    class alignas(32) Matrix
+#else
     class Matrix
+#endif
     {
     public:
         /*!

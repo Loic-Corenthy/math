@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 Checks:          'clang-diagnostic-*,clang-analyzer-*,-*,cppcoreguidelines-*,concurrency-*,clang-analyzer-*,performance-*,portability-*,readability-*,-readability-redundant-access-specifiers,-portability-avoid-pragma-once'
+=======
+Checks:          'clang-diagnostic-*,clang-analyzer-*,cppcoreguidelines-*,concurrency-*,clang-analyzer-*,performance-*,portability-*,readability-*,-readability-redundant-access-specifiers,-cppcoreguidelines-avoid-magic-numbers,-readability-magic-numbers'
+>>>>>>> 814dc10 (Update clang-tidy rules)
 WarningsAsErrors: '*'
 HeaderFileExtensions:
   - ''

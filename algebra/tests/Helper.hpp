@@ -1,5 +1,7 @@
 #pragma once
 
+#include <type_traits>
+
 namespace LCNS
 {
     template <typename T>
@@ -7,7 +9,7 @@ namespace LCNS
     {
         if constexpr (std::is_same_v<T, float>)
         {
-            return 1e-3f;
+            return 1e-3F;
         }
         else if (std::is_same_v<T, double>)
         {
@@ -20,7 +22,7 @@ namespace LCNS
     {
         if constexpr (std::is_same_v<T, float>)
         {
-            return 1e-3f;
+            return 1e-3F;
         }
         else if (std::is_same_v<T, double>)
         {
@@ -33,7 +35,7 @@ namespace LCNS
     {
         if constexpr (std::is_same_v<T, float>)
         {
-            return 1e-6f;
+            return 1e-6F;
         }
         else if (std::is_same_v<T, double>)
         {
