@@ -1,4 +1,4 @@
-Checks:          'clang-diagnostic-*,clang-analyzer-*,-*,cppcoreguidelines-*,concurrency-*,clang-analyzer-*,performance-*,portability-*,readability-*,-readability-redundant-access-specifiers'
+Checks:          'clang-diagnostic-*,clang-analyzer-*,-*,cppcoreguidelines-*,concurrency-*,clang-analyzer-*,performance-*,portability-*,readability-*,-readability-redundant-access-specifiers,-portability-avoid-pragma-once'
 WarningsAsErrors: '*'
 HeaderFileExtensions:
   - ''

@@ -20,7 +20,7 @@ namespace LCNS::Algebra
         template <Coordinate coordinate>
         float dot_product_concurrently(std::span<const coordinate, std::dynamic_extent> row, std::span<const coordinate, std::dynamic_extent> col)
         {
-            float result = 0.0f;
+            float result = 0.0F;
 
             auto row_it = row.begin();
             auto col_it = col.begin();

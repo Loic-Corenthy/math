@@ -7,6 +7,7 @@ target_sources(benchmarkMultiplicationLarge
 
 add_test(NAME "Benchmark large matrix with 256 rows" COMMAND "$<TARGET_FILE:benchmarkMultiplicationLarge>" "[benchmark][matrix][large][256]")
 add_test(NAME "Benchmark large matrix with 1000 rows" COMMAND "$<TARGET_FILE:benchmarkMultiplicationLarge>" "[benchmark][matrix][large][1000]")
+set_tests_properties("Benchmark large matrix with 256 rows" "Benchmark large matrix with 1000 rows" PROPERTIES LABELS "benchmarkMultiplicationLarge")
 
 target_link_libraries(benchmarkMultiplicationLarge PRIVATE lcns::algebra Catch2::Catch2WithMain)
 

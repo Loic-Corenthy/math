@@ -3,7 +3,6 @@
 #include "combinatorics/Concepts.hpp"
 
 #include <cstddef>
-#include <vector>
 #include <set>
 
 namespace LCNS::Combinatorics
