@@ -12,11 +12,11 @@ target_sources(lcnsAlgebra
       "include/algebra/Matrix.hpp"
       "include/algebra/Quaternion.hpp"
       "include/algebra/MappingFunctions.hpp"
-      "include/algebra/MultiplicationLarge.hpp"
       "include/algebra/Algebra.hpp"
+      "include/large/MultiplicationLarge.hpp"
 )
 
-target_compile_features(lcnsAlgebra INTERFACE cxx_std_20)
+target_compile_features(lcnsAlgebra INTERFACE cxx_std_23)
 
 if (${AVX512_ENABLED_ON_CPU})
   target_compile_options(lcnsAlgebra INTERFACE -mavx512f)

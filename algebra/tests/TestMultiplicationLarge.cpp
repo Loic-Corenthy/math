@@ -1,5 +1,5 @@
-#include "algebra/Matrix.hpp"
-#include "algebra/MultiplicationLarge.hpp"
+#include "large/MatrixLarge.hpp"
+#include "large/MultiplicationLarge.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_approx.hpp>
@@ -35,12 +35,16 @@ namespace
         if constexpr (is_integral_v<coordinate>)
         {
             std::uniform_int_distribution<> dis(min, max);
-            std::generate(result.data(), result.data() + rows * cols, [&]() { return static_cast<coordinate>(dis(gen)); }); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+            std::generate(result.data(),
+                          result.data() + rows * cols,
+                          [&]() { return static_cast<coordinate>(dis(gen)); });  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
         }
         else
         {
             std::uniform_real_distribution<> dis(min, max);
-            std::generate(result.data(), result.data() + rows * cols, [&]() { return static_cast<coordinate>(dis(gen)); }); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+            std::generate(result.data(),
+                          result.data() + rows * cols,
+                          [&]() { return static_cast<coordinate>(dis(gen)); });  // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
         }
 
         return result;
@@ -227,4 +231,3 @@ TEMPLATE_LIST_TEST_CASE("Test floating multiplication with multithreading and si
 }
 
 #endif
-
