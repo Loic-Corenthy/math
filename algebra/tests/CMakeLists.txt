@@ -97,7 +97,7 @@ set(ALL_TEST_TARGETS testVector testMatrix testQuaternion testMapping testMultip
 foreach(TEST_TARGET IN LISTS ALL_TEST_TARGETS)
     target_link_libraries(${TEST_TARGET} PRIVATE lcns::algebra Catch2::Catch2WithMain)
 
-    target_compile_features(${TEST_TARGET} PUBLIC cxx_std_20)
+    target_compile_features(${TEST_TARGET} PUBLIC cxx_std_23)
 
     set_target_properties(${TEST_TARGET} PROPERTIES LINKER_LANGUAGE CXX)
     set_target_properties(${TEST_TARGET} PROPERTIES CXX_EXTENSIONS OFF)
