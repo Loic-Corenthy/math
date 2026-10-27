@@ -8,6 +8,7 @@
 
 namespace LCNS::large
 {
+
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>
 #if defined(AVX512_ENABLED)
     class alignas(64) MatrixLarge
@@ -73,8 +74,7 @@ namespace LCNS::large
         std::array<coordinate, paddedRows() * cols> _coeff{};
 
         // Grant friendship to a dedicated test peer class
-        template <typename X, unsigned int Y, unsigned int Z>
-        friend class MatrixLargeTestPeer;
+        friend struct MatrixLargeTestAccess;
     };
 
     template <Coordinate coordinate, unsigned int rows, unsigned int cols>
