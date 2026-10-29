@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <type_traits>
 
 namespace LCNS
@@ -42,4 +43,23 @@ namespace LCNS
             return 1e-9;
         }
     }
+
+
+    template <typename Numeric, unsigned int rows, unsigned int cols>
+    consteval std::size_t precomputedSize()
+    {
+        if constexpr (std::is_same_v<Numeric, int32_t> and (cols <= 16))
+        {
+            return rows * 16;
+        }
+        else if constexpr (std::is_same_v<Numeric, int32_t> and cols <= 32)
+        {
+            return rows * 32;
+        }
+        else
+        {
+            static_assert(false, "Unsupported case");
+        }
+    }
+
 }  // namespace LCNS

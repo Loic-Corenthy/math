@@ -48,13 +48,19 @@ namespace LCNS::large
          * @brief Compute the num of elements in each row of the matrix including padding
          * @return The next number following cols that is a multiple of the aligned memory size
          */
-        static consteval unsigned int paddedRows()
+        static consteval unsigned int paddedCols()
         {
             constexpr auto numElements = static_cast<int>(64 / sizeof(coordinate));
 
             // Remember that cols determine the number of elements in a row!!
             // constexpr auto res = std::div(static_cast<int>(cols), numElements);
             constexpr auto res = static_cast<int>(cols) / numElements;
+            constexpr auto mod = cols % numElements;
+
+            if (mod == 0)
+            {
+                return res * numElements;
+            }
 
             return (res + 1) * numElements;
         }
@@ -71,7 +77,7 @@ namespace LCNS::large
         unsigned int _rows = rows;
         unsigned int _cols = cols;
 
-        std::array<coordinate, paddedRows() * cols> _coeff{};
+        std::array<coordinate, paddedCols() * rows> _coeff{};
 
         // Grant friendship to a dedicated test peer class
         friend struct MatrixLargeTestAccess;
