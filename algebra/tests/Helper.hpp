@@ -1,5 +1,8 @@
 #pragma once
 
+#include <cstdint>
+#include <type_traits>
+
 namespace LCNS
 {
     template <typename T>
@@ -7,7 +10,7 @@ namespace LCNS
     {
         if constexpr (std::is_same_v<T, float>)
         {
-            return 1e-3f;
+            return 1e-3F;
         }
         else if (std::is_same_v<T, double>)
         {
@@ -20,7 +23,7 @@ namespace LCNS
     {
         if constexpr (std::is_same_v<T, float>)
         {
-            return 1e-3f;
+            return 1e-3F;
         }
         else if (std::is_same_v<T, double>)
         {
@@ -33,11 +36,30 @@ namespace LCNS
     {
         if constexpr (std::is_same_v<T, float>)
         {
-            return 1e-6f;
+            return 1e-6F;
         }
         else if (std::is_same_v<T, double>)
         {
             return 1e-9;
         }
     }
+
+
+    template <typename Numeric, unsigned int rows, unsigned int cols>
+    consteval std::size_t precomputedSize()
+    {
+        if constexpr (std::is_same_v<Numeric, int32_t> and (cols <= 16))
+        {
+            return rows * 16;
+        }
+        else if constexpr (std::is_same_v<Numeric, int32_t> and cols <= 32)
+        {
+            return rows * 32;
+        }
+        else
+        {
+            static_assert(false, "Unsupported case");
+        }
+    }
+
 }  // namespace LCNS
