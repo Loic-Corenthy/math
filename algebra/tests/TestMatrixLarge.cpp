@@ -6,6 +6,8 @@
 #include <catch2/catch_template_test_macros.hpp>
 #include <catch2/catch_approx.hpp>
 
+#include <print>
+
 namespace LCNS::large
 {
     struct MatrixLargeTestAccess
@@ -33,6 +35,8 @@ namespace LCNS::large
         SECTION("Check the internal size of the array containing the coefficients")
         {
             const auto expectedSize = LCNS::precomputedSize<coordinate, rows, cols>();
+            const auto name         = LCNS::type_name<coordinate>();
+            std::println("For a matrix <{},{},{}>, the reserved memory is for {} elements", name, rows, cols, expectedSize);
             CHECK(Access::coeffs(mat).size() == expectedSize);
         }
     }
