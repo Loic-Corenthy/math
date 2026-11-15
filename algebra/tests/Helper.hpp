@@ -49,13 +49,27 @@ namespace LCNS
     template <typename Numeric, unsigned int rows, unsigned int cols>
     consteval std::size_t precomputedSize()
     {
-        if constexpr (std::is_same_v<Numeric, int32_t> and (cols <= 16))
+        if constexpr (std::is_same_v<Numeric, int32_t>)
         {
-            return rows * 16;
+            if constexpr (cols <= 16)
+            {
+                return rows * 16;
+            }
+            else if constexpr (cols <= 32)
+            {
+                return rows * 32;
+            }
         }
-        else if constexpr (std::is_same_v<Numeric, int32_t> and cols <= 32)
+        else if constexpr (std::is_same_v<Numeric, float>)
         {
-            return rows * 32;
+            if constexpr (cols <= 16)
+            {
+                return rows * 16;
+            }
+            else if constexpr (cols <= 32)
+            {
+                return rows * 32;
+            }
         }
         else
         {
@@ -67,24 +81,26 @@ namespace LCNS
     constexpr std::string_view type_name()
     {
 #if defined(__clang__)
+        // signature: std::string_view type_name() [T = int; ...]
         std::string_view fun_name = __PRETTY_FUNCTION__;
-        // signature: std::string_view type_name() [T = int]
+
         auto start = fun_name.find("T = ") + 4;
-        auto end   = fun_name.rfind(']');
-        return fun_name.substr(start, end - start);
+        auto end   = fun_name.rfind(';');
 #elif defined(__GNUC__)
+        // signature: constexpr std::string_view type_name() [with T = int; ...]
         std::string_view fun_name = __PRETTY_FUNCTION__;
-        // signature: constexpr std::string_view type_name() [with T = int]
+
         auto start = fun_name.find("with T = ") + 9;
-        auto end   = fun_name.rfind(']');
-        return fun_name.substr(start, end - start);
+        auto end   = fun_name.rfind(';');
 #elif defined(_MSC_VER)
-        std::string_view fun_name = __FUNCSIG__;
         // signature: class std::basic_string_view<...> __cdecl type_name<int>(void)
+        std::string_view fun_name = __FUNCSIG__;
+
         auto start = fun_name.find("type_name<") + 10;
         auto end   = fun_name.rfind(">(void)");
-        return fun_name.substr(start, end - start);
 #endif
+
+        return fun_name.substr(start, end - start);
     }
 
 }  // namespace LCNS
