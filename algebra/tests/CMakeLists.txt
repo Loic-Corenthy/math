@@ -35,6 +35,20 @@ add_test(NAME "Test mat4" COMMAND "$<TARGET_FILE:testMatrix>" "[algebra][matrix]
 set_tests_properties("Test mat2" "Test mat3" "Test mat4" PROPERTIES LABELS "testMatrix")
 
 
+################
+# Matrix Large #
+################
+add_executable(testMatrixLarge)
+
+target_sources(testMatrixLarge
+    PRIVATE
+        "Helper.hpp"
+        "TestMatrixLarge.cpp"
+)
+
+add_test(NAME "Test padding" COMMAND "$<TARGET_FILE:testMatrixLarge>" "[large][matrix][padding]")
+set_tests_properties("Test padding"  PROPERTIES LABELS "testMatrixLarge")
+
 ##############
 # Quaternion #
 ##############
@@ -92,12 +106,12 @@ endif()
 ####################################
 # Setup common to all test targets #
 ####################################
-set(ALL_TEST_TARGETS testVector testMatrix testQuaternion testMapping testMultiplicationLarge)
+set(ALL_TEST_TARGETS testVector testMatrix testMatrixLarge testQuaternion testMapping testMultiplicationLarge)
 
 foreach(TEST_TARGET IN LISTS ALL_TEST_TARGETS)
     target_link_libraries(${TEST_TARGET} PRIVATE lcns::algebra Catch2::Catch2WithMain)
 
-    target_compile_features(${TEST_TARGET} PUBLIC cxx_std_20)
+    target_compile_features(${TEST_TARGET} PUBLIC cxx_std_23)
 
     set_target_properties(${TEST_TARGET} PROPERTIES LINKER_LANGUAGE CXX)
     set_target_properties(${TEST_TARGET} PROPERTIES CXX_EXTENSIONS OFF)

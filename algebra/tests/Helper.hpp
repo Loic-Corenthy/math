@@ -1,5 +1,9 @@
 #pragma once
 
+#include <cstdint>
+#include <string_view>
+#include <type_traits>
+
 namespace LCNS
 {
     template <typename T>
@@ -7,7 +11,7 @@ namespace LCNS
     {
         if constexpr (std::is_same_v<T, float>)
         {
-            return 1e-3f;
+            return 1e-3F;
         }
         else if (std::is_same_v<T, double>)
         {
@@ -20,7 +24,7 @@ namespace LCNS
     {
         if constexpr (std::is_same_v<T, float>)
         {
-            return 1e-3f;
+            return 1e-3F;
         }
         else if (std::is_same_v<T, double>)
         {
@@ -33,11 +37,107 @@ namespace LCNS
     {
         if constexpr (std::is_same_v<T, float>)
         {
-            return 1e-6f;
+            return 1e-6F;
         }
         else if (std::is_same_v<T, double>)
         {
             return 1e-9;
         }
     }
+
+
+    template <typename Numeric, unsigned int rows, unsigned int cols>
+    consteval std::size_t precomputedSize()
+    {
+#if defined(AVX512_ENABLED)
+        constexpr size_t numElementsPerInstructions = 64 / sizeof(Numeric);
+#elif defined(AVX2_ENBALED)
+        constexpr size_t numElementsPerInstructions = 32 / sizeof(Numeric);
+#else
+        static_assert(false, "This function only works with AVX instructions");
+#endif
+
+        // Avoid to use the same modulo computation as in the MatrixLarge class
+
+        if constexpr (std::is_same_v<Numeric, int32_t>)
+        {
+            if constexpr (cols <= numElementsPerInstructions)
+            {
+                return rows * numElementsPerInstructions;
+            }
+            else if constexpr (cols <= (numElementsPerInstructions * 2))
+            {
+                return rows * (numElementsPerInstructions * 2);
+            }
+            else
+            {
+                static_assert(false, "Unsupported size");
+            }
+        }
+        else if constexpr (std::is_same_v<Numeric, float>)
+        {
+            if constexpr (cols <= numElementsPerInstructions)
+            {
+                return rows * numElementsPerInstructions;
+            }
+            else if constexpr (cols <= (numElementsPerInstructions * 2))
+            {
+                return rows * (numElementsPerInstructions * 2);
+            }
+            else
+            {
+                static_assert(false, "Unsupported size");
+            }
+        }
+        else if constexpr (std::is_same_v<Numeric, double>)
+        {
+            if constexpr (cols <= numElementsPerInstructions)
+            {
+                return rows * numElementsPerInstructions;
+            }
+            else if constexpr (cols <= (numElementsPerInstructions * 2))
+            {
+                return rows * (numElementsPerInstructions * 2);
+            }
+            else if constexpr (cols <= (numElementsPerInstructions * 3))
+            {
+                return rows * (numElementsPerInstructions * 3);
+            }
+            else
+            {
+                static_assert(false, "Unsupported size");
+            }
+        }
+        else
+        {
+            static_assert(false, "Unsupported case");
+        }
+    }
+
+    template <typename T>
+    constexpr std::string_view type_name()
+    {
+#if defined(__clang__)
+        // signature: std::string_view type_name() [T = int; ...]
+        std::string_view fun_name = __PRETTY_FUNCTION__;
+
+        auto start = fun_name.find("T = ") + 4;
+        auto end   = fun_name.rfind(';');
+#elif defined(__GNUC__)
+        // signature: constexpr std::string_view type_name() [with T = int; ...]
+        std::string_view fun_name = __PRETTY_FUNCTION__;
+
+        auto start = fun_name.find("with T = ") + 9;
+        auto end   = fun_name.rfind(';');
+#elif defined(_MSC_VER)
+        // signature: class std::basic_string_view<...> __cdecl type_name<int>(void)
+        std::string_view fun_name = __FUNCSIG__;
+
+        auto start = fun_name.find("type_name<") + 10;
+        auto end   = fun_name.rfind(">(void)");
+#endif
+
+        return fun_name.substr(start, end - start);
+    }
+
 }  // namespace LCNS

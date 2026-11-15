@@ -1,5 +1,5 @@
 #include "algebra/Matrix.hpp"
-#include "algebra/MultiplicationLarge.hpp"
+#include "large/MultiplicationLarge.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_approx.hpp>
@@ -26,9 +26,7 @@ class BenchmarkFixture
 public:
     BenchmarkFixture()
     : _gen(_rd())
-    {
-        cout << "CTEST_FULL_OUTPUT\n";
-    }
+    { cout << "CTEST_FULL_OUTPUT\n"; }
 
     size_t random_row_index(size_t row_count)
     {
