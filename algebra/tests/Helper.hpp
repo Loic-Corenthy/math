@@ -49,17 +49,25 @@ namespace LCNS
     template <typename Numeric, unsigned int rows, unsigned int cols>
     consteval std::size_t precomputedSize()
     {
+#if defined(AVX512_ENABLED)
+        constexpr size_t numElementsPerInstructions = 64 / sizeof(Numeric);
+#elif defined(AVX2_ENBALED)
+        constexpr size_t numElementsPerInstructions = 32 / sizeof(Numeric);
+#else
+        static_assert(false, "This function only works with AVX instructions");
+#endif
+
         // Avoid to use the same modulo computation as in the MatrixLarge class
 
         if constexpr (std::is_same_v<Numeric, int32_t>)
         {
-            if constexpr (cols <= 16)
+            if constexpr (cols <= numElementsPerInstructions)
             {
-                return rows * 16;
+                return rows * numElementsPerInstructions;
             }
-            else if constexpr (cols <= 32)
+            else if constexpr (cols <= (numElementsPerInstructions * 2))
             {
-                return rows * 32;
+                return rows * (numElementsPerInstructions * 2);
             }
             else
             {
@@ -68,13 +76,13 @@ namespace LCNS
         }
         else if constexpr (std::is_same_v<Numeric, float>)
         {
-            if constexpr (cols <= 16)
+            if constexpr (cols <= numElementsPerInstructions)
             {
-                return rows * 16;
+                return rows * numElementsPerInstructions;
             }
-            else if constexpr (cols <= 32)
+            else if constexpr (cols <= (numElementsPerInstructions * 2))
             {
-                return rows * 32;
+                return rows * (numElementsPerInstructions * 2);
             }
             else
             {
@@ -83,17 +91,17 @@ namespace LCNS
         }
         else if constexpr (std::is_same_v<Numeric, double>)
         {
-            if constexpr (cols <= 8)
+            if constexpr (cols <= numElementsPerInstructions)
             {
-                return rows * 8;
+                return rows * numElementsPerInstructions;
             }
-            else if constexpr (cols <= 16)
+            else if constexpr (cols <= (numElementsPerInstructions * 2))
             {
-                return rows * 16;
+                return rows * (numElementsPerInstructions * 2);
             }
-            else if constexpr (cols <= 24)
+            else if constexpr (cols <= (numElementsPerInstructions * 3))
             {
-                return rows * 24;
+                return rows * (numElementsPerInstructions * 3);
             }
             else
             {

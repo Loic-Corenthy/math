@@ -6,6 +6,10 @@
 #include <catch2/catch_template_test_macros.hpp>
 #include <catch2/catch_approx.hpp>
 
+#ifdef AVX_ENABLED_ON_CPU
+#include <immintrin.h>
+#endif
+
 #include <print>
 
 namespace LCNS::large
@@ -22,7 +26,7 @@ namespace LCNS::large
 
     using Access = MatrixLargeTestAccess;
 
-    TEMPLATE_TEST_CASE_SIG("KeyValueStore private members can be accessed via friend fixture",
+    TEMPLATE_TEST_CASE_SIG("Check internal matrix size",
                            "[template][fixture][product]",
                            ((Coordinate coordinate, unsigned int rows, unsigned int cols), coordinate, rows, cols),
                            (int32_t, 3, 4),
@@ -47,4 +51,30 @@ namespace LCNS::large
         }
     }
 
+
+    TEMPLATE_TEST_CASE_SIG("Check using load for aligned memory",
+                           "[template][fixture][product]",
+                           ((Coordinate coordinate, unsigned int rows, unsigned int cols), coordinate, rows, cols),
+                           (int32_t, 3, 4))
+    {
+        MatrixLarge<coordinate, rows, cols> mat;
+
+        for (size_t i{}; i < rows; ++i)
+        {
+            for (size_t j{}; j < cols; ++j)
+            {
+                mat(i, j) = 1;
+            }
+        }
+
+        SECTION("Check loading aligned memory")
+        {
+            coordinate sum{};
+            for (size_t i{}; i < rows; ++i)
+            {
+                __m512i chunk = _mm512_load_epi32(mat.data());
+                // sum += __mm512_
+            }
+        }
+    }
 }

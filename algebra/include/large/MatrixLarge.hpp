@@ -43,6 +43,18 @@ namespace LCNS::large
          */
         [[nodiscard]] constexpr std::tuple<unsigned int, unsigned int> dimensions() const;
 
+        /*!
+         * @brief Get a pointer to the internal coefficients (read/write)
+         * @return a pointer to the first element of _coeff
+         */
+        [[nodiscard]] coordinate* data();
+
+        /*!
+         * @brief Get a pointer to the internal coefficients (read only)
+         * @return a pointer to the first element of _coeff
+         */
+        [[nodiscard]] const coordinate* data() const;
+
     private:
         /*!
          * @brief Compute the num of elements in each row of the matrix including padding
@@ -116,5 +128,11 @@ namespace LCNS::large
     constexpr std::tuple<unsigned int, unsigned int> MatrixLarge<coordinate, rows, cols>::dimensions() const
     { return std::make_tuple(_rows, _cols); }
 
+    template <Coordinate coordinate, unsigned int rows, unsigned int cols>
+    coordinate* MatrixLarge<coordinate, rows, cols>::data()
+    { return _coeff.data(); }
 
+    template <Coordinate coordinate, unsigned int rows, unsigned int cols>
+    const coordinate* MatrixLarge<coordinate, rows, cols>::data() const
+    { return _coeff.data(); }
 }
