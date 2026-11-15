@@ -28,7 +28,12 @@ namespace LCNS::large
                            (int32_t, 3, 4),
                            (int32_t, 3, 16),
                            (int32_t, 3, 25),
-                           (float, 3, 25))
+                           (float, 3, 5),
+                           (float, 123, 16),
+                           (float, 17, 25),
+                           (double, 2, 7),
+                           (double, 3, 8),
+                           (double, 4, 20))
     {
         MatrixLarge<coordinate, rows, cols> mat;
 

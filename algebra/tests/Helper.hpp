@@ -49,6 +49,8 @@ namespace LCNS
     template <typename Numeric, unsigned int rows, unsigned int cols>
     consteval std::size_t precomputedSize()
     {
+        // Avoid to use the same modulo computation as in the MatrixLarge class
+
         if constexpr (std::is_same_v<Numeric, int32_t>)
         {
             if constexpr (cols <= 16)
@@ -58,6 +60,10 @@ namespace LCNS
             else if constexpr (cols <= 32)
             {
                 return rows * 32;
+            }
+            else
+            {
+                static_assert(false, "Unsupported size");
             }
         }
         else if constexpr (std::is_same_v<Numeric, float>)
@@ -69,6 +75,29 @@ namespace LCNS
             else if constexpr (cols <= 32)
             {
                 return rows * 32;
+            }
+            else
+            {
+                static_assert(false, "Unsupported size");
+            }
+        }
+        else if constexpr (std::is_same_v<Numeric, double>)
+        {
+            if constexpr (cols <= 8)
+            {
+                return rows * 8;
+            }
+            else if constexpr (cols <= 16)
+            {
+                return rows * 16;
+            }
+            else if constexpr (cols <= 24)
+            {
+                return rows * 24;
+            }
+            else
+            {
+                static_assert(false, "Unsupported size");
             }
         }
         else
